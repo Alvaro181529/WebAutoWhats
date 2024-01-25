@@ -1,0 +1,66 @@
+[
+    {
+        "id": 1,
+        "mensaje": "Por favor, recuerde recoger su paquete en la agencia nacional de correos."
+    },
+    {
+        "id": 2,
+        "mensaje": "Estamos ansiosos por su llegada. Lo esperamos con entusiasmo."
+    },
+    {
+        "id": 3,
+        "mensaje": "Estaremos atentos a su llegada. No dude en pasar por nuestra oficina."
+    },
+    {
+        "id": 4,
+        "mensaje": "Su paquete está listo para ser recogido en la agencia. ¡Hasta pronto!"
+    },
+    {
+        "id": 5,
+        "mensaje": "Le recordamos que su paquete le espera en la agencia nacional de correos."
+    },
+    {
+        "id": 6,
+        "mensaje": "Nos encantaría verlo pronto en nuestra agencia. Su paquete está listo."
+    },
+    {
+        "id": 7,
+        "mensaje": "Lo esperamos con gusto en la agencia de correos. Su paquete le aguarda."
+    },
+    {
+        "id": 8,
+        "mensaje": "Su paquete está seguro y listo para ser recogido. ¡No demore!"
+    },
+    {
+        "id": 9,
+        "mensaje": "Asegúrese de recoger su encomienda en la agencia de mensajería nacional."
+    },
+    {
+        "id": 10,
+        "mensaje": "Estamos emocionados por su llegada. Le esperamos con anticipación."
+    },
+    {
+        "id": 11,
+        "mensaje": "Permaneceremos alerta a su llegada. No dude en visitar nuestras instalaciones."
+    },
+    {
+        "id": 12,
+        "mensaje": "Su paquete está preparado para ser retirado en la agencia. ¡Hasta pronto!"
+    },
+    {
+        "id": 13,
+        "mensaje": "Le recordamos la disponibilidad de su paquete en la agencia de correos nacional."
+    },
+    {
+        "id": 14,
+        "mensaje": "Nos encantaría darle la bienvenida pronto en nuestra agencia. Su paquete está preparado."
+    },
+    {
+        "id": 15,
+        "mensaje": "Le esperamos con gusto en la agencia postal. Su paquete le aguarda."
+    },
+    {
+        "id": 16,
+        "mensaje": "Su paquete está resguardado y listo para ser retirado. ¡No demore!."
+    }
+]
