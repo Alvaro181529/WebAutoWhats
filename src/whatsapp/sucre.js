@@ -42,4 +42,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-module.exports = { ClientSR, codigoQRSR, estadoConexionSR, enviarMensaje, callbackStatusSR };
+async function cerrarSesion(cliente){
+
+  await cliente.logout();
+
+}
+module.exports = { ClientSR, codigoQRSR, estadoConexionSR, enviarMensaje, callbackStatusSR,cerrarSesion };

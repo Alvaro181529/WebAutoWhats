@@ -5,6 +5,7 @@ const router = Router();
 
 // rutas
 router.get("/pando", pandoController);
+router.get("/pando/logout", logout);
 router.get("/pando/notes", NotespandoController);
 router.post("/pando/notes", NotesCreatepandoController);
 router.put("/pando/notes/:id", NotesUpdatepandoController);

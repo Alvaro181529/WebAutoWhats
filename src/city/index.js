@@ -5,7 +5,7 @@ document.getElementById('ingresar').addEventListener('click', function () {
     var hashedPassword = CryptoJS.MD5(inputPassword).toString();
 
     // Reemplaza 'hash-md5-de-tu-contraseña' con el hash MD5 correcto de tu contraseña
-    var storedPasswordHash = 'f55b3add9532941486440fe11f75a1e7';
+    var storedPasswordHash = '827ccb0eea8a706c4c34a16891f84e7b';
 
     // Reemplaza 'tu-contraseña' con la contraseña que desees
     if (hashedPassword === storedPasswordHash) {

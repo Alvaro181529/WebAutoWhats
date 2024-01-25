@@ -5,6 +5,7 @@ const router = Router();
 
 // rutas
 router.get("/santacruz", santacruzController);
+router.get("/santacruz/logout", logout);
 router.get("/santacruz/notes", NotessantacruzController);
 router.post("/santacruz/notes", NotesCreatesantacruzController);
 router.put("/santacruz/notes/:id", NotesUpdatesantacruzController);

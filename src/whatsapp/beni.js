@@ -42,4 +42,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-module.exports = { ClientBN, codigoQRBN, estadoConexionBN, enviarMensaje, callbackStatusBN };
+async function cerrarSesion(cliente){
+
+  await cliente.logout();
+
+}
+module.exports = { ClientBN, codigoQRBN, estadoConexionBN, enviarMensaje, callbackStatusBN ,cerrarSesion};

@@ -44,7 +44,6 @@ async function enviarMensaje(cliente, numero, mensaje) {
 }
 async function cerrarSesion(cliente){
 
-  await cliente.disconnect();
   await cliente.logout();
 
 }

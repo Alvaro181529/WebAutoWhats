@@ -6,6 +6,7 @@ const router = Router();
 // rutas
 router.get("/beni", beniController);
 router.get("/admin",log );
+router.get("/beni/logout", logout);
 router.get("/beni/notes", NotesbeniController);
 router.post("/beni/notes", NotesCreatebeniController);
 router.put("/beni/notes/:id", NotesUpdatebeniController);

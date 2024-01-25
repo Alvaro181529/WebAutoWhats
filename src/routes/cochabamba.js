@@ -4,7 +4,9 @@ const { cochabambaController, NotescochabambaController, NotesCreatecochabambaCo
 const router = Router();
 
 // rutas
+
 router.get("/cochabamba", cochabambaController);
+router.get("/cochabamba/logout", logout);
 router.get("/cochabamba/notes", NotescochabambaController);
 router.post("/cochabamba/notes", NotesCreatecochabambaController);
 router.put("/cochabamba/notes/:id", NotesUpdatecochabambaController);

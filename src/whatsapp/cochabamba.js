@@ -42,4 +42,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-module.exports = { ClientCBBA, codigoQRCBBA, estadoConexionCBBA, enviarMensaje, callbackStatusCBBA };
+async function cerrarSesion(cliente){
+
+  await cliente.logout();
+
+}
+module.exports = { ClientCBBA, codigoQRCBBA, estadoConexionCBBA, enviarMensaje, callbackStatusCBBA ,cerrarSesion};

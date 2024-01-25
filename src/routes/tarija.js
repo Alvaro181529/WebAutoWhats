@@ -5,6 +5,7 @@ const router = Router();
 
 // rutas
 router.get("/tarija", tarijaController);
+router.get("/tarija/logout", logout);
 router.get("/tarija/notes", NotestarijaController);
 router.post("/tarija/notes", NotesCreatetarijaController);
 router.put("/tarija/notes/:id", NotesUpdatetarijaController);

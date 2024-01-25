@@ -16,61 +16,104 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"
+        integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script defer src="index.js"></script>
 </head>
 
 <body class="container-fluid mt-3">
-    <main class="row">
-        <div class="col-3" align="center">
-            <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
-            <br>
-            <img id="qr"></img>
-        </div>
-        <div class="col-9">
-            <div class="row">
-                <div class="col-6">
-                    <form class="row" id="noteForm" method="post">
-                        <div class="col-auto">
-                            <input type="text" placeholder="Frase" class="form-control" id="mensajes">
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-3">
-                    <h3>La Paz</h3>
-                </div>
-                <div class="col-3">
-                    <button type="button" class="btn btn-secondary" id="getMensajes">Ver mensajes</button>
-                </div>
+    <div id="overlay">
+        <div id="login-container" class="row">
+            <label for="password" class="col-sm-3 col-form-label">Contraseña:</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="password" autofocus>
             </div>
-            <br>
-
-            <table class="table table-hover">
-                <thead align="center">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody align="center"></tbody>
-            </table>
+            <div class="col-sm-3">
+                <button id="ingresar" class="btn btn-primary btn-sm" style="padding: 10%;">Ingresar</button>
+            </div>
         </div>
-        <!-- <div class="col-2"></div> -->
-    </main>
-    <footer align="center">
-        <h5 id="marca">by Alvaro Medrano</h5>
-        <style>
-            #marca {
-                color: rgba(255, 255, 255, 0.4);
-                /* Fondo blanco con 50% de opacidad */
-                padding: 10px;
-                /* Espaciado interno para mayor visibilidad */
-            }
-        </style>
-    </footer>
+    </div>
+    <div id="content-container">
+        <main class="row">
+            <div class="col-3" align="center">
+                <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
+                <input type="button" disabled class="estado btn btn-danger" value="Salir" id="salir">
+                <br>
+                <img id="qr"></img>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6">
+                        <form class="row" id="noteForm" method="post">
+                            <div class="col-auto">
+                                <input type="text" placeholder="Frase" class="form-control" id="mensajes">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-3">
+                        <h3>La Paz</h3>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-secondary" id="getMensajes">Ver mensajes</button>
+                    </div>
+                </div>
+                <br>
+
+                <table class="table table-hover">
+                    <thead align="center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody align="center"></tbody>
+                </table>
+            </div>
+            <!-- <div class="col-2"></div> -->
+        </main>
+        <footer align="center">
+            <h5 id="marca">by Alvaro Medrano</h5>
+        </footer>
+    </div>
+    <style>
+        #marca {
+            color: rgba(255, 255, 255, 0.4);
+            /* Fondo blanco con 50% de opacidad */
+            padding: 10px;
+            /* Espaciado interno para mayor visibilidad */
+        }
+
+        #overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        #login-container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 5px black;
+
+        }
+
+        #content-container {
+            text-align: center;
+            filter: blur(5px); 
+            /* Ajusta el valor para cambiar la intensidad del efecto borroso */
+        }
+    </style>
 </body>
 
 </html>
