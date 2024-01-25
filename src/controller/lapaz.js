@@ -39,7 +39,6 @@ exports.lapazController = (req, res) => {
 exports.logout = async (req, res) => {
   const cliente = container.cliente;
   res.json("deslogeado");
-  pathFile = ".wwebjs_auth/session-lapaz";
   cerrarSesion(cliente);
 };
 exports.NoteslapazController = (req, res) => {

@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { pandoController, NotespandoController, NotesCreatepandoController, NotesUpdatepandoController, NotesDelatepandoController } = require("../controller/pando")
+const { pandoController, NotespandoController, NotesCreatepandoController, NotesUpdatepandoController, NotesDelatepandoController ,logout} = require("../controller/pando")
 const router = Router();
 
 // rutas

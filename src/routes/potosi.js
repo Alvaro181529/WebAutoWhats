@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { potosiController, NotespotosiController, NotesCreatepotosiController, NotesUpdatepotosiController, NotesDelatepotosiController } = require("../controller/potosi")
+const { potosiController, NotespotosiController, NotesCreatepotosiController, NotesUpdatepotosiController, NotesDelatepotosiController,logout } = require("../controller/potosi")
 const router = Router();
 
 // rutas

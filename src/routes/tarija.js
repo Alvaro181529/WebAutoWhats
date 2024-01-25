@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { tarijaController, NotestarijaController, NotesCreatetarijaController, NotesUpdatetarijaController, NotesDelatetarijaController } = require("../controller/tarija")
+const { tarijaController, NotestarijaController, NotesCreatetarijaController, NotesUpdatetarijaController, NotesDelatetarijaController,logout } = require("../controller/tarija")
 const router = Router();
 
 // rutas

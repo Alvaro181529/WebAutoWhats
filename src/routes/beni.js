@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { beniController, log, NotesbeniController, NotesCreatebeniController, NotesUpdatebeniController, NotesDelatebeniController } = require("../controller/beni")
+const { beniController, log, NotesbeniController, NotesCreatebeniController, NotesUpdatebeniController, NotesDelatebeniController,logout } = require("../controller/beni")
 const router = Router();
 
 // rutas

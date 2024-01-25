@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { sucreController, NotessucreController, NotesCreatesucreController, NotesUpdatesucreController, NotesDelatesucreController } = require("../controller/sucre")
+const { sucreController, NotessucreController, NotesCreatesucreController, NotesUpdatesucreController, NotesDelatesucreController,logout } = require("../controller/sucre")
 const router = Router();
 
 // rutas

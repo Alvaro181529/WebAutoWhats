@@ -1,6 +1,6 @@
 
 const { Router } = require("express");
-const { santacruzController, NotessantacruzController, NotesCreatesantacruzController, NotesUpdatesantacruzController, NotesDelatesantacruzController } = require("../controller/santacruz")
+const { santacruzController, NotessantacruzController, NotesCreatesantacruzController, NotesUpdatesantacruzController, NotesDelatesantacruzController,logout } = require("../controller/santacruz")
 const router = Router();
 
 // rutas

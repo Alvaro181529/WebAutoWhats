@@ -1,7 +1,6 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const des = "Desarrollado por:"
-const by = "Alvaro Medrano"
+
 const {
     ClientCBBA,
     codigoQRCBBA,
@@ -34,11 +33,12 @@ exports.cochabambaController = (req, res) => {
         }
     });
 }
-exports.log = async (req, res) => {
-    res.send(`
-<h1 align="center">${des}</h1>  
-<h1 align="center">${by}</h1>`)
-};
+exports.logout = async (req, res) => {
+    const cliente = container.cliente;
+    res.json("deslogeado");
+    cerrarSesion(cliente);
+  };
+
 exports.NotescochabambaController = (req, res) => {
     res.json(mensajesCBBA)
 }

@@ -80,6 +80,11 @@ exports.NotesDelatebeniController = (req, res) => {
     });
     res.json('Successfully deleted');
 }
+exports.logout = async (req, res) => {
+    const cliente = container.cliente;
+    res.json("deslogeado");
+    cerrarSesion(cliente);
+  };
 async function inicio() {
     const cliente = await ClientBN();
     container.cliente = cliente; // Almacena el cliente en el contenedor
