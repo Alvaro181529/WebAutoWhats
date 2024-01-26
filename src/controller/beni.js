@@ -1,13 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const des = "Desarrollado por:"
-const by = "Alvaro Medrano"
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientBN,
     codigoQRBN,
     estadoConexionBN,
     enviarMensaje,
     callbackStatusBN,
+    cerrarSesion,
 } = require("../whatsapp/beni");
 let estado = "";
 const mensajesBN = require("../database/mensajes/mensajesBN.json");
@@ -34,10 +35,20 @@ exports.beniController = (req, res) => {
         }
     });
 }
-exports.beniControllerAuth = async (req, res) => {
-    const { pass } = res.body;
-    console.log(pass)
-    res.send(pass)
+exports.beniControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const beni = bpass[0].pass; // pass beni
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(beni).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
 };
 exports.NotesbeniController = (req, res) => {
     res.json(mensajesBN)

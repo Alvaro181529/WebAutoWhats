@@ -1,10 +1,11 @@
 
 const { Router } = require("express");
-const { lapazController, NoteslapazController, NotesCreatelapazController, NotesUpdatelapazController, NotesDelatelapazController ,logout } = require("../controller/lapaz")
+const { lapazController, NoteslapazController, NotesCreatelapazController, NotesUpdatelapazController, NotesDelatelapazController ,logout, lapazControllerAuth  } = require("../controller/lapaz")
 const router = Router();
 
 // rutas
 router.get("/lapaz", lapazController);
+router.post("/lapaz/auth", lapazControllerAuth);
 router.get("/lapaz/logout", logout);
 router.get("/lapaz/notes", NoteslapazController);
 router.post("/lapaz/notes", NotesCreatelapazController);

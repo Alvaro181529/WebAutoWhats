@@ -14,6 +14,7 @@ const urlBN = require("./routes/beni")
 const urlPT = require("./routes/potosi")
 const urlSR = require("./routes/sucre")
 const urlPN = require("./routes/pando")
+const urlADM = require("./routes/admin")
 
 const sockets = require("./sockets/sockets")
 
@@ -31,6 +32,7 @@ app.use(express.json());
 sockets(io)
 
 app.use("/dashboard", express.static(path.join(__dirname, 'city')));//lp md5
+app.use("/admin", express.static(path.join(__dirname, 'city/admin')));//lp md5
 app.use("/351325a660b25474456af5c9a5606c4e", express.static(path.join(__dirname, 'city/lapaz')));//lp md5
 app.use("/e81c4e4f2b7b93b481e13a8553c2ae1b", express.static(path.join(__dirname, 'city/oruro')));//or md5
 app.use("/d54185b71f614c30a396ac4bc44d3269", express.static(path.join(__dirname, 'city/santacruz')));//sc
@@ -50,6 +52,7 @@ app.use(urlBN)
 app.use(urlPT)
 app.use(urlSR)
 app.use(urlPN)
+app.use(urlADM)
 
 server.listen(app.get('port'));
 console.log(`servidor encendido ${app.get('appName')}`)

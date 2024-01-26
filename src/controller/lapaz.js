@@ -1,7 +1,8 @@
 const qrcode = require("qrcode");
-const cron = require("node-cron");
-const { fs } = require("fs").promises;
-const { rimraf } = require("rimraf");
+const cron = require("node-cron")
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
+
 const {
   ClientLP,
   codigoQRLPZ,
@@ -13,7 +14,6 @@ const {
 let estado = "";
 const mensajesLP = require("../database/mensajes/mensajesLP.json");
 const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
-const path = require("path");
 const container = {
   cliente: null,
 };
@@ -36,6 +36,21 @@ exports.lapazController = (req, res) => {
     }
   });
 };
+exports.lapazControllerAuth = (req, res) => {
+  const { pass } = req.body;
+  const admin = bpass[9].pass;
+  const lapaz = bpass[2].pass; // pass beni
+  const passwordAdm = CryptoJS.MD5(admin).toString();
+  const password = CryptoJS.MD5(lapaz).toString();
+  const auth = CryptoJS.MD5(pass).toString();
+  if (auth === password) {
+    res.send("pass");
+  } else if (auth === passwordAdm) {
+    res.send("adm");
+  } else {
+    res.send("incorrecto");
+  }
+}
 exports.logout = async (req, res) => {
   const cliente = container.cliente;
   res.json("deslogeado");

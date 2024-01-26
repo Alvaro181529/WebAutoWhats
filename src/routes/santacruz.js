@@ -1,10 +1,11 @@
 
 const { Router } = require("express");
-const { santacruzController, NotessantacruzController, NotesCreatesantacruzController, NotesUpdatesantacruzController, NotesDelatesantacruzController,logout } = require("../controller/santacruz")
+const { santacruzController, NotessantacruzController, NotesCreatesantacruzController, NotesUpdatesantacruzController, NotesDelatesantacruzController,logout, santacruzControllerAuth } = require("../controller/santacruz")
 const router = Router();
 
 // rutas
 router.get("/santacruz", santacruzController);
+router.post("/santacruz/auth", santacruzControllerAuth);
 router.get("/santacruz/logout", logout);
 router.get("/santacruz/notes", NotessantacruzController);
 router.post("/santacruz/notes", NotesCreatesantacruzController);

@@ -1,12 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const fs = require("fs/promises")
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientOR,
     codigoQROR,
     estadoConexionOR,
     enviarMensaje,
     callbackStatusOR,
+    cerrarSesion,
 } = require("../whatsapp/oruro");
 let estado = "";
 const mensajesOR = require("../database/mensajes/mensajesOR.json");
@@ -14,6 +16,21 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+exports.oruroControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const oruro = bpass[3].pass; // pass beni
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(oruro).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+      res.send("pass");
+    } else if (auth === passwordAdm) {
+      res.send("adm");
+    } else {
+      res.send("incorrecto");
+    }
+  }
 exports.oruroController = (req, res) => {
     inicio();
     const codigo = codigoQROR();
@@ -33,7 +50,9 @@ exports.oruroController = (req, res) => {
     });
 }
 exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
+    const cliente = container.cliente;
+  res.json("deslogeado");
+  cerrarSesion(cliente);
 };
 exports.NotesoruroController = (req, res) => {
     res.json(mensajesOR)
@@ -68,11 +87,7 @@ exports.NotesDelateoruroController = (req, res) => {
     });
     res.json('Successfully deleted');
 }
-exports.logout = async (req, res) => {
-    const cliente = container.cliente;
-    res.json("deslogeado");
-    cerrarSesion(cliente);
-  };
+
 async function inicio() {
     const cliente = await ClientOR();
     container.cliente = cliente; // Almacena el cliente en el contenedor

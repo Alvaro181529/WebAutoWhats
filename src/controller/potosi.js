@@ -1,11 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientPT,
     codigoQRPT,
     estadoConexionPT,
     enviarMensaje,
     callbackStatusPT,
+    cerrarSesion,
 } = require("../whatsapp/potosi");
 let estado = "";
 const mensajesPT = require("../database/mensajes/mensajesPT.json");
@@ -13,6 +16,21 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+exports.potosiControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const potosi = bpass[5].pass; // pass potosi
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(potosi).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.potosiController = (req, res) => {
     inicio();
     const codigo = codigoQRPT();
@@ -32,7 +50,9 @@ exports.potosiController = (req, res) => {
     });
 }
 exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
+    const cliente = container.cliente;
+    res.json("deslogeado");
+    cerrarSesion(cliente);
 };
 exports.NotespotosiController = (req, res) => {
     res.json(mensajesPT)
@@ -67,11 +87,7 @@ exports.NotesDelatepotosiController = (req, res) => {
     });
     res.json('Successfully deleted');
 }
-exports.logout = async (req, res) => {
-    const cliente = container.cliente;
-    res.json("deslogeado");
-    cerrarSesion(cliente);
-  };
+
 async function inicio() {
     const cliente = await ClientPT();
     container.cliente = cliente; // Almacena el cliente en el contenedor

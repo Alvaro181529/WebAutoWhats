@@ -1,10 +1,11 @@
 
 const { Router } = require("express");
-const { sucreController, NotessucreController, NotesCreatesucreController, NotesUpdatesucreController, NotesDelatesucreController,logout } = require("../controller/sucre")
+const { sucreController, NotessucreController, NotesCreatesucreController, NotesUpdatesucreController, NotesDelatesucreController,logout,sucreControllerAuth } = require("../controller/sucre")
 const router = Router();
 
 // rutas
 router.get("/sucre", sucreController);
+router.post("/sucre/auth", sucreControllerAuth);
 router.get("/sucre/logout", logout);
 router.get("/sucre/notes", NotessucreController);
 router.post("/sucre/notes", NotesCreatesucreController);

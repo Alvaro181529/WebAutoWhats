@@ -1,11 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientPN,
     codigoQRPN,
     estadoConexionPN,
     enviarMensaje,
     callbackStatusPN,
+    cerrarSesion
 } = require("../whatsapp/pando");
 let estado = "";
 const mensajesPN = require("../database/mensajes/mensajesPN.json");
@@ -13,6 +16,21 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+exports.pandoControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const pando = bpass[4].pass; // pass beni
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(pando).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.pandoController = (req, res) => {
     inicio();
     const codigo = codigoQRPN();
@@ -32,7 +50,9 @@ exports.pandoController = (req, res) => {
     });
 }
 exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
+    const cliente = container.cliente;
+    res.json("deslogeado");
+    cerrarSesion(cliente);
 };
 exports.NotespandoController = (req, res) => {
     res.json(mensajesPN)
@@ -67,11 +87,7 @@ exports.NotesDelatepandoController = (req, res) => {
     });
     res.json('Successfully deleted');
 }
-exports.logout = async (req, res) => {
-    const cliente = container.cliente;
-    res.json("deslogeado");
-    cerrarSesion(cliente);
-  };
+
 async function inicio() {
     const cliente = await ClientPN();
     container.cliente = cliente; // Almacena el cliente en el contenedor

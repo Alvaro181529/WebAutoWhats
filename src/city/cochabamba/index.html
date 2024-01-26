@@ -22,20 +22,23 @@
 
 <body class="container-fluid mt-3">
     <div id="overlay">
-        <div id="login-container" class="row">
-            <label for="password" class="col-sm-3 col-form-label">Contraseña:</label>
-            <div class="col-sm-6">
-                <input type="password" class="form-control" id="password" autofocus>
+        <form class="row" id="getPass" method="post">
+            <div id="login-container" class="row">
+                <label for="password" class="col-sm-3 col-form-label">Contraseña:</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" id="password" autofocus>
+                </div>
+                <div class="col-sm-3">
+                    <button id="ingresar" class="btn btn-primary btn-sm" style="padding: 10%;">Ingresar</button>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <button id="ingresar" class="btn btn-primary btn-sm" style="padding: 10%;">Ingresar</button>
-            </div>
-        </div>
+        </form>
     </div>
     <div id="content-container">
         <main class="row">
             <div class="col-3" align="center">
                 <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
+                <input type="button" hidden class="estado btn btn-danger" value="Salir" id="salir">
                 <br>
                 <img id="qr"></img>
             </div>

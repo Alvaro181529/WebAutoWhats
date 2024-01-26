@@ -1,10 +1,11 @@
 
 const { Router } = require("express");
-const { potosiController, NotespotosiController, NotesCreatepotosiController, NotesUpdatepotosiController, NotesDelatepotosiController,logout } = require("../controller/potosi")
+const { potosiController, NotespotosiController, NotesCreatepotosiController, NotesUpdatepotosiController, NotesDelatepotosiController,logout, potosiControllerAuth } = require("../controller/potosi")
 const router = Router();
 
 // rutas
 router.get("/potosi", potosiController);
+router.post("/potosi/auth", potosiControllerAuth);
 router.get("/potosi/logout", logout);
 router.get("/potosi/notes", NotespotosiController);
 router.post("/potosi/notes", NotesCreatepotosiController);

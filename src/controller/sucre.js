@@ -1,11 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientSR,
     codigoQRSR,
     estadoConexionSR,
     enviarMensaje,
     callbackStatusSR,
+    cerrarSesion
 } = require("../whatsapp/sucre");
 let estado = "";
 const mensajesSR = require("../database/mensajes/mensajesSR.json");
@@ -31,9 +34,21 @@ exports.sucreController = (req, res) => {
         }
     });
 }
-exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
-};
+exports.sucreControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const sucre = bpass[7].pass; // pass sucre
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(sucre).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.NotessucreController = (req, res) => {
     res.json(mensajesSR)
 }

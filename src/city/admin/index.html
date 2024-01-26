@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script defer src="../socket.io/socket.io.js"></script>
@@ -16,9 +16,11 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"
+        integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="index.js"></script>
     <link rel="stylesheet" href="index.css">
-
 </head>
 
 <body class="container-fluid mt-3">
@@ -36,47 +38,28 @@
         </form>
     </div>
     <div id="content-container">
+        <button type="button" hidden class="btn btn-secondary mb-4" align="center" id="getMensajes">Ver
+            Usuarios</button>
 
         <main class="row">
-            <div class="col-3" align="center">
-                <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
-                <input type="button" hidden class="estado btn btn-danger" value="Salir" id="salir">
-                <br>
-                <img id="qr"></img>
+            <div class="col-2">
             </div>
-            <div class="col-9">
-                <div class="row">
-                    <div class="col-6">
-                        <form class="row" id="noteForm" method="post">
-                            <div class="col-auto">
-                                <input type="text" placeholder="Frase" class="form-control" id="mensajes">
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-3">
-                        <h3>Oruro</h3>
-                    </div>
-                    <div class="col-3">
-                        <button type="button" class="btn btn-secondary" id="getMensajes">Ver mensajes</button>
-                    </div>
-                </div>
-                <br>
-
-                <table class="table table-hover">
+            <div class="col-8">
+                <table class="table table-hover table-striped">
                     <thead align="center">
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Actions</th>
+                            <th>CIUDAD</th>
+                            <th>CONTRASEÑA</th>
+                            <th>ACCION</th>
                         </tr>
                     </thead>
                     <tbody align="center"></tbody>
                 </table>
             </div>
-            <!-- <div class="col-2"></div> -->
+            <div class="col-2">
+                <a class="btn btn-primary" href="/dashboard">Dashboard</a>
+            </div>
         </main>
         <footer align="center">
             <h5 id="marca">by Alvaro Medrano</h5>

@@ -3,6 +3,35 @@ socket.on('connect', () => {
   console.log('Conectado al servidor de Socket.IO');
 })
 $(function () {
+  $("#getPass").on("submit", function (e) {
+    e.preventDefault();
+    let pass = $("#password")
+    $.ajax({
+      url: "/tarija/auth",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ pass: pass.val() }),
+      success: function (resp) {
+        switch (resp) {
+          case "adm":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            var inputSalir = document.getElementById('salir');
+            inputSalir.removeAttribute('hidden');
+            break;
+          case "pass":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            break;
+          default:
+            alert("contraseña incorrecta")
+            break;
+        }
+      }
+    })
+  })
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/tarija",
@@ -30,14 +59,14 @@ $(function () {
     });
   });
   // no se ouede usar ocurren errores
-  // $("#salir").on("click", function () {
-  //   $.ajax({
-  //     url: "/tarija/logout",
-  //     success: async function () {
-  //       console.log("LOGOUT ")
-  //     }
-  //   });
-  // }),
+  $("#salir").on("click", function () {
+    $.ajax({
+      url: "/tarija/logout",
+      success: async function () {
+        console.log("LOGOUT ")
+      }
+    });
+  }),
 
   $("#getMensajes").on("click", function () {
     $.ajax({

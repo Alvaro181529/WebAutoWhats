@@ -2,28 +2,37 @@ const socket = io();
 socket.on('connect', () => {
   console.log('Conectado al servidor de Socket.IO');
 })
-document.getElementById('ingresar').addEventListener('click', function () {
-  var inputPassword = document.getElementById('password').value;
-
-  // Hash MD5 de la contraseña ingresada
-  var hashedPassword = CryptoJS.MD5(inputPassword).toString();
-
-  // Reemplaza 'hash-md5-de-tu-contraseña' con el hash MD5 correcto de tu contraseña
-  var storedPasswordHash = 'f55b3add9532941486440fe11f75a1e7';
-
-  // Reemplaza 'tu-contraseña' con la contraseña que desees
-  if (hashedPassword === storedPasswordHash) {
-    document.getElementById('overlay').style.display = 'none';
-
-    // Quitar el efecto borroso
-    document.getElementById('content-container').style.filter = 'none';
-    document.getElementById('content-container').style.display = 'block';
-  } else {
-    alert('Contraseña incorrecta. Inténtalo de nuevo.');
-  }
-});
 
 $(function () {
+  $("#getPass").on("submit", function (e) {
+    e.preventDefault();
+    let pass = $("#password")
+    $.ajax({
+      url: "/lapaz/auth",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ pass: pass.val() }),
+      success: function (resp) {
+        switch (resp) {
+          case "adm":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            var inputSalir = document.getElementById('salir');
+            inputSalir.removeAttribute('hidden');
+            break;
+          case "pass":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            break;
+          default:
+            alert("contraseña incorrecta")
+            break;
+        }
+      }
+    })
+  })
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/lapaz",
@@ -60,14 +69,14 @@ $(function () {
     });
   }),
 
-  $("#getMensajes").on("click", function () {
-    $.ajax({
-      url: "/lapaz/notes",
-      success: function (mensajesLP) {
-        let tbody = $('tbody');
-        tbody.html('');
-        mensajesLP.forEach(mensajesL => {
-          tbody.append(`
+    $("#getMensajes").on("click", function () {
+      $.ajax({
+        url: "/lapaz/notes",
+        success: function (mensajesLP) {
+          let tbody = $('tbody');
+          tbody.html('');
+          mensajesLP.forEach(mensajesL => {
+            tbody.append(`
                     <tr>
                     <td class="id">${mensajesL.id}</td>
                         <td>
@@ -79,10 +88,10 @@ $(function () {
                         </td>
                     </tr>
                 `);
-        });
-      }
+          });
+        }
+      });
     });
-  });
 
   $("#noteForm").on("submit", function (e) {
     e.preventDefault();

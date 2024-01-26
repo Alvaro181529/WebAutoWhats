@@ -31,9 +31,21 @@ exports.tarijaController = (req, res) => {
         }
     });
 }
-exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
-};
+exports.tarijaControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const tarija = bpass[8].pass; // pass tarija
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(tarija).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.NotestarijaController = (req, res) => {
     res.json(mensajesTJ)
 }
@@ -110,7 +122,7 @@ function envio(contacto, id) {
             }
             descripcion = "El número es correcto.";
             enviados++;
-            // enviarMensaje(cliente, numero, mensaje);
+            enviarMensaje(cliente, numero, mensaje);
 
         } else {
             estado = "No enviado"
@@ -123,7 +135,7 @@ function envio(contacto, id) {
         rechazados++;
     }
     console.log(`ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`)
-    // guardarMensajes(estado, mensaje, descripcion, id);
+    guardarMensajes(estado, mensaje, descripcion, id);
 }
 
 async function comprobacion() {

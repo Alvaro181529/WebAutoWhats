@@ -5,7 +5,7 @@ const router = Router();
 
 // rutas
 router.get("/beni", beniController);
-router.get("/beni/auth", beniControllerAuth);
+router.post("/beni/auth", beniControllerAuth);
 router.get("/beni/logout", logout);
 router.get("/beni/notes", NotesbeniController);
 router.post("/beni/notes", NotesCreatebeniController);

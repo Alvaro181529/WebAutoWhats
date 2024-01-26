@@ -1,5 +1,6 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const CryptoJS = require("crypto-js")
 
 const {
     ClientCBBA,
@@ -7,9 +8,11 @@ const {
     estadoConexionCBBA,
     enviarMensaje,
     callbackStatusCBBA,
+    cerrarSesion
 } = require("../whatsapp/cochabamba");
 let estado = "";
 const mensajesCBBA = require("../database/mensajes/mensajesCBBA.json");
+const bpass = require("../database/mensajes/bpass.json");
 const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
@@ -33,11 +36,26 @@ exports.cochabambaController = (req, res) => {
         }
     });
 }
+exports.cochabambaControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const cochabamba = bpass[1].pass; // pass beni
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(cochabamba).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.logout = async (req, res) => {
     const cliente = container.cliente;
     res.json("deslogeado");
     cerrarSesion(cliente);
-  };
+};
 
 exports.NotescochabambaController = (req, res) => {
     res.json(mensajesCBBA)
@@ -111,7 +129,7 @@ function envio(contacto, id) {
             descripcion = "El número es correcto.";
             enviados++;
 
-                enviarMensaje(cliente, numero, mensaje);
+            enviarMensaje(cliente, numero, mensaje);
         } else {
             estado = "No enviado"
             descripcion = "El número es incorrecto.";

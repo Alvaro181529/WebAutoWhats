@@ -1,10 +1,11 @@
 
 const { Router } = require("express");
-const { oruroController, NotesoruroController, NotesCreateoruroController, NotesUpdateoruroController, NotesDelateoruroController,logout } = require("../controller/oruro")
+const { oruroController, NotesoruroController, NotesCreateoruroController, NotesUpdateoruroController, NotesDelateoruroController, logout, oruroControllerAuth } = require("../controller/oruro")
 const router = Router();
 
 // rutas
 router.get("/oruro", oruroController);
+router.post("/oruro/auth", oruroControllerAuth);
 router.get("/oruro/logout", logout);
 router.get("/oruro/notes", NotesoruroController);
 router.post("/oruro/notes", NotesCreateoruroController);

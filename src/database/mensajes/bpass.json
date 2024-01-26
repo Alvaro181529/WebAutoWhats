@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "city": "BENI",
+        "pass": "agbc2024beni"
+    },
+    {
+        "id": 2,
+        "city": "COCHABAMBA",
+        "pass": "agbc2024cochabamba"
+    },
+    {
+        "id": 3,
+        "city": "LA PAZ",
+        "pass": "agbc2024lapaz"
+    },
+    {
+        "id": 4,
+        "city": "ORURO",
+        "pass": "agbc2024oruro"
+    },
+    {
+        "id": 5,
+        "city": "PANDO",
+        "pass": "agbc2024pando"
+    },
+    {
+        "id": 6,
+        "city": "POTOSI",
+        "pass": "agbc2024potosi"
+    },
+    {
+        "id": 7,
+        "city": "SANTA CRUZ",
+        "pass": "agbc2024santacruz"
+    },
+    {
+        "id": 8,
+        "city": "SUCRE",
+        "pass": "agbc2024sucre"
+    },
+    {
+        "id": 9,
+        "city": "TARIJA",
+        "pass": "agbc2024tarija"
+    },
+    {
+        "id": 10,
+        "city": "ADMIN",
+        "pass": "agbc2024admin"
+    },
+    {
+        "id": 11,
+        "city": "ADMINPAGE",
+        "pass": "agbc2024adminpage"
+    }
+]

@@ -1,11 +1,14 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const CryptoJS = require("crypto-js")
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientSC,
     codigoQRSC,
     estadoConexionSC,
     enviarMensaje,
     callbackStatusSC,
+    cerrarSesion,
 } = require("../whatsapp/santacruz");
 let estado = "";
 const mensajesSC = require("../database/mensajes/mensajesSC.json");
@@ -13,6 +16,21 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+exports.santacruzControllerAuth = (req, res) => {
+    const { pass } = req.body;
+    const admin = bpass[9].pass;
+    const santacruz = bpass[6].pass; // pass potosi
+    const passwordAdm = CryptoJS.MD5(admin).toString();
+    const password = CryptoJS.MD5(santacruz).toString();
+    const auth = CryptoJS.MD5(pass).toString();
+    if (auth === password) {
+        res.send("pass");
+    } else if (auth === passwordAdm) {
+        res.send("adm");
+    } else {
+        res.send("incorrecto");
+    }
+}
 exports.santacruzController = (req, res) => {
     inicio();
     const codigo = codigoQRSC();
@@ -32,7 +50,9 @@ exports.santacruzController = (req, res) => {
     });
 }
 exports.logout = async (req, res) => {
-    //no se puede ejecutar hay errores
+    const cliente = container.cliente;
+    res.json("deslogeado");
+    cerrarSesion(cliente);
 };
 exports.NotessantacruzController = (req, res) => {
     res.json(mensajesSC)
@@ -67,11 +87,7 @@ exports.NotesDelatesantacruzController = (req, res) => {
     });
     res.json('Successfully deleted');
 }
-exports.logout = async (req, res) => {
-    const cliente = container.cliente;
-    res.json("deslogeado");
-    cerrarSesion(cliente);
-  };
+
 async function inicio() {
     const cliente = await ClientSC();
     container.cliente = cliente; // Almacena el cliente en el contenedor

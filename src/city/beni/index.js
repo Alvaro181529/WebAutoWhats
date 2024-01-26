@@ -3,7 +3,35 @@ socket.on('connect', () => {
   console.log('Conectado al servidor de Socket.IO');
 })
 $(function () {
-  $('')
+  $("#getPass").on("submit", function (e) {
+    e.preventDefault();
+    let pass = $("#password")
+    $.ajax({
+      url: "/beni/auth",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ pass: pass.val() }),
+      success: function (resp) {
+        switch (resp) {
+          case "adm":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            var inputSalir = document.getElementById('salir');
+            inputSalir.removeAttribute('hidden');
+            break;
+          case "pass":
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('content-container').style.filter = 'none';
+            document.getElementById('content-container').style.display = 'block';
+            break;
+          default:
+            alert("contraseña incorrecta")
+            break;
+        }
+      }
+    })
+  })
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/beni",
@@ -38,15 +66,14 @@ $(function () {
       }
     });
   }),
-
-  $("#getMensajes").on("click", function () {
-    $.ajax({
-      url: "/beni/notes",
-      success: function (mensajesLP) {
-        let tbody = $('tbody');
-        tbody.html('');
-        mensajesLP.forEach(mensajesL => {
-          tbody.append(`
+    $("#getMensajes").on("click", function () {
+      $.ajax({
+        url: "/beni/notes",
+        success: function (mensajesLP) {
+          let tbody = $('tbody');
+          tbody.html('');
+          mensajesLP.forEach(mensajesL => {
+            tbody.append(`
                     <tr>
                     <td class="id">${mensajesL.id}</td>
                         <td>
@@ -58,11 +85,10 @@ $(function () {
                         </td>
                     </tr>
                 `);
-        });
-      }
+          });
+        }
+      });
     });
-  });
-
   $("#noteForm").on("submit", function (e) {
     e.preventDefault();
     let mensajes = $("#mensajes")
@@ -71,7 +97,8 @@ $(function () {
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensajes.val() }),
-      success: function (response) {
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     })
@@ -87,7 +114,7 @@ $(function () {
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensaje }),
       success: function (response) {
-        console.log(response);
+        alert(response);
         $("#getMensajes").click()
       }
     });
@@ -99,7 +126,7 @@ $(function () {
       url: "/beni/notes/" + id,
       method: 'DELETE',
       success: function (response) {
-        console.log(response)
+        alert(response)
         $('#getMensajes').click();
       }
     });
