@@ -17,60 +17,67 @@
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
     <script defer src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body class="container-fluid mt-3">
-    <main class="row">
-        <div class="col-3" align="center">
-            <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
-            <br>
-            <img id="qr"></img>
-        </div>
-        <div class="col-9">
-            <div class="row">
-                <div class="col-6">
-                    <form class="row" id="noteForm" method="post">
-                        <div class="col-auto">
-                            <input type="text" placeholder="Frase" class="form-control" id="mensajes">
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-3">
-                    <h3>Beni</h3>
-                </div>
-                <div class="col-3">
-                    <button type="button" class="btn btn-secondary" id="getMensajes">Ver mensajes</button>
-                </div>
+    <div id="overlay">
+        <div id="login-container" class="row">
+            <label for="password" class="col-sm-3 col-form-label">Contraseña:</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="password" autofocus>
             </div>
-            <br>
-
-            <table class="table table-hover">
-                <thead align="center">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody align="center"></tbody>
-            </table>
+            <div class="col-sm-3">
+                <button id="ingresar" class="btn btn-primary btn-sm" style="padding: 10%;">Ingresar</button>
+            </div>
         </div>
-        <!-- <div class="col-2"></div> -->
-    </main>
-    <footer align="center">
-        <h5 id="marca">by Alvaro Medrano</h5>
-        <style>
-            #marca {
-                color: rgba(255, 255, 255, 0.4);
-                /* Fondo blanco con 50% de opacidad */
-                padding: 10px;
-                /* Espaciado interno para mayor visibilidad */
-            }
-        </style>
-    </footer>
+    </div>
+    <div id="content-container">
+        <main class="row">
+            <div class="col-3" align="center">
+                <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
+                <input type="button" class="estado btn btn-dark" value="Salir" id="salir">
+                <br>
+                <img id="qr"></img>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6">
+                        <form class="row" id="noteForm" method="post">
+                            <div class="col-auto">
+                                <input type="text" placeholder="Frase" class="form-control" id="mensajes">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-3">
+                        <h3>Beni</h3>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-secondary" id="getMensajes">Ver mensajes</button>
+                    </div>
+                </div>
+                <br>
+
+                <table class="table table-hover">
+                    <thead align="center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody align="center"></tbody>
+                </table>
+            </div>
+            <!-- <div class="col-2"></div> -->
+        </main>
+        <footer align="center">
+            <h5 id="marca">by Alvaro Medrano</h5>
+        </footer>
+    </div>
 </body>
 
 </html>

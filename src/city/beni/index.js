@@ -3,6 +3,7 @@ socket.on('connect', () => {
   console.log('Conectado al servidor de Socket.IO');
 })
 $(function () {
+  $('')
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/beni",
@@ -29,15 +30,14 @@ $(function () {
       },
     });
   });
-  // no se ouede usar ocurren errores
-  // $("#salir").on("click", function () {
-  //   $.ajax({
-  //     url: "/beni/logout",
-  //     success: async function () {
-  //       console.log("LOGOUT ")
-  //     }
-  //   });
-  // }),
+  $("#salir").on("click", function () {
+    $.ajax({
+      url: "/beni/logout",
+      success: async function () {
+        console.log("LOGOUT ")
+      }
+    });
+  }),
 
   $("#getMensajes").on("click", function () {
     $.ajax({

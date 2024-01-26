@@ -1,11 +1,11 @@
 
 const { Router } = require("express");
-const { beniController, log, NotesbeniController, NotesCreatebeniController, NotesUpdatebeniController, NotesDelatebeniController,logout } = require("../controller/beni")
+const { beniController, NotesbeniController, NotesCreatebeniController, NotesUpdatebeniController, NotesDelatebeniController,logout, beniControllerAuth } = require("../controller/beni")
 const router = Router();
 
 // rutas
 router.get("/beni", beniController);
-router.get("/admin",log );
+router.get("/beni/auth", beniControllerAuth);
 router.get("/beni/logout", logout);
 router.get("/beni/notes", NotesbeniController);
 router.post("/beni/notes", NotesCreatebeniController);

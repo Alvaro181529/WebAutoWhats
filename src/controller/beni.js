@@ -34,18 +34,10 @@ exports.beniController = (req, res) => {
         }
     });
 }
-exports.log = async (req, res) => {
-    res.send(`
-    <style>
-    #marca {
-        color: rgba(255, 255, 255, 0.4);
-        /* Fondo blanco con 50% de opacidad */
-        padding: 10px;
-        /* Espaciado interno para mayor visibilidad */
-    }
-</style>
-<h1 id="marca" align="center">${des}</h1>  
-<h1 id="marca" align="center">${by}</h1>`)
+exports.beniControllerAuth = async (req, res) => {
+    const { pass } = res.body;
+    console.log(pass)
+    res.send(pass)
 };
 exports.NotesbeniController = (req, res) => {
     res.json(mensajesBN)
@@ -84,7 +76,7 @@ exports.logout = async (req, res) => {
     const cliente = container.cliente;
     res.json("deslogeado");
     cerrarSesion(cliente);
-  };
+};
 async function inicio() {
     const cliente = await ClientBN();
     container.cliente = cliente; // Almacena el cliente en el contenedor
