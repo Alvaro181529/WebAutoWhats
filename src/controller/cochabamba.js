@@ -8,7 +8,8 @@ const {
     estadoConexionCBBA,
     enviarMensaje,
     callbackStatusCBBA,
-    cerrarSesion
+    cerrarSesion,
+    contactoCBBA,
 } = require("../whatsapp/cochabamba");
 let estado = "";
 const mensajesCBBA = require("../database/mensajes/mensajesCBBA.json");
@@ -19,10 +20,11 @@ const container = {
 };
 exports.cochabambaController = (req, res) => {
     const codigo = codigoQRCBBA();
+    const contacto = contactoCBBA();
     estado = estadoConexionCBBA();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo,contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', async () => {
                     comprobacion();
@@ -146,6 +148,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'COCHABAMBA' AND ESTADO = 'VENTANILLA';";

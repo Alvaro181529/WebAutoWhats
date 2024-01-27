@@ -3,7 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRpando = "";
 let estadoPando = "";
 let statusPando = "";
-
+let contacto="";
 async function ClientPN() {
   const pando = new Client({
     authStrategy: new LocalAuth({ clientId: "pando" }),
@@ -16,6 +16,9 @@ async function ClientPN() {
   pando.on("ready", () => {
     console.log("Client is ready!");
     estadoPando = "conectado";
+    const user = pando.info.me.user
+    contacto = user.slice(-8);
+
   });
   pando.on("message_ack", (msg, ack) => {
     statusPando = ack;
@@ -33,6 +36,9 @@ function estadoConexionPN() {
 function callbackStatusPN() {
   return statusPando;
 }
+function contactoPN() {
+  return contacto;
+}
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
     const resultado = await cliente.sendMessage(numero, mensaje);
@@ -47,4 +53,4 @@ async function cerrarSesion(cliente){
   await cliente.logout();
 
 }
-module.exports = { ClientPN, codigoQRPN, estadoConexionPN, enviarMensaje, callbackStatusPN ,cerrarSesion};
+module.exports = { ClientPN,contactoPN, codigoQRPN, estadoConexionPN, enviarMensaje, callbackStatusPN ,cerrarSesion};

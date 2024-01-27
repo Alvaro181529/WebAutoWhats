@@ -6,6 +6,7 @@ const {
     estadoConexionTJ,
     enviarMensaje,
     callbackStatusTJ,
+    contactoTJ,
 } = require("../whatsapp/tarija");
 let estado = "";
 const mensajesTJ = require("../database/mensajes/mensajesTJ.json");
@@ -14,16 +15,18 @@ const container = {
     cliente: null,
 };
 exports.tarijaController = (req, res) => {
-    inicio();
     const codigo = codigoQRTJ();
+    const contacto = contactoTJ();
     estado = estadoConexionTJ();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', () => {
                     comprobacion();
                 })
+            } else {
+                inicio();
             }
             res.json(lp);
         } catch (error) {
@@ -139,6 +142,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'TARIJA' AND ESTADO = 'VENTANILLA';";

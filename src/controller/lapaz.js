@@ -10,6 +10,7 @@ const {
   enviarMensaje,
   callbackStatusLPZ,
   cerrarSesion,
+  contactoLPZ,
 } = require("../whatsapp/lapaz");
 let estado = "";
 const mensajesLP = require("../database/mensajes/mensajesLP.json");
@@ -19,10 +20,11 @@ const container = {
 };
 exports.lapazController = (req, res) => {
   const codigo = codigoQRLPZ();
+  const contacto = contactoLPZ();
   estado = estadoConexionLPZ();
   qrcode.toDataURL(codigo, (err, src) => {
     try {
-      const lpl = [{ estado, codigo, code: src }];
+      const lpl = [{ estado, codigo,contacto, code: src }];
       if (estado == "conectado") {
         cron.schedule("*/1 * * * *", () => {
           comprobacion();
@@ -148,6 +150,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+  let i = 0
+  let j = 0
+
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const menQuery = "SELECT * FROM mensajes";
   const packQuery =

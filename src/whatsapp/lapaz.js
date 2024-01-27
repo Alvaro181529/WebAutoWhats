@@ -3,7 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRlapaz = "";
 let estadoLapaz = "";
 let statusLapaz = "";
-
+let contacto ="";
 async function ClientLP() {
  const lapaz = new Client({
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
@@ -16,6 +16,9 @@ async function ClientLP() {
   lapaz.on("ready", () => {
     console.log("Client is ready!");
     estadoLapaz = "conectado";
+    const user = lapaz.info.me.user
+    contacto = user.slice(-8);
+
   });
   lapaz.on("message_ack", (msg, ack) => {
     statusLapaz = ack;
@@ -32,6 +35,8 @@ function estadoConexionLPZ() {
 }
 function callbackStatusLPZ() {
   return statusLapaz;
+}function contactoLPZ() {
+  return contacto;
 }
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
@@ -47,5 +52,5 @@ async function cerrarSesion(cliente){
   await cliente.logout();
 
 }
-module.exports = { ClientLP, codigoQRLPZ, estadoConexionLPZ, enviarMensaje, callbackStatusLPZ, cerrarSesion };
+module.exports = { ClientLP,contactoLPZ, codigoQRLPZ, estadoConexionLPZ, enviarMensaje, callbackStatusLPZ, cerrarSesion };
  

@@ -3,6 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRbeni = "";
 let estadoBeni = "";
 let statusBeni = "";
+let contacto = "";
 
 async function ClientBN() {
   const beni = new Client({
@@ -16,6 +17,9 @@ async function ClientBN() {
   beni.on("ready", () => {
     console.log("Client is ready!");
     estadoBeni = "conectado";
+    const user = beni.info.me.user
+    contacto = user.slice(-8);
+
   });
   beni.on("message_ack", (msg, ack) => {
     statusBeni = ack;
@@ -33,6 +37,9 @@ function estadoConexionBN() {
 function callbackStatusBN() {
   return statusBeni;
 }
+function contactoBN() {
+  return contacto;
+}
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
     const resultado = await cliente.sendMessage(numero, mensaje);
@@ -42,9 +49,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-async function cerrarSesion(cliente){
+async function cerrarSesion(cliente) {
 
   await cliente.logout();
 
 }
-module.exports = { ClientBN, codigoQRBN, estadoConexionBN, enviarMensaje, callbackStatusBN ,cerrarSesion};
+module.exports = { ClientBN,contactoBN, codigoQRBN, estadoConexionBN, enviarMensaje, callbackStatusBN, cerrarSesion };

@@ -31,13 +31,14 @@ $(function () {
         }
       }
     })
-  })
+  });
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/beni",
       success: async function (lp) {
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
+          // console.log(lps)
           $("#inicio").attr("value", "Conectando . . .");
           if (lps.code === undefined) {
             imgQR.attr("src", "https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"); // Update the image source
@@ -50,9 +51,11 @@ $(function () {
             $("#inicio").attr("class", "btn btn-success");
             $("#inicio").attr("value", "Conectado");
             $("#inicio").prop("disabled", true);
+            document.getElementById('contacto').innerHTML = lps.contacto;
             imgQR.attr("src", "https://icones.pro/wp-content/uploads/2021/04/icone-noire-vert.png"); // Update the image source
             imgQR.attr("width", "250"); // Update the image source
             imgQR.attr("height", "250"); // Update the image source
+            document.getElementById('texto').removeAttribute('hidden');
           } else {
             await new Promise((resolve) => setTimeout(resolve, 30000));
             $("#inicio").click();
@@ -68,30 +71,30 @@ $(function () {
         console.log("LOGOUT ")
       }
     });
-  }),
-    $("#getMensajes").on("click", function () {
-      $.ajax({
-        url: "/beni/notes",
-        success: function (mensajesLP) {
-          let tbody = $('tbody');
-          tbody.html('');
-          mensajesLP.forEach(mensajesL => {
-            tbody.append(`
+  });
+  $("#getMensajes").on("click", function () {
+    $.ajax({
+      url: "/beni/notes",
+      success: function (mensajesLP) {
+        let tbody = $('tbody');
+        tbody.html('');
+        mensajesLP.forEach(mensajesL => {
+          tbody.append(`
                     <tr>
                     <td class="id">${mensajesL.id}</td>
                         <td>
                             <input type="text" style="background-color:transparent; border:none" class="mensaje form-control" style=""value="${mensajesL.mensaje}"/>
                         </td>
-                        <td>
-                            <button class="update-button btn btn-primary">Actualizar</button>
-                            <button class="delete-button btn btn-danger">Eliminar</button>
+                        <td>                            
+                            <button class="update-button btn btn-primary"><i class="fa fa-pen" aria-hidden="true"></i> Actualizar</button>
+                            <button class="delete-button btn btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i> Eliminar</button>
                         </td>
                     </tr>
                 `);
-          });
-        }
-      });
+        });
+      }
     });
+  });
   $("#noteForm").on("submit", function (e) {
     e.preventDefault();
     let mensajes = $("#mensajes")
@@ -116,8 +119,8 @@ $(function () {
       method: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensaje }),
-      success: function (response) {
-        alert(response);
+      success: function (resp) {
+        alert(resp);
         $("#getMensajes").click()
       }
     });
@@ -128,12 +131,11 @@ $(function () {
     $.ajax({
       url: "/beni/notes/" + id,
       method: 'DELETE',
-      success: function (response) {
-        alert(response)
+      success: function (resp) {
+        alert(resp)
         $('#getMensajes').click();
       }
     });
   });
-
 });
 

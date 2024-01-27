@@ -9,8 +9,8 @@ const {
     enviarMensaje,
     callbackStatusBN,
     cerrarSesion,
+    contactoBN,
 } = require("../whatsapp/beni");
-let estado = "";
 const mensajesBN = require("../database/mensajes/mensajesBN.json");
 const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
@@ -18,17 +18,20 @@ const container = {
 };
 exports.beniController = (req, res) => {
     const codigo = codigoQRBN();
+    const contacto = contactoBN();
     estado = estadoConexionBN();
+    
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 //si o si una hora definida
                 //              s   m h 
-                cron.schedule(' 35 2 * * *', async () => {
-                    //    const resp = 
+                cron.schedule(' */10 * * * * *', async () => {
                     comprobacion();
-                    // res.json(resp)
+                    // const cli = container.cliente;
+                    // const user = cli.info.me.user;  // Or cli.info.wid.user, as they have the same value
+                    // console.log(user);
                 })
             } else {
                 inicio();
@@ -63,7 +66,7 @@ exports.NotesCreatebeniController = (req, res) => {
         id: mensajesBN.length + 1,
         mensaje
     });
-    res.json('Successfully created');
+    res.json('Creado Exitosamente');
 }
 exports.NotesUpdatebeniController = (req, res) => {
     console.log(req.body, req.params)
@@ -75,7 +78,7 @@ exports.NotesUpdatebeniController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Successfully updated');
+    res.json('Actualizado exitosamente');
 }
 exports.NotesDelatebeniController = (req, res) => {
     const { id } = req.params;
@@ -85,7 +88,7 @@ exports.NotesDelatebeniController = (req, res) => {
             mensajesBN.splice(i, 1);
         }
     });
-    res.json('Successfully deleted');
+    res.json('Eliminado Exitosamente');
 }
 exports.logout = async (req, res) => {
     const cliente = container.cliente;

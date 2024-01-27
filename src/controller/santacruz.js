@@ -9,6 +9,7 @@ const {
     enviarMensaje,
     callbackStatusSC,
     cerrarSesion,
+    contactoSC,
 } = require("../whatsapp/santacruz");
 let estado = "";
 const mensajesSC = require("../database/mensajes/mensajesSC.json");
@@ -32,16 +33,18 @@ exports.santacruzControllerAuth = (req, res) => {
     }
 }
 exports.santacruzController = (req, res) => {
-    inicio();
     const codigo = codigoQRSC();
+    const contacto = contactoSC();
     estado = estadoConexionSC();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', () => {
                     comprobacion();
                 })
+            } else {
+                inicio();s
             }
             res.json(lp);
         } catch (error) {
@@ -143,6 +146,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'SANTA CRUZ' AND ESTADO = 'VENTANILLA';";

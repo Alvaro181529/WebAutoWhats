@@ -3,6 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRoruro = "";
 let estadoOruro = "";
 let statusOruro = "";
+let contacto = "";
 
 async function ClientOR() {
   const oruro = new Client({
@@ -16,12 +17,14 @@ async function ClientOR() {
   oruro.on("ready", () => {
     console.log("Client is ready!");
     estadoOruro = "conectado";
+    const user = oruro.info.me.user
+    contacto = user.slice(-8);
   });
   oruro.on("message_ack", (msg, ack) => {
     statusOruro = ack;
   });
   await oruro.initialize();
-  return oruro ;
+  return oruro;
 }
 
 function codigoQROR() {
@@ -33,6 +36,9 @@ function estadoConexionOR() {
 function callbackStatusOR() {
   return statusOruro;
 }
+function contactoOR() {
+  return contacto;
+}
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
     const resultado = await cliente.sendMessage(numero, mensaje);
@@ -42,9 +48,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-async function cerrarSesion(cliente){
+async function cerrarSesion(cliente) {
 
   await cliente.logout();
 
 }
-module.exports = { ClientOR, codigoQROR, estadoConexionOR, enviarMensaje, callbackStatusOR,cerrarSesion };
+module.exports = { ClientOR, contactoOR, codigoQROR, estadoConexionOR, enviarMensaje, callbackStatusOR, cerrarSesion };

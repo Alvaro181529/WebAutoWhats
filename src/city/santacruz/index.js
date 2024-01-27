@@ -38,6 +38,7 @@ $(function () {
       success: async function (lp) {
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
+          // console.log(lps)
           $("#inicio").attr("value", "Conectando . . .");
           if (lps.code === undefined) {
             imgQR.attr("src", "https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"); // Update the image source
@@ -50,9 +51,11 @@ $(function () {
             $("#inicio").attr("class", "btn btn-success");
             $("#inicio").attr("value", "Conectado");
             $("#inicio").prop("disabled", true);
+            document.getElementById('contacto').innerHTML = lps.contacto;
             imgQR.attr("src", "https://icones.pro/wp-content/uploads/2021/04/icone-noire-vert.png"); // Update the image source
             imgQR.attr("width", "250"); // Update the image source
             imgQR.attr("height", "250"); // Update the image source
+            document.getElementById('texto').removeAttribute('hidden');
           } else {
             await new Promise((resolve) => setTimeout(resolve, 30000));
             $("#inicio").click();

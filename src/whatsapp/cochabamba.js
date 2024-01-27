@@ -3,6 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRcochabamba = "";
 let estadoCochabamba = "";
 let statusCochabamba = "";
+let contacto = "";
 
 async function ClientCBBA() {
   const cochabamba = new Client({
@@ -16,6 +17,10 @@ async function ClientCBBA() {
   cochabamba.on("ready", () => {
     console.log("Client is ready!");
     estadoCochabamba = "conectado";
+    const user = cochabamba.info.me.user
+    contacto = user.slice(-8);
+
+
   });
   cochabamba.on("message_ack", (msg, ack) => {
     statusCochabamba = ack;
@@ -33,6 +38,9 @@ function estadoConexionCBBA() {
 function callbackStatusCBBA() {
   return statusCochabamba;
 }
+function contactoCBBA() {
+  return contacto;
+}
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
     const resultado = await cliente.sendMessage(numero, mensaje);
@@ -47,4 +55,4 @@ async function cerrarSesion(cliente){
   await cliente.logout();
 
 }
-module.exports = { ClientCBBA, codigoQRCBBA, estadoConexionCBBA, enviarMensaje, callbackStatusCBBA ,cerrarSesion};
+module.exports = { ClientCBBA,contactoCBBA, codigoQRCBBA, estadoConexionCBBA, enviarMensaje, callbackStatusCBBA ,cerrarSesion};

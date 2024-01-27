@@ -8,7 +8,8 @@ const {
     estadoConexionSR,
     enviarMensaje,
     callbackStatusSR,
-    cerrarSesion
+    cerrarSesion,
+    contactoSR
 } = require("../whatsapp/sucre");
 let estado = "";
 const mensajesSR = require("../database/mensajes/mensajesSR.json");
@@ -17,16 +18,18 @@ const container = {
     cliente: null,
 };
 exports.sucreController = (req, res) => {
-    inicio();
     const codigo = codigoQRSR();
+    const contacto = contactoSR();
     estado = estadoConexionSR();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', () => {
                     comprobacion();
                 })
+            } else {
+                inicio();
             }
             res.json(lp);
         } catch (error) {
@@ -86,7 +89,7 @@ exports.logout = async (req, res) => {
     const cliente = container.cliente;
     res.json("deslogeado");
     cerrarSesion(cliente);
-  };
+};
 async function inicio() {
     const cliente = await ClientSR();
     container.cliente = cliente; // Almacena el cliente en el contenedor
@@ -142,6 +145,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'SUCRE' AND ESTADO = 'VENTANILLA';";

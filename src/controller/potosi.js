@@ -9,6 +9,7 @@ const {
     enviarMensaje,
     callbackStatusPT,
     cerrarSesion,
+    contactoPT,
 } = require("../whatsapp/potosi");
 let estado = "";
 const mensajesPT = require("../database/mensajes/mensajesPT.json");
@@ -32,16 +33,18 @@ exports.potosiControllerAuth = (req, res) => {
     }
 }
 exports.potosiController = (req, res) => {
-    inicio();
     const codigo = codigoQRPT();
+    const contacto = contactoPT();
     estado = estadoConexionPT();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', () => {
                     comprobacion();
                 })
+            } else {
+                inicio();
             }
             res.json(lp);
         } catch (error) {
@@ -143,6 +146,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'POTOSI' AND ESTADO = 'VENTANILLA';";
@@ -158,18 +164,18 @@ async function comprobacion() {
         const idsPack = new Set(resPack.map(item => item.id));
         const idsPackSn = new Set(resPackSn.map(item => item.id));
 
-         // Encontrar IDs comunes
-         const idsComunes = [...new Set([...idsMen].filter(id => idsPack.has(id)))];
-         const idsComunesSn = [...new Set([...idsMen].filter(id => idsPackSn.has(id)))];
- 
-         // Encontrar IDs únicos en cada conjunto
-         const idsUnicosPack = [...new Set([...idsPack].filter(id => !idsComunes.includes(id)))];
-         const idsUnicosPackSn = [...new Set([...idsPackSn].filter(id => !idsComunesSn.includes(id)))];
- 
-         console.log("IDs Comunes:", idsComunes);
-         console.log("IDs Comunes Sn:", idsComunesSn);
-         console.log("IDs Únicos en packQuery:", idsUnicosPack);
-         console.log("IDs Únicos en packQuerySn:", idsUnicosPackSn);
+        // Encontrar IDs comunes
+        const idsComunes = [...new Set([...idsMen].filter(id => idsPack.has(id)))];
+        const idsComunesSn = [...new Set([...idsMen].filter(id => idsPackSn.has(id)))];
+
+        // Encontrar IDs únicos en cada conjunto
+        const idsUnicosPack = [...new Set([...idsPack].filter(id => !idsComunes.includes(id)))];
+        const idsUnicosPackSn = [...new Set([...idsPackSn].filter(id => !idsComunesSn.includes(id)))];
+
+        console.log("IDs Comunes:", idsComunes);
+        console.log("IDs Comunes Sn:", idsComunesSn);
+        console.log("IDs Únicos en packQuery:", idsUnicosPack);
+        console.log("IDs Únicos en packQuerySn:", idsUnicosPackSn);
 
         // Mostrar el TELEFONO correspondiente a los IDs únicos en packQuery
         console.log("IDs Únicos en packQuery:");

@@ -3,7 +3,7 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRsantacruz = "";
 let estadoSantacruz = "";
 let statusSantacruz = "";
-
+let contacto = "";
 async function ClientSC() {
   const santacruz = new Client({
     authStrategy: new LocalAuth({ clientId: "santacruz" }),
@@ -16,6 +16,8 @@ async function ClientSC() {
   santacruz.on("ready", () => {
     console.log("Client is ready!");
     estadoSantacruz = "conectado";
+    const user = santacruz.info.me.user
+    contacto = user.slice(-8);
   });
   santacruz.on("message_ack", (msg, ack) => {
     statusSantacruz = ack;
@@ -33,6 +35,9 @@ function estadoConexionSC() {
 function callbackStatusSC() {
   return statusSantacruz;
 }
+function contactoSC() {
+  return contacto;
+}
 async function enviarMensaje(cliente, numero, mensaje) {
   try {
     const resultado = await cliente.sendMessage(numero, mensaje);
@@ -47,4 +52,4 @@ async function cerrarSesion(cliente){
   await cliente.logout();
 
 }
-module.exports = { ClientSC, codigoQRSC, estadoConexionSC, enviarMensaje, callbackStatusSC ,cerrarSesion};
+module.exports = { ClientSC,contactoSC, codigoQRSC, estadoConexionSC, enviarMensaje, callbackStatusSC ,cerrarSesion};

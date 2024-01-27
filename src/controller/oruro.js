@@ -9,6 +9,7 @@ const {
     enviarMensaje,
     callbackStatusOR,
     cerrarSesion,
+    contactoOR,
 } = require("../whatsapp/oruro");
 let estado = "";
 const mensajesOR = require("../database/mensajes/mensajesOR.json");
@@ -24,24 +25,26 @@ exports.oruroControllerAuth = (req, res) => {
     const password = CryptoJS.MD5(oruro).toString();
     const auth = CryptoJS.MD5(pass).toString();
     if (auth === password) {
-      res.send("pass");
+        res.send("pass");
     } else if (auth === passwordAdm) {
-      res.send("adm");
+        res.send("adm");
     } else {
-      res.send("incorrecto");
+        res.send("incorrecto");
     }
-  }
+}
 exports.oruroController = (req, res) => {
-    inicio();
     const codigo = codigoQROR();
+    const contacto = contactoOR();
     estado = estadoConexionOR();
     qrcode.toDataURL(codigo, (err, src) => {
         try {
-            const lp = [{ estado, codigo, code: src }];
+            const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', () => {
                     comprobacion();
                 })
+            } else {
+                inicio();
             }
             res.json(lp);
         } catch (error) {
@@ -51,8 +54,8 @@ exports.oruroController = (req, res) => {
 }
 exports.logout = async (req, res) => {
     const cliente = container.cliente;
-  res.json("deslogeado");
-  cerrarSesion(cliente);
+    res.json("deslogeado");
+    cerrarSesion(cliente);
 };
 exports.NotesoruroController = (req, res) => {
     res.json(mensajesOR)
@@ -143,6 +146,9 @@ function envio(contacto, id) {
 }
 
 async function comprobacion() {
+    let i = 0
+    let j = 0
+
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const menQuery = "SELECT * FROM mensajes";
     const packQuery = "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA';";
