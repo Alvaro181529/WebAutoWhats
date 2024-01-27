@@ -24,7 +24,9 @@ exports.beniController = (req, res) => {
             const lp = [{ estado, codigo, code: src }];
             if (estado == "conectado") {
                 cron.schedule('*/1 * * * *', async () => {
+                    //    const resp = 
                     comprobacion();
+                    // res.json(resp)
                 })
             } else {
                 inicio();
@@ -138,9 +140,11 @@ function envio(contacto, id) {
         descripcion = "No es un número.";
         rechazados++;
     }
-    console.log(`ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`)
-
     guardarMensajes(estado, mensaje, descripcion, id);
+
+    // const respuesta =
+    console.log(`ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`)
+    // return respuesta
 }
 
 async function comprobacion() {

@@ -39,7 +39,13 @@ $(function () {
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           $("#inicio").attr("value", "Conectando . . .");
-          imgQR.attr("src", lps.code); // Update the image source
+          if (lps.code === undefined) {
+            imgQR.attr("src", "https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"); // Update the image source
+            imgQR.attr("width", "250"); // Update the image source
+            imgQR.attr("height", "250"); // Update the image source
+          } else {
+            imgQR.attr("src", lps.code); // Update the image source
+          }
           if (lps.estado == "conectado") {
             $("#inicio").attr("class", "btn btn-success");
             $("#inicio").attr("value", "Conectado");
@@ -47,12 +53,9 @@ $(function () {
             imgQR.attr("src", "https://icones.pro/wp-content/uploads/2021/04/icone-noire-vert.png"); // Update the image source
             imgQR.attr("width", "250"); // Update the image source
             imgQR.attr("height", "250"); // Update the image source
-
-            console.log("Esta conectado el cliente ")
           } else {
             await new Promise((resolve) => setTimeout(resolve, 30000));
             $("#inicio").click();
-            console.log("qr");
           }
         });
       },

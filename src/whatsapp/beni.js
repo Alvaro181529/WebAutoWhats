@@ -15,6 +15,8 @@ async function ClientBN() {
 
   beni.on("ready", () => {
     console.log("Client is ready!");
+    const info = beni.getClientInfo();
+    console.log(info);
     estadoBeni = "conectado";
   });
   beni.on("message_ack", (msg, ack) => {
