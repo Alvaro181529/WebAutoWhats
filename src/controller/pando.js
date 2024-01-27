@@ -174,19 +174,30 @@ async function comprobacion() {
         // Mostrar el TELEFONO correspondiente a los IDs únicos en packQuery
         console.log("IDs Únicos en packQuery:");
         for (const idUnicoPack of idsUnicosPack) {
+            i++;
+            const limiteInferior = 5000;
+            const limiteSuperior = 10000;
+            const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
             const telefono = resPack.find(item => item.id === idUnicoPack)?.TELEFONO;
             const idTelefono = resPack.find(item => item.id === idUnicoPack)?.id;
-            await new Promise((resolve) => setTimeout(resolve, 3000));
             envio(telefono, idTelefono);
+            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio));//12
         }
 
         // Mostrar el TELEFONO correspondiente a los IDs únicos en packQuerySn
         console.log("IDs Únicos en packQuerySn:");
         for (const idUnicoPackSn of idsUnicosPackSn) {
+            j++;
+            const limiteInferior = 5000;
+            const limiteSuperior = 10000;
+            const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
             const telefono = resPackSn.find(item => item.id === idUnicoPackSn)?.TELEFONO;
             const idTelefono = resPackSn.find(item => item.id === idUnicoPackSn)?.id;
-            await new Promise((resolve) => setTimeout(resolve, 3000));
             envio(telefono, idTelefono);
+            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio));//12
+        }
+        if (idsUnicosPackSn.length === j && idsUnicosPack.length === i) {
+            console.log("Terminado")
         }
 
     } catch (err) {
