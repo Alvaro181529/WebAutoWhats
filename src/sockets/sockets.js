@@ -3,6 +3,7 @@ module.exports = (io) => {
         console.log('a user connected');
         console.log(socket.id)
         // Evento personalizado para la ruta /lapaz
+        socket.on()
 
     });
 }

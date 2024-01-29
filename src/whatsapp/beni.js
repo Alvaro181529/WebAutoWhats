@@ -19,7 +19,6 @@ async function ClientBN() {
     estadoBeni = "conectado";
     const user = beni.info.me.user
     contacto = user.slice(-8);
-
   });
   beni.on("message_ack", (msg, ack) => {
     statusBeni = ack;
