@@ -17,6 +17,11 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+exports.santacruzControllerMessage = async(req, res) => {
+    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'SANTA CRUZ' AND mensajes.fecha_creacion >= CURRENT_DATE();"
+       const cons = await ejecutarConsulta(mensajes)
+    res.json(cons)
+}
 exports.santacruzControllerAuth = (req, res) => {
     const { pass } = req.body;
     const admin = bpass[9].pass;

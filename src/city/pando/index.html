@@ -37,27 +37,33 @@
     <div id="content-container">
         <main class="row">
             <div class="col-3" align="center">
-                <input type="button" class="estado btn btn-dark" value="Conectar" id="inicio">
-                <input type="button" hidden class="estado btn btn-danger" value="Salir" id="salir">
+                <button type="button" class="estado btn btn-dark" id="inicio"><i
+                        class="fa-solid fa-arrow-right-to-bracket"></i> Conectar </button>
+                <button type="button" hidden class="estado btn btn-danger" id="salir"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i> Salir </button>
                 <br>
                 <img id="qr"></img>
-                <h6 id="texto" hidden>Conectado a: <h5 type="text" id="contacto"style="color: green ;"></h5></h6>
+                <h6 id="texto" hidden>Conectado a: <h5 type="text" id="contacto" style="color: green ;"></h5>
+                </h6>
             </div>
             <div class="col-9">
                 <div class="row">
                     <div class="col-4">
                         <button type="button" class="btn btn-secondary" id="getMensajes" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">Ver mensajes</button>
+                            data-bs-target="#exampleModal">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                            Ver mensajes</button>
                     </div>
                     <div class="col-4">
                         <h3>Pando</h3>
                     </div>
                     <div class="col-4">
-                        <a class="btn btn-primary" href="/dashboard">Dashboard</a>
+                        <a class="btn btn-primary" href="/dashboard">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            Dashboard</a>
                     </div>
                 </div>
                 <br>
-                <hr class="my-2 mx-2 border border-primary border-3 opacity-75" />
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
@@ -69,15 +75,17 @@
                                             <input type="text" placeholder="Frase" class="form-control" id="mensajes">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-save" aria-hidden="true"></i>
+                                                Guardar</button>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="col-4">
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Mensajes</h1>
                                 </div>
-                                <div class="col-4">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                <div class="col-4" align="right">
+                                    <button type="button" class="btn-close m-0 p-0" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                             </div>
@@ -90,11 +98,26 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody align="center"></tbody>
+                                    <tbody align="center" id="tbody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
+                <hr class="my-1 mx-1 border border-primary border-3 opacity-75" />
+                <div class="mens">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NUMERO</th>
+                                <th>MENSAJE</th>
+                                <th>DESCRIPCION</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="info"></tbody>
+                    </table>
                 </div>
 
             </div>
@@ -104,5 +127,6 @@
         </footer>
     </div>
 </body>
+
 
 </html>

@@ -36,6 +36,8 @@ $(function () {
     $.ajax({
       url: "/pando",
       success: async function (lp) {
+        setInterval(table, 10000)
+
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           // console.log(lps)
@@ -72,7 +74,7 @@ $(function () {
         console.log("LOGOUT ")
       }
     });
-  }),
+  });
 
   $("#getMensajes").on("click", function () {
     $.ajax({
@@ -139,6 +141,25 @@ $(function () {
       }
     });
   });
-
+  function table() {
+    $.ajax({
+      url: "/pando/message",
+      success: function (resp) {
+        let tbody = $('#info');
+        tbody.html('');
+        resp.forEach(mensajesL => {
+          tbody.append(`
+              <tr>
+              <td >${mensajesL.numero}</td>
+              <td >${mensajesL.TELEFONO}</td>
+              <td >${mensajesL.mensajes}</td>
+              <td >${mensajesL.observacion}</td>
+              <td >${mensajesL.estado}</td>
+              </tr>
+          `);
+        });
+      }
+    })
+  }
 });
 

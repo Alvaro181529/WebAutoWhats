@@ -26,6 +26,18 @@
 
 #content-container {
     text-align: center;
-    filter: blur(5px); 
+    filter: blur(5px);
     /* Ajusta el valor para cambiar la intensidad del efecto borroso */
+}
+
+body {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.mens {
+    height: 500px;
+    line-height: 1em;
+    overflow-y: scroll;
+    width: 100%;
 }

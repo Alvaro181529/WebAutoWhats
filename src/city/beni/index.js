@@ -2,6 +2,7 @@ const socket = io();
 socket.on('connect', () => {
   console.log('Conectado al servidor de Socket.IO');
 })
+
 $(function () {
   $("#getPass").on("submit", function (e) {
     e.preventDefault();
@@ -36,6 +37,7 @@ $(function () {
     $.ajax({
       url: "/beni",
       success: async function (lp) {
+        setInterval(table, 10000)
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           // console.log(lps)
@@ -76,7 +78,7 @@ $(function () {
     $.ajax({
       url: "/beni/notes",
       success: function (mensajesLP) {
-        let tbody = $('tbody');
+        let tbody = $('#tbody');
         tbody.html('');
         mensajesLP.forEach(mensajesL => {
           tbody.append(`
@@ -137,5 +139,25 @@ $(function () {
       }
     });
   });
+  function table() {
+    $.ajax({
+      url: "/beni/message",
+      success: function (resp) {
+        let tbody = $('#info');
+        tbody.html('');
+        resp.forEach(mensajesL => {
+          tbody.append(`
+              <tr>
+              <td >${mensajesL.numero}</td>
+              <td >${mensajesL.TELEFONO}</td>
+              <td >${mensajesL.mensajes}</td>
+              <td >${mensajesL.observacion}</td>
+              <td >${mensajesL.estado}</td>
+              </tr>
+          `);
+        });
+      }
+    })
+  }
 });
 

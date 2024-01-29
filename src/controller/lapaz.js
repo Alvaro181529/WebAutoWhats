@@ -38,6 +38,11 @@ exports.lapazController = (req, res) => {
     }
   });
 };
+exports.lapazControllerMessage = async(req, res) => {
+  const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'LA PAZ' AND mensajes.fecha_creacion >= CURRENT_DATE();"
+     const cons = await ejecutarConsulta(mensajes)
+  res.json(cons)
+}
 exports.lapazControllerAuth = (req, res) => {
   const { pass } = req.body;
   const admin = bpass[9].pass;

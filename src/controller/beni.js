@@ -20,7 +20,7 @@ exports.beniController = (req, res) => {
     const codigo = codigoQRBN();
     const contacto = contactoBN();
     estado = estadoConexionBN();
-    
+
     qrcode.toDataURL(codigo, (err, src) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
@@ -41,6 +41,11 @@ exports.beniController = (req, res) => {
             console.log(err, error);
         }
     });
+}
+exports.beniControllerMessage = async(req, res) => {
+    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'BENI' AND mensajes.fecha_creacion >= CURRENT_DATE();"
+       const cons = await ejecutarConsulta(mensajes)
+    res.json(cons)
 }
 exports.beniControllerAuth = (req, res) => {
     const { pass } = req.body;
@@ -148,7 +153,7 @@ function envio(contacto, id) {
     guardarMensajes(estado, mensaje, descripcion, id);
 
     // const respuesta =
-    console.log(`ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`)
+    // console.log(`ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`)
     // return respuesta
 }
 

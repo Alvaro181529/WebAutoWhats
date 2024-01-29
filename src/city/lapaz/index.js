@@ -37,6 +37,7 @@ $(function () {
     $.ajax({
       url: "/lapaz",
       success: async function (lp) {
+        setInterval(table, 10000)
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           // console.log(lps)
@@ -73,16 +74,16 @@ $(function () {
         console.log("LOGOUT ")
       }
     });
-  }),
+  });
 
-    $("#getMensajes").on("click", function () {
-      $.ajax({
-        url: "/lapaz/notes",
-        success: function (mensajesLP) {
-          let tbody = $('tbody');
-          tbody.html('');
-          mensajesLP.forEach(mensajesL => {
-            tbody.append(`
+  $("#getMensajes").on("click", function () {
+    $.ajax({
+      url: "/lapaz/notes",
+      success: function (mensajesLP) {
+        let tbody = $('tbody');
+        tbody.html('');
+        mensajesLP.forEach(mensajesL => {
+          tbody.append(`
                     <tr>
                     <td class="id">${mensajesL.id}</td>
                         <td>
@@ -94,10 +95,10 @@ $(function () {
                         </td>
                     </tr>
                 `);
-          });
-        }
-      });
+        });
+      }
     });
+  });
 
   $("#noteForm").on("submit", function (e) {
     e.preventDefault();
@@ -140,6 +141,25 @@ $(function () {
       }
     });
   });
-
+  function table() {
+    $.ajax({
+      url: "/lapaz/message",
+      success: function (resp) {
+        let tbody = $('#info');
+        tbody.html('');
+        resp.forEach(mensajesL => {
+          tbody.append(`
+              <tr>
+              <td >${mensajesL.numero}</td>
+              <td >${mensajesL.TELEFONO}</td>
+              <td >${mensajesL.mensajes}</td>
+              <td >${mensajesL.observacion}</td>
+              <td >${mensajesL.estado}</td>
+              </tr>
+          `);
+        });
+      }
+    })
+  }
 });
 

@@ -46,12 +46,12 @@
                         class="fa-solid fa-arrow-right-from-bracket"></i> Salir </button>
                 <br>
                 <img id="qr"></img>
-                <h6 id="texto" hidden>Conectado a: <h5 type="text" id="contacto"style="color: green ;"></h5></h6>
+                <h6 id="texto" hidden>Conectado a: <h5 type="text" id="contacto" style="color: green ;"></h5>
+                </h6>
             </div>
             <div class="col-9">
                 <div class="row">
                     <div class="col-4">
-
                         <button type="button" class="btn btn-secondary" id="getMensajes" data-bs-toggle="modal"
                             data-bs-target="#exampleModal">
                             <i class="fa fa-eye" aria-hidden="true"></i>
@@ -101,25 +101,28 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody align="center"></tbody>
+                                    <tbody align="center" id="tbody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr class="my-1 mx-1 border border-primary border-3 opacity-75" />
-                <table class="table table-hover">
-                    <thead align="center">
-                        <tr>
-                            <th>ID</th>
-                            <th>NUMERO</th>
-                            <th>MENSAJE</th>
-                            <th>DESCRIPCION</th>
-                            <th>ESTADO</th>
-                        </tr>
-                    </thead>
-                    <tbody align="center"></tbody>
-                </table>
+                <div class="mens">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NUMERO</th>
+                                <th>MENSAJE</th>
+                                <th>DESCRIPCION</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="info"></tbody>
+                    </table>
+                </div>
+
             </div>
         </main>
         <footer align="center">

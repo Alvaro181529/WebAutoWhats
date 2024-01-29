@@ -36,6 +36,7 @@ $(function () {
     $.ajax({
       url: "/sucre",
       success: async function (lp) {
+        setInterval(table, 10000)
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           // console.log(lps)
@@ -139,6 +140,25 @@ $(function () {
       }
     });
   });
-
+  function table() {
+    $.ajax({
+      url: "/sucre/message",
+      success: function (resp) {
+        let tbody = $('#info');
+        tbody.html('');
+        resp.forEach(mensajesL => {
+          tbody.append(`
+              <tr>
+              <td >${mensajesL.numero}</td>
+              <td >${mensajesL.TELEFONO}</td>
+              <td >${mensajesL.mensajes}</td>
+              <td >${mensajesL.observacion}</td>
+              <td >${mensajesL.estado}</td>
+              </tr>
+          `);
+        });
+      }
+    })
+  }
 });
 
