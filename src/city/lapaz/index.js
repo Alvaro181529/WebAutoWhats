@@ -112,7 +112,30 @@ $(function () {
         $("#getMensajes").click()
       }
     })
-  })
+  });
+  ;
+  $("#reports").on("submit", function (e) {
+    e.preventDefault();
+    let date = $("#date").val();
+
+    $.ajax({
+      url: "/lapaz/reportes",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ date: date }),
+      xhrFields: {
+        responseType: 'blob'  // Establecer el tipo de respuesta como blob
+      },
+      success: function (data) {
+        var blob = new Blob([data], { type: 'application/pdf' });
+        var url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error: function (error) {
+        console.error('Error al obtener el informe PDF:', error);
+      }
+    });
+  });
   $('table').on('click', '.update-button', function () {
     let row = $(this).closest('tr');
     let id = row.find('.id').text();
@@ -148,6 +171,16 @@ $(function () {
         let tbody = $('#info');
         tbody.html('');
         resp.forEach(mensajesL => {
+          // Convertir la cadena de fecha a un objeto Date
+          let fechaCreacion = new Date(mensajesL.fecha_creacion);
+
+          // Obtener componentes de fecha y hora
+          let dia = fechaCreacion.getDate();
+          let mes = fechaCreacion.getMonth() + 1; // Meses en JavaScript van de 0 a 11
+          let año = fechaCreacion.getFullYear();
+          let horas = fechaCreacion.getHours();
+          let minutos = fechaCreacion.getMinutes();
+          let formatoFechaHora = `${mes}/${dia}/${año} ${horas}:${minutos}`;
           tbody.append(`
               <tr>
               <td >${mensajesL.numero}</td>
@@ -155,6 +188,7 @@ $(function () {
               <td >${mensajesL.mensajes}</td>
               <td >${mensajesL.observacion}</td>
               <td >${mensajesL.estado}</td>
+              <td >${formatoFechaHora}</td>
               </tr>
           `);
         });

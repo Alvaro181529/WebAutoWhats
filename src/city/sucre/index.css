@@ -40,3 +40,21 @@ body{
     overflow-y: scroll;
     width: 100%;
 }
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.floating-btn:hover {
+    background-color: #0056b3;
+}

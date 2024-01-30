@@ -116,12 +116,38 @@
                                 <th>MENSAJE</th>
                                 <th>DESCRIPCION</th>
                                 <th>ESTADO</th>
+                                <th>FECHA</th>
                             </tr>
                         </thead>
-                        <tbody id="info"></tbody>
+                        <tbody align="left" id="info"></tbody>
                     </table>
                 </div>
-
+                <a href="#" class="floating-btn" data-bs-toggle="modal" data-bs-target="#reports">Reportes</a>
+            </div>
+            <div class="modal fade" id="reports" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="row" id="pdfReport" method="post">
+                                <div class="col-1">
+                                </div>
+                                <div class="col-5">
+                                    <input type="date" class="form-control" id="date">
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa-solid fa-file-arrow-down"></i>
+                                        Guardar</button>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <footer align="center">

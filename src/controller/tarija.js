@@ -14,8 +14,53 @@ const { ejecutarConsulta, guardarMensajes } = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
+const tableArray = {
+    headers: ["N°", "Telefono", "Ciudad", "Mensajes", "Observacion", "Estado", "fecha"],
+    rows: [],
+};
+
+exports.tarijaControllerReportes = async (req, res) => {
+    const { date } = req.body
+    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.fecha_creacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'TARIJA' AND mensajes.fecha_creacion >= '${date}';`
+    const cons = await ejecutarConsulta(pdf)
+    cons.forEach((row) => {
+        const formattedDate = moment(row.fecha_creacion).format("DD-MM-YYYY HH:mm:ss");
+        tableArray.rows.push([
+            row.numero,
+            row.TELEFONO,
+            row.CUIDAD,
+            row.mensajes,
+            row.observacion,
+            row.estado,
+            formattedDate,
+        ]);
+    });
+
+    res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=${date}-reporte.pdf`,
+    });
+
+    buildPDF(
+        (data) => res.write(data),  // Utiliza res.write para enviar datos al cliente
+        () => { res.end(), tableArray.rows = []; } // Llamado cuando el documento está completo
+    );
+};
+
+function buildPDF(dataCallback, endCallback) {
+    const doc = new PDFDocument();
+
+    doc.on("data", dataCallback);
+    doc.on("end", endCallback);
+
+    doc.fontSize(20).text("Reporte de envio");
+
+    doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 100, 50, 70] });
+    doc.end();
+}
+
 exports.tarijaControllerMessage = async(req, res) => {
-    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'TARIJA' AND mensajes.fecha_creacion >= CURRENT_DATE();"
+    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_creacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'TARIJA' AND mensajes.fecha_creacion >= CURRENT_DATE();"
        const cons = await ejecutarConsulta(mensajes)
     res.json(cons)
 }

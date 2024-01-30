@@ -1,6 +1,8 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const CryptoJS = require("crypto-js")
+const CryptoJS = require("crypto-js");
+const PDFDocument = require("pdfkit-table");
+const moment = require('moment');
 const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientBN,
@@ -29,9 +31,6 @@ exports.beniController = (req, res) => {
                 //              s   m h 
                 cron.schedule(' */10 * * * * *', async () => {
                     comprobacion();
-                    // const cli = container.cliente;
-                    // const user = cli.info.me.user;  // Or cli.info.wid.user, as they have the same value
-                    // console.log(user);
                 })
             } else {
                 inicio();
@@ -42,11 +41,56 @@ exports.beniController = (req, res) => {
         }
     });
 }
-exports.beniControllerMessage = async(req, res) => {
-    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'BENI' AND mensajes.fecha_creacion >= CURRENT_DATE();"
-       const cons = await ejecutarConsulta(mensajes)
+exports.beniControllerMessage = async (req, res) => {
+    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_creacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'BENI' AND mensajes.fecha_creacion >= CURRENT_DATE();"
+    const cons = await ejecutarConsulta(mensajes)
     res.json(cons)
 }
+const tableArray = {
+    headers: ["N°", "Telefono", "Ciudad", "Mensajes", "Observacion", "Estado", "fecha"],
+    rows: [],
+};
+
+exports.beniControllerReportes = async (req, res) => {
+    const { date } = req.body
+    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.fecha_creacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'BENI' AND mensajes.fecha_creacion >= '${date}';`
+    const cons = await ejecutarConsulta(pdf)
+    cons.forEach((row) => {
+        const formattedDate = moment(row.fecha_creacion).format("DD-MM-YYYY HH:mm:ss");
+        tableArray.rows.push([
+            row.numero,
+            row.TELEFONO,
+            row.CUIDAD,
+            row.mensajes,
+            row.observacion,
+            row.estado,
+            formattedDate,
+        ]);
+    });
+
+    res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=${date}-reporte.pdf`,
+    });
+
+    buildPDF(
+        (data) => res.write(data),  // Utiliza res.write para enviar datos al cliente
+        () => { res.end(), tableArray.rows = []; } // Llamado cuando el documento está completo
+    );
+};
+
+function buildPDF(dataCallback, endCallback) {
+    const doc = new PDFDocument();
+
+    doc.on("data", dataCallback);
+    doc.on("end", endCallback);
+
+    doc.fontSize(20).text("Reporte de envio");
+
+    doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 100, 50, 70] });
+    doc.end();
+}
+
 exports.beniControllerAuth = (req, res) => {
     const { pass } = req.body;
     const admin = bpass[9].pass;

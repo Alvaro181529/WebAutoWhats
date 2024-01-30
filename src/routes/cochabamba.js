@@ -1,12 +1,13 @@
 
 const { Router } = require("express");
-const { cochabambaController, NotescochabambaController, NotesCreatecochabambaController, NotesUpdatecochabambaController, NotesDelatecochabambaController, logout,cochabambaControllerAuth ,cochabambaControllerMessage} = require("../controller/cochabamba")
+const { cochabambaController, NotescochabambaController, NotesCreatecochabambaController, NotesUpdatecochabambaController, NotesDelatecochabambaController, logout,cochabambaControllerAuth ,cochabambaControllerMessage, cochabambaControllerReportes} = require("../controller/cochabamba")
 const router = Router();
 
 // rutas
 
 router.get("/cochabamba", cochabambaController);
 router.post("/cochabamba/auth", cochabambaControllerAuth);
+router.post("/cochabamba/reportes", cochabambaControllerReportes);
 router.get("/cochabamba/logout", logout);
 router.get("/cochabamba/message", cochabambaControllerMessage);
 router.get("/cochabamba/notes", NotescochabambaController);
