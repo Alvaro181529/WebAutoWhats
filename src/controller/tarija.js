@@ -1,5 +1,8 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
+const PDFDocument = require("pdfkit-table");
+const moment = require('moment');
+const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientTJ,
     codigoQRTJ,
@@ -108,7 +111,7 @@ exports.NotesCreatetarijaController = (req, res) => {
         id: mensajesTJ.length + 1,
         mensaje
     });
-    res.json('Successfully created');
+    res.json('Creado Exitosamente');
 }
 exports.NotesUpdatetarijaController = (req, res) => {
     console.log(req.body, req.params)
@@ -120,7 +123,7 @@ exports.NotesUpdatetarijaController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Successfully updated');
+    res.json('Actualizado Exitosamente');
 }
 exports.NotesDelatetarijaController = (req, res) => {
     const { id } = req.params;
@@ -130,7 +133,7 @@ exports.NotesDelatetarijaController = (req, res) => {
             mensajesTJ.splice(i, 1);
         }
     });
-    res.json('Successfully deleted');
+    res.json('Eliminado Exitosamente');
 }
 exports.logout = async (req, res) => {
     const cliente = container.cliente;

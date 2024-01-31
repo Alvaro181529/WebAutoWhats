@@ -1,7 +1,8 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const CryptoJS = require("crypto-js")
-
+const CryptoJS = require("crypto-js");
+const PDFDocument = require("pdfkit-table");
+const moment = require('moment');
 const {
     ClientCBBA,
     codigoQRCBBA,
@@ -118,7 +119,7 @@ exports.NotesCreatecochabambaController = (req, res) => {
         id: mensajesCBBA.length + 1,
         mensaje
     });
-    res.json('Successfully created');
+    res.json('Creado Exitosamente');
 }
 exports.NotesUpdatecochabambaController = (req, res) => {
     console.log(req.body, req.params)
@@ -130,7 +131,7 @@ exports.NotesUpdatecochabambaController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Successfully updated');
+    res.json('Actualizado Exitosamente');
 }
 exports.NotesDelatecochabambaController = (req, res) => {
     const { id } = req.params;
@@ -140,7 +141,7 @@ exports.NotesDelatecochabambaController = (req, res) => {
             mensajesCBBA.splice(i, 1);
         }
     });
-    res.json('Successfully deleted');
+    res.json('Eliminado Exitosamente');
 }
 async function inicio() {
     const cliente = await ClientCBBA();

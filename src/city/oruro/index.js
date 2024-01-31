@@ -129,7 +129,8 @@ $(function () {
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensajes.val() }),
-      success: function (response) {
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     })
@@ -144,8 +145,8 @@ $(function () {
       method: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensaje }),
-      success: function (response) {
-        console.log(response);
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     });
@@ -156,19 +157,26 @@ $(function () {
     $.ajax({
       url: "/oruro/notes/" + id,
       method: 'DELETE',
-      success: function (response) {
-        console.log(response)
-        $('#getMensajes').click();
+      success: function (resp) {
+        alert(resp)
+        $("#getMensajes").click()
       }
     });
   });
+
+  function scrollToBottom() {
+    var divMens = document.getElementById('mens');
+    divMens.scrollTop = divMens.scrollHeight;
+  }
   function table() {
+    $("#mens").animate({ scrollTop: $(this).prop("scrollHeight") }, 1000);
     $.ajax({
       url: "/oruro/message",
-      success: function (resp) {
+      success: function (resp) {  
         let tbody = $('#info');
         tbody.html('');
         resp.forEach(mensajesL => {
+       
           // Convertir la cadena de fecha a un objeto Date
           let fechaCreacion = new Date(mensajesL.fecha_creacion);
 
@@ -190,6 +198,7 @@ $(function () {
               </tr>
           `);
         });
+        scrollToBottom()
       }
     })
   }

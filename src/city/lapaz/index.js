@@ -108,7 +108,8 @@ $(function () {
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensajes.val() }),
-      success: function (response) {
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     })
@@ -136,7 +137,8 @@ $(function () {
       }
     });
   });
-  $('table').on('click', '.update-button', function () {
+  $('table').on('click', '.update-button', function (resp) {
+    alert(resp)
     let row = $(this).closest('tr');
     let id = row.find('.id').text();
     let mensaje = row.find('.mensaje').val();
@@ -146,8 +148,8 @@ $(function () {
       method: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensaje }),
-      success: function (response) {
-        console.log(response);
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     });
@@ -158,12 +160,17 @@ $(function () {
     $.ajax({
       url: "/lapaz/notes/" + id,
       method: 'DELETE',
-      success: function (response) {
-        console.log(response)
+      success: function (resp) {
+        alert(resp)
+
         $('#getMensajes').click();
       }
     });
   });
+  function scrollToBottom() {
+    var divMens = document.getElementById('mens');
+    divMens.scrollTop = divMens.scrollHeight;
+  }
   function table() {
     $.ajax({
       url: "/lapaz/message",
@@ -192,6 +199,7 @@ $(function () {
               </tr>
           `);
         });
+        scrollToBottom();
       }
     })
   }

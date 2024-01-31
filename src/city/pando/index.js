@@ -108,7 +108,8 @@ $(function () {
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensajes.val() }),
-      success: function (response) {
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     })
@@ -146,8 +147,8 @@ $(function () {
       method: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify({ mensaje: mensaje }),
-      success: function (response) {
-        console.log(response);
+      success: function (resp) {
+        alert(resp)
         $("#getMensajes").click()
       }
     });
@@ -158,12 +159,16 @@ $(function () {
     $.ajax({
       url: "/pando/notes/" + id,
       method: 'DELETE',
-      success: function (response) {
-        console.log(response)
-        $('#getMensajes').click();
+      success: function (resp) {
+        alert(resp)
+        $("#getMensajes").click()
       }
     });
   });
+  function scrollToBottom() {
+    var divMens = document.getElementById('mens');
+    divMens.scrollTop = divMens.scrollHeight;
+  }
   function table() {
     $.ajax({
       url: "/pando/message",
@@ -192,6 +197,7 @@ $(function () {
               </tr>
           `);
         });
+        scrollToBottom();
       }
     })
   }

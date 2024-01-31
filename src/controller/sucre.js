@@ -1,6 +1,8 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron");
-const CryptoJS = require("crypto-js")
+const CryptoJS = require("crypto-js");
+const PDFDocument = require("pdfkit-table");
+const moment = require('moment');
 const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientSR,
@@ -111,7 +113,7 @@ exports.NotesCreatesucreController = (req, res) => {
         id: mensajesSR.length + 1,
         mensaje
     });
-    res.json('Successfully created');
+    res.json('Actualizado Exitosamente');
 }
 exports.NotesUpdatesucreController = (req, res) => {
     console.log(req.body, req.params)
@@ -123,7 +125,7 @@ exports.NotesUpdatesucreController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Successfully updated');
+    res.json('Actualizado Exitosamente');
 }
 exports.NotesDelatesucreController = (req, res) => {
     const { id } = req.params;
@@ -133,7 +135,7 @@ exports.NotesDelatesucreController = (req, res) => {
             mensajesSR.splice(i, 1);
         }
     });
-    res.json('Successfully deleted');
+    res.json('Eliminado Exitosamente');
 }
 exports.logout = async (req, res) => {
     const cliente = container.cliente;

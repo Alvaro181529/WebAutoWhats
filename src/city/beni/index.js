@@ -162,6 +162,10 @@ $(function () {
       }
     });
   });
+  function scrollToBottom() {
+    var divMens = document.getElementById('mens');
+    divMens.scrollTop = divMens.scrollHeight;
+  }
   function table() {
     $.ajax({
       url: "/beni/message",
@@ -191,6 +195,7 @@ $(function () {
               </tr>
           `);
         });
+        scrollToBottom();
       }
     })
   }

@@ -1,6 +1,8 @@
 const qrcode = require("qrcode");
 const cron = require("node-cron")
-const CryptoJS = require("crypto-js")
+const CryptoJS = require("crypto-js");
+const PDFDocument = require("pdfkit-table");
+const moment = require('moment');
 const bpass = require("../database/mensajes/bpass.json");
 
 const {
@@ -117,7 +119,7 @@ exports.NotesCreatelapazController = (req, res) => {
     id: mensajesLP.length + 1,
     mensaje,
   });
-  res.json("Successfully created");
+  res.json("Creado Exitosamente");
 };
 exports.NotesUpdatelapazController = (req, res) => {
   console.log(req.body, req.params);
@@ -129,7 +131,7 @@ exports.NotesUpdatelapazController = (req, res) => {
       mensajesL.mensaje = mensaje;
     }
   });
-  res.json("Successfully updated");
+  res.json("Actualizado Exitosamente");
 };
 exports.NotesDelatelapazController = (req, res) => {
   const { id } = req.params;
@@ -139,7 +141,7 @@ exports.NotesDelatelapazController = (req, res) => {
       mensajesLP.splice(i, 1);
     }
   });
-  res.json("Successfully deleted");
+  res.json("Eliminado Exitosamente");
 };
 async function inicio() {
   const cliente = await ClientLP();

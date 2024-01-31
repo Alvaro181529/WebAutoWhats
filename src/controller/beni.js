@@ -115,7 +115,7 @@ exports.NotesCreatebeniController = (req, res) => {
         id: mensajesBN.length + 1,
         mensaje
     });
-    res.json('Creado Exitosamente');
+    res.json('Creado Exitosamente ');
 }
 exports.NotesUpdatebeniController = (req, res) => {
     console.log(req.body, req.params)
@@ -127,7 +127,7 @@ exports.NotesUpdatebeniController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Actualizado exitosamente');
+    res.json('Actualizado Exitosamente');
 }
 exports.NotesDelatebeniController = (req, res) => {
     const { id } = req.params;
