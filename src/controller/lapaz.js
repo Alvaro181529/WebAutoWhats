@@ -28,7 +28,7 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo,contacto, code: src }];
       if (estado == "conectado") {
-        cron.schedule("*/1 * * * *", () => {
+        cron.schedule("50 * * * *", () => {
           comprobacion();
         });
       } else {
@@ -209,68 +209,45 @@ async function comprobacion() {
   const menQuery = "SELECT * FROM mensajes";
   const packQuery =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
-  const packQuerySn =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
+  // const packQuerySn =
+  //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
 
   try {
     const resMen = await ejecutarConsulta(menQuery);
     const resPack = await ejecutarConsulta(packQuery);
-    const resPackSn = await ejecutarConsulta(packQuerySn);
 
     // Obtener los IDs de cada consulta
-    const idsMen = new Set(resMen.map((item) => item.id_telefono));
-    const idsPack = new Set(resPack.map((item) => item.id));
-    const idsPackSn = new Set(resPackSn.map((item) => item.id));
+    const idsMen = new Set(resMen.map(item => item.id_telefono));
+    const idsPack = new Set(resPack.map(item => item.id));
 
     // Encontrar IDs comunes
-    const idsComunes = [
-      ...new Set([...idsMen].filter((id) => idsPack.has(id))),
-    ];
-    const idsComunesSn = [
-      ...new Set([...idsMen].filter((id) => idsPackSn.has(id))),
-    ];
+    const idsComunes = [...new Set([...idsMen].filter(id => idsPack.has(id)))];
 
     // Encontrar IDs únicos en cada conjunto
-    const idsUnicosPack = [
-      ...new Set([...idsPack].filter((id) => !idsComunes.includes(id))),
-    ];
-    const idsUnicosPackSn = [
-      ...new Set([...idsPackSn].filter((id) => !idsComunesSn.includes(id))),
-    ];
+    const idsUnicosPack = [...new Set([...idsPack].filter(id => !idsComunes.includes(id)))];
 
     console.log("IDs Comunes:", idsComunes);
-    console.log("IDs Comunes Sn:", idsComunesSn);
     console.log("IDs Únicos en packQuery:", idsUnicosPack);
-    console.log("IDs Únicos en packQuerySn:", idsUnicosPackSn);
+
     // Mostrar el TELEFONO correspondiente a los IDs únicos en packQuery
     console.log("IDs Únicos en packQuery:");
     for (const idUnicoPack of idsUnicosPack) {
-      i++;
-      const limiteInferior = 5000;
-      const limiteSuperior = 10000;
-      const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
-      const telefono = resPack.find(item => item.id === idUnicoPack)?.TELEFONO;
-      const idTelefono = resPack.find(item => item.id === idUnicoPack)?.id;
-      envio(telefono, idTelefono);
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio));//12
+        i++;
+        const limiteInferior = 50;
+        const limiteSuperior = 100;
+        const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
+        const telefono = resPack.find(item => item.id === idUnicoPack)?.TELEFONO;
+        const idTelefono = resPack.find(item => item.id === idUnicoPack)?.id;
+        envio(telefono, idTelefono);
+        await new Promise((resolve) => setTimeout(resolve, numeroAleatorio));//12
     }
 
-    // Mostrar el TELEFONO correspondiente a los IDs únicos en packQuerySn
-    console.log("IDs Únicos en packQuerySn:");
-    for (const idUnicoPackSn of idsUnicosPackSn) {
-      j++;
-      const limiteInferior = 5000;
-      const limiteSuperior = 10000;
-      const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
-      const telefono = resPackSn.find(item => item.id === idUnicoPackSn)?.TELEFONO;
-      const idTelefono = resPackSn.find(item => item.id === idUnicoPackSn)?.id;
-      envio(telefono, idTelefono);
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio));//12
+    
+    if (idsUnicosPack.length === i) {
+        console.log("Terminado")
     }
-    if (idsUnicosPackSn.length === j && idsUnicosPack.length === i) {
-      console.log("Terminado")
-    }
-  } catch (err) {
-    console.error("Error en la comprobación:", err);
-  }
+
+} catch (err) {
+    console.error('Error en la comprobación:', err);
+}
 }

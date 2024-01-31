@@ -80,7 +80,8 @@ $(function () {
     $.ajax({
       url: "/pando/notes",
       success: function (mensajesLP) {
-        let tbody = $('tbody');
+        let tbody = $('#tbody');
+    
         tbody.html('');
         mensajesLP.forEach(mensajesL => {
           tbody.append(`

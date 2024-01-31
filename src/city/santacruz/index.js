@@ -79,7 +79,8 @@ $(function () {
     $.ajax({
       url: "/santacruz/notes",
       success: function (mensajesLP) {
-        let tbody = $('tbody');
+        let tbody = $('#tbody');
+
         tbody.html('');
         mensajesLP.forEach(mensajesL => {
           tbody.append(`
