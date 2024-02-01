@@ -227,8 +227,8 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-      const limiteInferior = 1000;
-      const limiteSuperior = 5000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 15000;
       const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
       const packItem = resPack.find(item => item.id === idUnicoPack);
       const id = packItem.id;
@@ -317,8 +317,8 @@ async function comprobacionReenvio() {
     const idsUnicosMen3 = resMen3.map(item => item.id);
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-      const limiteInferior = 1000;
-      const limiteSuperior = 5000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 15000;
       const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
       const packItem = resMen1.find(item => item.id === idUnicosMen1);
       const id = packItem.id;
@@ -331,8 +331,8 @@ async function comprobacionReenvio() {
     console.log("Segundo reenvio:");
 
     for (const idUnicosMen2 of idsUnicosMen2) {
-      const limiteInferior = 1000;
-      const limiteSuperior = 5000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 15000;
       const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
       const packItem = resMen2.find(item => item.id === idUnicosMen2);
       const id = packItem.id;
@@ -345,8 +345,8 @@ async function comprobacionReenvio() {
     Reenvio("Segundo reenvio:");
 
     for (const idUnicosMen3 of idsUnicosMen3) {
-      const limiteInferior = 1000;
-      const limiteSuperior = 5000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 15000;
       const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
       const packItem = resMen3.find(item => item.id === idUnicosMen3);
       const id = packItem.id;

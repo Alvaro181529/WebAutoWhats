@@ -36,7 +36,7 @@ $(function () {
     $.ajax({
       url: "/potosi",
       success: async function (lp) {
-        setInterval(table, 10000)
+        setInterval(table, 13000)
         const imgQR = $("#qr"); // Select the existing image
         lp.forEach(async (lps) => {
           // console.log(lps)

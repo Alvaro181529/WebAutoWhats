@@ -99,7 +99,7 @@ function buildPDF(dataCallback, endCallback) {
 exports.santacruzControllerAuth = (req, res) => {
     const { pass } = req.body;
     const admin = bpass[9].pass;
-    const santacruz = bpass[0].pass; // pass santacruz
+    const santacruz = bpass[6].pass; // pass santacruz
     const passwordAdm = CryptoJS.MD5(admin).toString();
     const password = CryptoJS.MD5(santacruz).toString();
     const auth = CryptoJS.MD5(pass).toString();
@@ -224,8 +224,8 @@ async function comprobacion() {
   
       for (const idUnicoPack of idsUnicosPack) {
         i++;
-        const limiteInferior = 1000;
-        const limiteSuperior = 5000;
+        const limiteInferior = 10000;
+        const limiteSuperior = 15000;
         const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
         const packItem = resPack.find(item => item.id === idUnicoPack);
         const id = packItem.id;
@@ -314,8 +314,8 @@ async function comprobacion() {
       const idsUnicosMen3 = resMen3.map(item => item.id);
       console.log("Primer reenvio:");
       for (const idUnicosMen1 of idsUnicosMen1) {
-        const limiteInferior = 1000;
-        const limiteSuperior = 5000;
+        const limiteInferior = 10000;
+        const limiteSuperior = 15000;
         const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
         const packItem = resMen1.find(item => item.id === idUnicosMen1);
         const id = packItem.id;
@@ -328,8 +328,8 @@ async function comprobacion() {
       console.log("Segundo reenvio:");
   
       for (const idUnicosMen2 of idsUnicosMen2) {
-        const limiteInferior = 1000;
-        const limiteSuperior = 5000;
+        const limiteInferior = 10000;
+        const limiteSuperior = 15000;
         const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
         const packItem = resMen2.find(item => item.id === idUnicosMen2);
         const id = packItem.id;
@@ -342,8 +342,8 @@ async function comprobacion() {
       Reenvio("Segundo reenvio:");
   
       for (const idUnicosMen3 of idsUnicosMen3) {
-        const limiteInferior = 1000;
-        const limiteSuperior = 5000;
+        const limiteInferior = 10000;
+        const limiteSuperior = 15000;
         const numeroAleatorio = Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) + limiteInferior;
         const packItem = resMen3.find(item => item.id === idUnicosMen3);
         const id = packItem.id;
