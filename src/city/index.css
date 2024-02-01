@@ -44,7 +44,7 @@
   --bs-dark: #212529;
   --bs-black: #000;
   --bs-white: #fff;
-  --bs-primary-rgb: 100, 161, 157;
+  --bs-primary-rgb: 52, 68, 124;
   --bs-secondary-rgb: 116, 100, 161;
   --bs-success-rgb: 103, 194, 156;
   --bs-info-rgb: 28, 171, 196;
@@ -2852,8 +2852,8 @@ textarea.form-control-lg {
   --bs-btn-bg: #34447C;
   --bs-btn-border-color: #34447C;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #558985;
-  --bs-btn-hover-border-color: #50817e;
+  --bs-btn-hover-bg: #B99C46;
+  --bs-btn-hover-border-color: #B99C46;
   --bs-btn-focus-shadow-rgb: 123, 175, 172;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #50817e;
@@ -11163,9 +11163,14 @@ body {
 .contact-section {
   padding-top: 5rem;
 }
+.card:hover{
+  color: #fff;
+  background-color: #B99C46;
+  opacity: 1;
+}
 .contact-section .card {
   border: 0;
-  border-bottom: 0.25rem solid #64a19d;
+  border-bottom: 0.25rem solid #34447C;
 }
 .contact-section .card h4, .contact-section .card .h4 {
   font-size: 0.8rem;
@@ -11175,7 +11180,7 @@ body {
 }
 .contact-section .card hr {
   opacity: 1;
-  border-color: #64a19d;
+  border-color: #34447C;
   border-width: 0.25rem;
   width: 3rem;
 }

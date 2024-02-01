@@ -19,5 +19,13 @@ async function guardarMensajes(estado, mensaje, descripcion, id_telefono) {
         console.error('Error al enviar y guardar mensaje:', err);
     }
 }
-
-module.exports = { ejecutarConsulta, guardarMensajes }
+async function actualizarMensajes(estado, mensaje, descripcion, intentos, id) {
+    const query = "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
+    try {
+        await conn.query(query, [estado, mensaje, descripcion, intentos, id]); // Asegúrate de tener un valor para `id`
+        console.log('Mensaje actualizado en la base de datos');
+    } catch (err) {
+        console.error('Error al actualizar mensaje:', err);
+    }
+}
+module.exports = { ejecutarConsulta, guardarMensajes, actualizarMensajes }

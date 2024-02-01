@@ -180,7 +180,7 @@ $(function () {
         tbody.html('');
         resp.forEach(mensajesL => {
           // Convertir la cadena de fecha a un objeto Date
-          let fechaCreacion = new Date(mensajesL.fecha_creacion);
+          let fechaCreacion = new Date(mensajesL.fecha_actualizacion);
 
           // Obtener componentes de fecha y hora
           let dia = fechaCreacion.getDate();
