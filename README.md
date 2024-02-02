@@ -18,7 +18,7 @@ Versión actual: 0.0.9
 
 ## Instalación
 
-1. Clona el repositorio
+1. Clona el repositorio y ejecuta el siguiente comando
 * `npm install`
 2. Se instalaran las siguientes dependencias:
 * `npm i crypto-js`
