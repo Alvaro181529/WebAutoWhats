@@ -28,10 +28,10 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
-        cron.schedule("30 16 * * 1,3,5", () => {
+        cron.schedule("30 15 * * 1,2,3", () => {
           comprobacion();
         });
-        cron.schedule("30 16 * * 2,4", () => {
+        cron.schedule("30 15 * * 4,5", () => {
           comprobacionReenvio();
         });
       } else {
@@ -55,8 +55,8 @@ exports.lapazControllerReportes = async (req, res) => {
   const cons = await ejecutarConsulta(pdf)
   cons.forEach((row) => {
     const formattedDate = moment(row.fecha_creacion).format("DD-MM-YYYY HH:mm:ss");
-        const formattedDateEnd = moment(row.fecha_actualizacion).format("DD-MM-YYYY HH:mm:ss");
-        tableArray.rows.push([
+    const formattedDateEnd = moment(row.fecha_actualizacion).format("DD-MM-YYYY HH:mm:ss");
+    tableArray.rows.push([
       row.numero,
       row.TELEFONO,
       row.CUIDAD,
@@ -87,7 +87,7 @@ function buildPDF(dataCallback, endCallback) {
 
   doc.fontSize(20).text("Reporte de envio");
 
-  doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 70, 45,55, 55] });
+  doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 70, 45, 55, 55] });
   doc.end();
 }
 

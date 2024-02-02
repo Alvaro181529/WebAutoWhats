@@ -29,12 +29,12 @@ exports.oruroController = (req, res) => {
             if (estado == "conectado") {
                 //si o si una hora definida
                 //              s   m h 
-                cron.schedule("30 16 * * 1,3,5", () => {
+                cron.schedule("30 15 * * 1,2,3", () => {
                     comprobacion();
-                  });
-                  cron.schedule("30 16 * * 2,4", () => {
+                });
+                cron.schedule("30 15 * * 4,5", () => {
                     comprobacionReenvio();
-                  });
+                });
             } else {
                 inicio();
             }
