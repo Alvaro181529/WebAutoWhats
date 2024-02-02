@@ -28,11 +28,10 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
-        // cron.schedule("*/2 * * * 1,3,5", () => {
-        cron.schedule("20 * * * *", () => {
+        cron.schedule("30 16 * * 1,3,5", () => {
           comprobacion();
         });
-        cron.schedule("*/2 * * * *", () => {
+        cron.schedule("30 16 * * 2,4", () => {
           comprobacionReenvio();
         });
       } else {

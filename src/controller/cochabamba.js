@@ -27,14 +27,12 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                //si o si una hora definida
-                //              s   m h 
-                cron.schedule(' */24 * * * * *', async () => {
+                cron.schedule("30 16 * * 1,3,5", () => {
                     comprobacion();
-                });
-                cron.schedule("*/1 * * * *", () => {
+                  });
+                  cron.schedule("30 16 * * 2,4", () => {
                     comprobacionReenvio();
-                });
+                  });
             } else {
                 inicio();
             }

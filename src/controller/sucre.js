@@ -29,12 +29,12 @@ exports.sucreController = (req, res) => {
             if (estado == "conectado") {
                 //si o si una hora definida
                 //  SE CAMBIA A LA HORA DEFINIDA
-                cron.schedule(' */24 * * * * *', async () => {
+                cron.schedule("30 16 * * 1,3,5", () => {
                     comprobacion();
-                });
-                cron.schedule("*/1 * * * *", () => {
+                  });
+                  cron.schedule("30 16 * * 2,4", () => {
                     comprobacionReenvio();
-                });
+                  });
             } else {
                 inicio();
             }
