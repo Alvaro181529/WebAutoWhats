@@ -1,66 +1,46 @@
 [
-    {
-        "id": 1,
-        "mensaje": "Por favor, recuerde recoger su paquete en la agencia nacional de correos."
-    },
-    {
-        "id": 2,
-        "mensaje": "Estamos ansiosos por su llegada. Lo esperamos con entusiasmo."
-    },
-    {
-        "id": 3,
-        "mensaje": "Estaremos atentos a su llegada. No dude en pasar por nuestra oficina."
-    },
-    {
-        "id": 4,
-        "mensaje": "Su paquete está listo para ser recogido en la agencia. ¡Hasta pronto!"
-    },
-    {
-        "id": 5,
-        "mensaje": "Le recordamos que su paquete le espera en la agencia nacional de correos."
-    },
-    {
-        "id": 6,
-        "mensaje": "Nos encantaría verlo pronto en nuestra agencia. Su paquete está listo."
-    },
-    {
-        "id": 7,
-        "mensaje": "Lo esperamos con gusto en la agencia de correos. Su paquete le aguarda."
-    },
-    {
-        "id": 8,
-        "mensaje": "Su paquete está seguro y listo para ser recogido. ¡No demore!"
-    },
-    {
-        "id": 9,
-        "mensaje": "Asegúrese de recoger su encomienda en la agencia de mensajería nacional."
-    },
-    {
-        "id": 10,
-        "mensaje": "Estamos emocionados por su llegada. Le esperamos con anticipación."
-    },
-    {
-        "id": 11,
-        "mensaje": "Permaneceremos alerta a su llegada. No dude en visitar nuestras instalaciones."
-    },
-    {
-        "id": 12,
-        "mensaje": "Su paquete está preparado para ser retirado en la agencia. ¡Hasta pronto!"
-    },
-    {
-        "id": 13,
-        "mensaje": "Le recordamos la disponibilidad de su paquete en la agencia de correos nacional."
-    },
-    {
-        "id": 14,
-        "mensaje": "Nos encantaría darle la bienvenida pronto en nuestra agencia. Su paquete está preparado."
-    },
-    {
-        "id": 15,
-        "mensaje": "Le esperamos con gusto en la agencia postal. Su paquete le aguarda."
-    },
-    {
-        "id": 16,
-        "mensaje": "Su paquete está resguardado y listo para ser retirado. ¡No demore!."
-    }
+  {
+    "id": 1,
+    "mensaje": "Hola, Somos la Agencia Boliviana de Correos, nos permitimos comunicarle que llegó su paquete o sobre, ¡ya puede pasar a recogerlo! por nuestra oficina Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, que tenga un buen día."
+  },
+  {
+    "id": 2,
+    "mensaje": "La Agencia Boliviana de Correos, mediante la presente le comunica que ya llegó su paquete o sobre, ¡ya puede pasar a recogerlo! en nuestra oficina Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, que tenga un buen día."
+  },
+  {
+    "id": 3,
+    "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre, ya puede pasar a recogerlo por nuestra oficina Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, lo esperamos."
+  },
+  {
+    "id": 4,
+    "mensaje": "Saludos, somos de la AGBC y nos permitimos comunicarle que ya puede pasar a recoger su paquete o sobre de la oficina de la Agencia Boliviana de Correos Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00, muchas gracias por su atención."
+  },
+  {
+    "id": 5,
+    "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo de la oficina ubicada en la Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, lo esperamos."
+  },
+  {
+    "id": 6,
+    "mensaje": "Hola, espero se encuentre bien, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre a La Paz, por lo que ya puede pasar a recogerlo en la Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, lo esperamos."
+  },
+  {
+    "id": 7,
+    "mensaje": "Lo esperamos con gusto en la agencia de correos. Su paquete le aguarda."
+  },
+  {
+    "id": 8,
+    "mensaje": "Saludos, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo en la oficina de la AGBC Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla, lo esperamos."
+  },
+  {
+    "id": 9,
+    "mensaje": "Saludos, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo por la oficina de la AGBC Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 lo esperamos, en ventanilla."
+  },
+  {
+    "id": 10,
+    "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo por nuestra oficina Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 lo esperamos, en ventanilla."
+  },
+  {
+    "id": 11,
+    "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo por nuestra oficina Av. Mariscal Santa Cruz, Esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz, lo esperamos de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00, en ventanilla."
+  }
 ]

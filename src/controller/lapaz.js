@@ -27,6 +27,8 @@ exports.lapazController = (req, res) => {
   qrcode.toDataURL(codigo, (err, src) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
+      //lunes , martes, miercoles, 15:30hrs envio
+      //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
         cron.schedule("30 15 * * 1,2,3", () => {
           comprobacion();

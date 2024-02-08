@@ -14,11 +14,22 @@ $(function () {
       success: function (resp) {
         switch (resp) {
           case "adm":
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('content-container').style.filter = 'none';
-            document.getElementById('content-container').style.display = 'block';
-            var inputSalir = document.getElementById('salir');
-            inputSalir.removeAttribute('hidden');
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("content-container").style.filter = "none";
+            document.getElementById("content-container").style.display =
+              "block";
+            var inputSalir = document.getElementById("salir");
+            var form = document.getElementById("noteForm");
+            var act = document.getElementById("act");
+            $("#tbody").on("click", "tr", function () {
+              $(this)
+                .find(".update-button, .delete-button")
+                .removeClass("hide");
+            });
+            inputSalir.removeAttribute("hidden");
+            form.removeAttribute("hidden");
+            act.removeAttribute("hidden");
+
             break;
           case "pass":
             document.getElementById('overlay').style.display = 'none';

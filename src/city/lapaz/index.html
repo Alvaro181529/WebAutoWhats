@@ -73,12 +73,12 @@
                         <div class="modal-content">
                             <div class="modal-header row">
                                 <div class="col-4">
-                                    <form class="row" id="noteForm" method="post">
+                                    <form class="row" id="noteForm"hidden method="post">
                                         <div class="col-auto">
-                                            <input type="text" placeholder="Frase" class="form-control" id="mensajes">
+                                            <input type="text"  placeholder="Frase" class="form-control" id="mensajes">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit"  class="btn btn-primary" id="save">
                                                 <i class="fa fa-save" aria-hidden="true"></i>
                                                 Guardar</button>
                                         </div>
@@ -98,7 +98,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            <th>Actions</th>
+                                            <th id="act" hidden>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody align="center" id="tbody"></tbody>
