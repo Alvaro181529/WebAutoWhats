@@ -67,6 +67,7 @@ const tableArray = {
 
 exports.lapazControllerReportes = async (req, res) => {
   const { date } = req.body;
+  // con esta consilta sse hace el llamado para los reportes
   const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'LA PAZ' AND mensajes.fecha_creacion >= '${date}';`;
   const cons = await ejecutarConsulta(pdf);
   cons.forEach((row) => {
@@ -114,6 +115,7 @@ function buildPDF(dataCallback, endCallback) {
 }
 
 exports.lapazControllerMessage = async (req, res) => {
+  //con esta consultan se hace el control de los mensajes
   const mensajes =
     "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'LA PAZ' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
   const cons = await ejecutarConsulta(mensajes);
@@ -320,8 +322,11 @@ function Reenvio(contacto, id, int, estadoEnvio) {
   actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id);
 }
 async function comprobacionReenvio() {
+  /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
     "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_creacion ASC LIMIT 100;";
+
+  /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
     "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_creacion ASC LIMIT 100;";
 
@@ -331,6 +336,7 @@ async function comprobacionReenvio() {
 
     const idsUnicosMen1 = resMen1.map((item) => item.id);
     const idsUnicosMen2 = resMen2.map((item) => item.id);
+
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
       const limiteInferior = 10000;
