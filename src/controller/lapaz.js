@@ -34,12 +34,12 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        // cron.schedule("40 15 * * 1,2,3,4", () => {
-        cron.schedule("23 * * * *", () => {
+        cron.schedule("40 15 * * 1,2,3", () => {
+          // cron.schedule("23 * * * *", () => {
           comprobacion();
         });
-        // cron.schedule("30 15 * * 4,5", () => {
-        cron.schedule("49 * * * *", () => {
+        cron.schedule("30 15 * * 4,5", () => {
+          // cron.schedule("49 * * * *", () => {
           comprobacionReenvio();
         });
       } else {
@@ -124,7 +124,7 @@ exports.lapazControllerMessage = async (req, res) => {
 exports.lapazControllerAuth = (req, res) => {
   const { pass } = req.body;
   const admin = bpass[9].pass;
-  const lapaz = bpass[2].pass; // pass beni 
+  const lapaz = bpass[2].pass; // pass beni
   const passwordAdm = CryptoJS.MD5(admin).toString();
   const password = CryptoJS.MD5(lapaz).toString();
   const auth = CryptoJS.MD5(pass).toString();
