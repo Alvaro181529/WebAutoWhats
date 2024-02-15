@@ -26,8 +26,8 @@ app.set('case sensitive routing', true)
 app.set('appName', 'Whatsapp');
 app.set('port', process.env.PORT || 4000)
 
-app.use(morgan('tiny'));
-app.use(express.json());
+// app.use(morgan('tiny'));
+app.use(express.json())
 
 sockets(io)
 
