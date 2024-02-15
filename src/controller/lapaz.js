@@ -124,7 +124,7 @@ exports.lapazControllerMessage = async (req, res) => {
 exports.lapazControllerAuth = (req, res) => {
   const { pass } = req.body;
   const admin = bpass[9].pass;
-  const lapaz = bpass[2].pass; // pass beni
+  const lapaz = bpass[2].pass; // pass beni 
   const passwordAdm = CryptoJS.MD5(admin).toString();
   const password = CryptoJS.MD5(lapaz).toString();
   const auth = CryptoJS.MD5(pass).toString();
