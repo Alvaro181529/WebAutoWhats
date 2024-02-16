@@ -1,10 +1,9 @@
 const { createPool } = require("mysql2/promise");
 const conn = createPool({
-  host: "127.0.0.1",
-  // host: "172.65.14.180",
+  host: "172.65.10.50",
   port: 3306,
   database: "trackpak",
   user: "root",
-  password: "",
+  password: "Correos.2023",
 });
 module.exports = { conn };
