@@ -34,11 +34,11 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("30 12 * * 1,2,3", () => {
+        cron.schedule("30 12 * * 1,2,3,4,5", () => {
           // cron.schedule("23 * * * *", () => {
           comprobacion();
         });
-        cron.schedule("30 12 * * 4,5", () => {
+        cron.schedule("30 12 * * 2,4", () => {
           // cron.schedule("49 * * * *", () => {
           comprobacionReenvio();
         });
@@ -238,7 +238,7 @@ async function comprobacion() {
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
 
   try {
     const resPack = await ejecutarConsulta(packQuery);
@@ -250,7 +250,7 @@ async function comprobacion() {
     for (const idUnicoPack of idsUnicosPack) {
       i++;
       const limiteInferior = 20000;
-      const limiteSuperior = 60000;
+      const limiteSuperior = 120000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -338,7 +338,7 @@ async function comprobacionReenvio() {
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
       const limiteInferior = 20000;
-      const limiteSuperior = 60000;
+      const limiteSuperior = 120000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
