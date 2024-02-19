@@ -1,16 +1,17 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const puppeteer = require('puppeteer');
 
-// Configuración de Puppeteer
-const browser = await puppeteer.launch({
-  args: ['--no-sandbox']
-});
 
 let QRlapaz = "";
 let estadoLapaz = "";
 let statusLapaz = "";
 let contacto ="";
 async function ClientLP() {
+  // Configuración de Puppeteer
+const browser = await puppeteer.launch({
+  args: ['--no-sandbox']
+});
+
  const lapaz = new Client({
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
   });
