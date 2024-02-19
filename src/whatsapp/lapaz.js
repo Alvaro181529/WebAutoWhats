@@ -6,6 +6,16 @@ let statusLapaz = "";
 let contacto ="";
 async function ClientLP() {
  const lapaz = new Client({
+  puppeteer: {
+    headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-site-isolation-trials',
+        '--disable-setuid-sandbox',
+      ],
+      executablePath: '/usr/bin/chromium-browser',
+  },
+      executablePath: '/usr/bin/chromium-browser',
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
   });
 
