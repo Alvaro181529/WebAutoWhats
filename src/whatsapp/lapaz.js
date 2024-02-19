@@ -13,9 +13,7 @@ async function ClientLP() {
         '--disable-site-isolation-trials',
         '--disable-setuid-sandbox',
       ],
-      executablePath: '/usr/bin/chromium-browser',
   },
-      executablePath: '/usr/bin/chromium-browser',
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
   });
 
