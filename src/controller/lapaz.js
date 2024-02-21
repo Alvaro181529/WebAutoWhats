@@ -34,7 +34,7 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("30 9 * * 1,2,3,4,5", () => {
+        cron.schedule("30 10 * * 1,2,3,4,5", () => {
           // cron.schedule("23 * * * *", () => {
           comprobacion();
         });
@@ -249,8 +249,8 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-      const limiteInferior = 20000;
-      const limiteSuperior = 120000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 25000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -337,8 +337,8 @@ async function comprobacionReenvio() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-      const limiteInferior = 20000;
-      const limiteSuperior = 120000;
+      const limiteInferior = 10000;
+      const limiteSuperior = 25000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
