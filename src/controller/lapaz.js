@@ -35,11 +35,11 @@ exports.lapazController = (req, res) => {
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
         cron.schedule("7 10 * * 1,2,3,4,5", () => {
-          // cron.schedule("23 * * * *", () => {
+          // cron.schedule("* * * * *", () => {
           comprobacion();
         });
         cron.schedule("0 12 * * 2,4", () => {
-          // cron.schedule("49 * * * *", () => {
+        // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
       } else {
@@ -179,12 +179,13 @@ async function inicio() {
   container.cliente = cliente; // Almacena el cliente en el contenedor
   return cliente;
 }
-function envio(contacto, id, estadoEnvio) {
+function envio(contacto, id, estadoEnvio, ven) {
   const cliente = container.cliente;
   const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
-  const mensaje = mensajesLP[randomIndex].mensaje;
+  const men = mensajesLP[randomIndex].mensaje;
+  const mensaje = men + " " + ven + ".";
   let estado;
   let descripcion;
   let enviados = 0;
@@ -256,9 +257,10 @@ async function comprobacion() {
         limiteInferior;
       const packItem = resPack.find((item) => item.id === idUnicoPack);
       const id = packItem.id;
+      const ven = packItem.VENTANILLA;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio);
+      envio(telefono, id, estadoEnvio, ven);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
 
@@ -267,12 +269,13 @@ async function comprobacion() {
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio) {
+function Reenvio(contacto, id, int, estadoEnvio, ven) {
   const cliente = container.cliente;
   const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
-  const mensaje = mensajesLP[randomIndex].mensaje;
+  const men = mensajesLP[randomIndex].mensaje;
+  const mensaje = men + " " + ven + ".";
   let estado;
   let descripcion;
   let enviados = 0;
@@ -322,11 +325,11 @@ function Reenvio(contacto, id, int, estadoEnvio) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
-    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
@@ -345,11 +348,12 @@ async function comprobacionReenvio() {
       const packItem = resMen1.find((item) => item.id === idUnicosMen1);
       const id = packItem.id;
       const intentos = packItem.Intentos;
+      const ven = packItem.VENTANILLA;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
       console.log(estadoEnvio);
-      Reenvio(telefono, id, int, estadoEnvio);
+      Reenvio(telefono, id, int, estadoEnvio, ven);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
     console.log("Segundo reenvio:");
