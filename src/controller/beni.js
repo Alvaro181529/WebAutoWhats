@@ -175,59 +175,59 @@ async function inicio() {
   return container.cliente;
 }
 function envio(contacto, id, estadoEnvio, ven) {
-    const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
-    let status = callbackStatusLPZ();
-    const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
-    const mensaje = men + " " + ven + ".";
-    let estado;
-    let descripcion;
-    let enviados = 0;
-    let rechazados = 0;
-  
-    if (typeof contacto === "number") {
-      const numeroComoCadena = contacto.toString();
-      const primerNumero = numeroComoCadena[0];
-      const cantidadDigitos = numeroComoCadena.length;
-  
-      if (
-        cantidadDigitos === 8 &&
-        (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
-      ) {
-        switch (status) {
-          case 3:
-            estado = "Leído";
-            break;
-          case 2:
-            estado = "Recibido";
-            break;
-          case 1:
-            estado = "Enviado";
-            break;
-          default:
-            estado = "Enviado";
-            break;
-        }
-        descripcion = "El número es correcto.";
-        enviados++;
-        enviarMensaje(cliente, numero, mensaje);
-      } else {
-        estado = "No enviado";
-        descripcion = "El número es incorrecto.";
-        rechazados++;
+  const cliente = container.cliente;
+  const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+  let status = callbackStatusBN();
+  const numero = "591" + contacto + "@c.us";
+  const men = mensajesLP[randomIndex].mensaje;
+  const mensaje = men + " " + ven + ".";
+  let estado;
+  let descripcion;
+  let enviados = 0;
+  let rechazados = 0;
+
+  if (typeof contacto === "number") {
+    const numeroComoCadena = contacto.toString();
+    const primerNumero = numeroComoCadena[0];
+    const cantidadDigitos = numeroComoCadena.length;
+
+    if (
+      cantidadDigitos === 8 &&
+      (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
+    ) {
+      switch (status) {
+        case 3:
+          estado = "Leído";
+          break;
+        case 2:
+          estado = "Recibido";
+          break;
+        case 1:
+          estado = "Enviado";
+          break;
+        default:
+          estado = "Enviado";
+          break;
       }
+      descripcion = "El número es correcto.";
+      enviados++;
+      enviarMensaje(cliente, numero, mensaje);
     } else {
       estado = "No enviado";
-      descripcion = "No es un número.";
+      descripcion = "El número es incorrecto.";
       rechazados++;
     }
-    console.log(
-      `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
-    );
-    guardarMensajes(estado, mensaje, descripcion, id, estadoEnvio);
+  } else {
+    estado = "No enviado";
+    descripcion = "No es un número.";
+    rechazados++;
   }
-  
+  console.log(
+    `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
+  );
+  guardarMensajes(estado, mensaje, descripcion, id, estadoEnvio);
+}
+
 async function comprobacion() {
   let i = 0;
   let j = 0;
@@ -267,58 +267,58 @@ async function comprobacion() {
   }
 }
 function Reenvio(contacto, id, int, estadoEnvio, ven) {
-    const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
-    let status = callbackStatusLPZ();
-    const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
-    const mensaje = men + " " + ven + ".";
-    let estado;
-    let descripcion;
-    let enviados = 0;
-    let rechazados = 0;
-  
-    if (typeof contacto === "number") {
-      const numeroComoCadena = contacto.toString();
-      const primerNumero = numeroComoCadena[0];
-      const cantidadDigitos = numeroComoCadena.length;
-  
-      if (
-        cantidadDigitos === 8 &&
-        (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
-      ) {
-        switch (status) {
-          case 3:
-            estado = "Leído";
-            break;
-          case 2:
-            estado = "Recibido";
-            break;
-          case 1:
-            estado = "Enviado";
-            break;
-          default:
-            estado = "Enviado";
-            break;
-        }
-        descripcion = "El número es correcto. y el mensaje fue reenviado";
-        enviados++;
-        enviarMensaje(cliente, numero, mensaje);
-      } else {
-        estado = "No enviado";
-        descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
-        rechazados++;
+  const cliente = container.cliente;
+  const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+  let status = callbackStatusBN();
+  const numero = "591" + contacto + "@c.us";
+  const men = mensajesLP[randomIndex].mensaje;
+  const mensaje = men + " " + ven + ".";
+  let estado;
+  let descripcion;
+  let enviados = 0;
+  let rechazados = 0;
+
+  if (typeof contacto === "number") {
+    const numeroComoCadena = contacto.toString();
+    const primerNumero = numeroComoCadena[0];
+    const cantidadDigitos = numeroComoCadena.length;
+
+    if (
+      cantidadDigitos === 8 &&
+      (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
+    ) {
+      switch (status) {
+        case 3:
+          estado = "Leído";
+          break;
+        case 2:
+          estado = "Recibido";
+          break;
+        case 1:
+          estado = "Enviado";
+          break;
+        default:
+          estado = "Enviado";
+          break;
       }
+      descripcion = "El número es correcto. y el mensaje fue reenviado";
+      enviados++;
+      enviarMensaje(cliente, numero, mensaje);
     } else {
       estado = "No enviado";
-      descripcion = "No es un número.";
+      descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
       rechazados++;
     }
-    console.log(
-      `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
-    );
-    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id);
+  } else {
+    estado = "No enviado";
+    descripcion = "No es un número.";
+    rechazados++;
   }
+  console.log(
+    `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
+  );
+  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id);
+}
 async function comprobacionReenvio() {
   let i = 0;
   let j = 0;
@@ -330,15 +330,15 @@ async function comprobacionReenvio() {
   const menQuery2 =
     "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'BENI' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
-//   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-//   const menQuery1 =
-//     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-//   const menQuery2 =
-//     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =1 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-//   const menQuery3 =
-//     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =2 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-//   // const packQuerySn =
-//   //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
+  //   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
+  //   const menQuery1 =
+  //     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
+  //   const menQuery2 =
+  //     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =1 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
+  //   const menQuery3 =
+  //     "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =2 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
+  //   // const packQuerySn =
+  //   //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
