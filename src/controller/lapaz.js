@@ -34,12 +34,12 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("7 10 * * 1,2,3,4,5", () => {
-          // cron.schedule("* * * * *", () => {
+        // cron.schedule("7 10 * * 1,2,3,4,5", () => {
+          cron.schedule("* * * * *", () => {
           comprobacion();
         });
-        cron.schedule("0 12 * * 2,4", () => {
-        // cron.schedule("* * * * *", () => {
+        // cron.schedule("0 12 * * 2,4", () => {
+        cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
       } else {
@@ -240,15 +240,37 @@ async function comprobacion() {
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
+    const packQuery1 =
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
 
   try {
     const resPack = await ejecutarConsulta(packQuery);
+    //DESPACHO
+    const resPack1 = await ejecutarConsulta(packQuery1);
 
-    console.log("IDs Únicos en packQuery:");
+    console.log("Envio mensajes:");
 
     const idsUnicosPack = resPack.map((item) => item.id);
+    const idsUnicosPack1 = resPack1.map((item) => item.id);
 
     for (const idUnicoPack of idsUnicosPack) {
+      i++;
+      const limiteInferior = 10000;
+      const limiteSuperior = 25000;
+      const numeroAleatorio =
+        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+        limiteInferior;
+      const packItem = resPack.find((item) => item.id === idUnicoPack);
+      const id = packItem.id;
+      const ven = packItem.VENTANILLA;
+      const telefono = packItem.TELEFONO;
+      const estadoEnvio = packItem.ESTADO;
+      envio(telefono, id, estadoEnvio, ven);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+    }
+    console.log("Envio mensajes desde despacho:");
+
+    for (const idUnicoPack of idsUnicosPack1) {
       i++;
       const limiteInferior = 10000;
       const limiteSuperior = 25000;
