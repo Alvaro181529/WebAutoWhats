@@ -6,6 +6,14 @@ let statusPotosi = "";
 let contacto ="";
 async function ClientPT() {
   const potosi = new Client({
+    puppeteer: {
+      headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-setuid-sandbox',
+        ],
+    },
     authStrategy: new LocalAuth({ clientId: "potosi" }),
   });
 

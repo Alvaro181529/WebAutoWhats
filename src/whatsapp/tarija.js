@@ -6,6 +6,14 @@ let statusTarija = "";
 let contacto ="";
 async function ClientTJ() {
   const tarija = new Client({
+    puppeteer: {
+      headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-setuid-sandbox',
+        ],
+    },
     authStrategy: new LocalAuth({ clientId: "tarija" }),
   });
 

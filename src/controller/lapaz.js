@@ -34,12 +34,12 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        // cron.schedule("7 10 * * 1,2,3,4,5", () => {
-          cron.schedule("* * * * *", () => {
+        cron.schedule("7 10 * * 1,2,3,4,5", () => {
+          // cron.schedule("* * * * *", () => {
           comprobacion();
         });
-        // cron.schedule("0 12 * * 2,4", () => {
-        cron.schedule("* * * * *", () => {
+        cron.schedule("0 12 * * 2,4", () => {
+        // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
       } else {

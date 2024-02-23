@@ -6,6 +6,14 @@ let statusPando = "";
 let contacto="";
 async function ClientPN() {
   const pando = new Client({
+    puppeteer: {
+      headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-setuid-sandbox',
+        ],
+    },
     authStrategy: new LocalAuth({ clientId: "pando" }),
   });
 

@@ -7,6 +7,14 @@ let contacto = "";
 
 async function ClientCBBA() {
   const cochabamba = new Client({
+    puppeteer: {
+      headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-setuid-sandbox',
+        ],
+    },
     authStrategy: new LocalAuth({ clientId: "cochabamba" }),
   });
 

@@ -7,6 +7,14 @@ let contacto = "";
 
 async function ClientOR() {
   const oruro = new Client({
+    puppeteer: {
+      headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-setuid-sandbox',
+        ],
+    },
     authStrategy: new LocalAuth({ clientId: "oruro" }),
   });
 
