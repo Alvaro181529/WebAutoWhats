@@ -1,1 +1,0 @@
-SELECT packages.TELEFONO,packages.CUIDAD,mensajes.mensajes,mensajes.observacion,mensajes.estado FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'BENI';

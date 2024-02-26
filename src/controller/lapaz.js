@@ -374,7 +374,6 @@ async function comprobacionReenvio() {
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
-      console.log(estadoEnvio);
       Reenvio(telefono, id, int, estadoEnvio, ven);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
@@ -389,7 +388,6 @@ async function comprobacionReenvio() {
       let descripcion = desc + " Paquete Entregado";
       let mensajes = packItem.mensajes;
       let estadoEnvio = packItem.ESTADO;
-      console.log(estado, mensajes, descripcion, int, estadoEnvio, id);
       actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id);
     }
     console.log("terminado");
