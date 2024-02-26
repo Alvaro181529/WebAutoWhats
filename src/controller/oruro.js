@@ -29,7 +29,8 @@ exports.oruroController = (req, res) => {
             if (estado == "conectado") {
                 //si o si una hora definida
                 //              s   m h 
-                cron.schedule("30 15 * * 1,2,3", () => {
+                // cron.schedule("30 15 * * 1,2,3", () => {
+                cron.schedule("* * * * *", () => {
                     comprobacion();
                 });
                 cron.schedule("30 15 * * 4,5", () => {
@@ -156,10 +157,10 @@ async function inicio() {
 }
 function envio(contacto, id, estadoEnvio, ven) {
     const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+    const randomIndex = Math.floor(Math.random() * mensajesOR.length);
     let status = callbackStatusOR();
     const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
+    const men = mensajesOR[randomIndex].mensaje;
     const mensaje = men + " " + ven + ".";
     let estado;
     let descripcion;
@@ -214,10 +215,9 @@ async function comprobacion() {
     let j = 0
 
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-    const packQuery = "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
-    // const packQuerySn =
-    //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
-
+    // SELECT *, COUNT(TELEFONO) AS TotalTelefonos FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) GROUP BY TELEFONO LIMIT 100; 
+    const packQuery = "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
+    
     try {
         const resPack = await ejecutarConsulta(packQuery);
 
@@ -248,10 +248,10 @@ async function comprobacion() {
 }
 function Reenvio(contacto, id, int, estadoEnvio, ven) {
     const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+    const randomIndex = Math.floor(Math.random() * mensajesOR.length);
     let status = callbackStatusBN();
     const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
+    const men = mensajesOR[randomIndex].mensaje;
     const mensaje = men + " " + ven + ".";
     let estado;
     let descripcion;

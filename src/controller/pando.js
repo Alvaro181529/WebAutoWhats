@@ -156,10 +156,10 @@ async function inicio() {
 }
 function envio(contacto, id, estadoEnvio, ven) {
     const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+    const randomIndex = Math.floor(Math.random() * mensajesPN.length);
     let status = callbackStatusPN();
     const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
+    const men = mensajesPN[randomIndex].mensaje;
     const mensaje = men + " " + ven + ".";
     let estado;
     let descripcion;
@@ -246,10 +246,10 @@ async function comprobacion() {
 }
 function Reenvio(contacto, id, int, estadoEnvio, ven) {
     const cliente = container.cliente;
-    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+    const randomIndex = Math.floor(Math.random() * mensajesPN.length);
     let status = callbackStatusPN();
     const numero = "591" + contacto + "@c.us";
-    const men = mensajesLP[randomIndex].mensaje;
+    const men = mensajesPN[randomIndex].mensaje;
     const mensaje = men + " " + ven + ".";
     let estado;
     let descripcion;
