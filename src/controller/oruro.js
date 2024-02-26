@@ -29,11 +29,12 @@ exports.oruroController = (req, res) => {
             if (estado == "conectado") {
                 //si o si una hora definida
                 //              s   m h 
-                // cron.schedule("30 15 * * 1,2,3", () => {
-                cron.schedule("* * * * *", () => {
+                cron.schedule("0 9 * * 1,2,3,4,5", () => {
+                    // cron.schedule("* * * * *", () => {
                     comprobacion();
                 });
-                cron.schedule("30 15 * * 4,5", () => {
+                cron.schedule("0 12 * * 2,4", () => {
+                    // cron.schedule("* * * * *", () => {
                     comprobacionReenvio();
                 });
             } else {
@@ -217,7 +218,7 @@ async function comprobacion() {
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     // SELECT *, COUNT(TELEFONO) AS TotalTelefonos FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) GROUP BY TELEFONO LIMIT 100; 
     const packQuery = "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
-    
+
     try {
         const resPack = await ejecutarConsulta(packQuery);
 

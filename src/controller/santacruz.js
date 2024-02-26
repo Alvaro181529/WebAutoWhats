@@ -29,11 +29,13 @@ exports.santacruzController = (req, res) => {
             if (estado == "conectado") {
                 //si o si una hora definida
                 //              s   m h 
-                cron.schedule("30 15 * * 1,2,3", () => {
-                    comprobacion();
+                cron.schedule("0 9 * * 1,2,3,4,5", () => {
+                  // cron.schedule("* * * * *", () => {
+                  comprobacion();
                 });
-                cron.schedule("30 15 * * 4,5", () => {
-                    comprobacionReenvio();
+                cron.schedule("0 12 * * 2,4", () => {
+                // cron.schedule("* * * * *", () => {
+                  comprobacionReenvio();
                 });
             } else {
                 inicio();
