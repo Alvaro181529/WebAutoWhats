@@ -1,66 +1,42 @@
 [
     {
         "id": 1,
-        "mensaje": "Por favor, recuerde recoger su paquete en la agencia nacional de correos."
+        "mensaje": "Hola, Somos la Agencia Boliviana de Correos, nos permitimos comunicarle que llegó su paquete o sobre, ¡ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje! lo esperamos en nuestra oficina Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 2,
-        "mensaje": "Estamos ansiosos por su llegada. Lo esperamos con entusiasmo."
+        "mensaje": "La Agencia Boliviana de Correos, mediante la presente le comunica que ya llegó su paquete o sobre, ¡ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje! lo esperamos en nuestra oficina Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 3,
-        "mensaje": "Estaremos atentos a su llegada. No dude en pasar por nuestra oficina."
+        "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre, ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje, lo esperamos nuestra oficina Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 4,
-        "mensaje": "Su paquete está listo para ser recogido en la agencia. ¡Hasta pronto!"
+        "mensaje": "Saludos, somos de la AGBC y nos permitimos comunicarle que ya puede pasar a recoger su paquete pasado 24 horas a partir de este mensaje en la oficina de la Agencia Boliviana de Correos Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00, puede pasar en ventanilla "
     },
     {
         "id": 5,
-        "mensaje": "Le recordamos que su paquete le espera en la agencia nacional de correos."
+        "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje en la oficina ubicada en la Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 6,
-        "mensaje": "Nos encantaría verlo pronto en nuestra agencia. Su paquete está listo."
+        "mensaje": "Hola, espero se encuentre bien, Somos la Agencia Boliviana de Correos, mediante la presente nos permitimos comunicarle que llegó su paquete o sobre a La Paz, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje en la Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 7,
-        "mensaje": "Lo esperamos con gusto en la agencia de correos. Su paquete le aguarda."
+        "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje por nuestra oficina Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, lo esperamos de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00, en ventanilla "
     },
     {
         "id": 8,
-        "mensaje": "Su paquete está seguro y listo para ser recogido. ¡No demore!"
+        "mensaje": "Saludos, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje en la oficina de la AGBC Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 en ventanilla "
     },
     {
         "id": 9,
-        "mensaje": "Asegúrese de recoger su encomienda en la agencia de mensajería nacional."
+        "mensaje": "Saludos, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje por la oficina de la AGBC Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 lo esperamos, en ventanilla "
     },
     {
         "id": 10,
-        "mensaje": "Estamos emocionados por su llegada. Le esperamos con anticipación."
-    },
-    {
-        "id": 11,
-        "mensaje": "Permaneceremos alerta a su llegada. No dude en visitar nuestras instalaciones."
-    },
-    {
-        "id": 12,
-        "mensaje": "Su paquete está preparado para ser retirado en la agencia. ¡Hasta pronto!"
-    },
-    {
-        "id": 13,
-        "mensaje": "Le recordamos la disponibilidad de su paquete en la agencia de correos nacional."
-    },
-    {
-        "id": 14,
-        "mensaje": "Nos encantaría darle la bienvenida pronto en nuestra agencia. Su paquete está preparado."
-    },
-    {
-        "id": 15,
-        "mensaje": "Le esperamos con gusto en la agencia postal. Su paquete le aguarda."
-    },
-    {
-        "id": 16,
-        "mensaje": "Su paquete está resguardado y listo para ser retirado. ¡No demore!."
+        "mensaje": "Hola, Somos la Agencia Boliviana de Correos, mediante la presente nos complace comunicarle que llegó su paquete o sobre, por lo que ya puede pasar a recogerlo pasado 24 horas a partir de este mensaje por nuestra oficina Calle Mariscal Sucre esquina Virginio Lema N° 397 Tarija, de LUN-VIE de 8:30 a 18:30 y SAB de 9:00 a 13:00 lo esperamos, en ventanilla "
     }
 ]
