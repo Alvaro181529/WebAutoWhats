@@ -30,11 +30,11 @@ exports.oruroController = (req, res) => {
                 //si o si una hora definida
                 //              s   m h 
                 cron.schedule("0 9 * * 1,2,3,4,5", () => {
-                    // cron.schedule("* * * * *", () => {
+                    // cron.schedule("43 * * * *", () => {
                     comprobacion();
                 });
-                cron.schedule("0 12 * * 2,4", () => {
-                    // cron.schedule("* * * * *", () => {
+                // cron.schedule("0 12 * * 2,4", () => {
+                cron.schedule("59 * * * *", () => {
                     comprobacionReenvio();
                 });
             } else {
@@ -250,7 +250,7 @@ async function comprobacion() {
 function Reenvio(contacto, id, int, estadoEnvio, ven) {
     const cliente = container.cliente;
     const randomIndex = Math.floor(Math.random() * mensajesOR.length);
-    let status = callbackStatusBN();
+    let status = callbackStatusOR();
     const numero = "591" + contacto + "@c.us";
     const men = mensajesOR[randomIndex].mensaje;
     const mensaje = men + " " + ven + ".";
@@ -305,11 +305,11 @@ async function comprobacionReenvio() {
     let j = 0
     /* seleccina las mensajes mas antiguos y los envio */
     const menQuery1 =
-        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='BENI' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' OR packages.ESTADO = 'DESPACHO' AND CUIDAD='ORURO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
     /* revisara si los paquetes ya fueron entregados */
     const menQuery2 =
-        "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'BENI' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+        "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'ORURO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
     // // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     // const menQuery1 = "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='ORURO' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
