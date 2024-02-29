@@ -37,7 +37,7 @@ exports.beniController = (req, res) => {
           comprobacion();
         });
         cron.schedule("0 12 * * 2,4", () => {
-        // cron.schedule("* * * * *", () => {
+          // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
       } else {
@@ -235,7 +235,7 @@ async function comprobacion() {
 
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'BENI' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
+    "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'BENI' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
   // const packQuerySn =
   //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
 

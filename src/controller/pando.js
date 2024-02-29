@@ -32,11 +32,11 @@ exports.pandoController = (req, res) => {
                 cron.schedule("0 9 * * 1,2,3,4,5", () => {
                     // cron.schedule("* * * * *", () => {
                     comprobacion();
-                  });
-                  cron.schedule("0 12 * * 2,4", () => {
-                  // cron.schedule("* * * * *", () => {
+                });
+                cron.schedule("0 12 * * 2,4", () => {
+                    // cron.schedule("* * * * *", () => {
                     comprobacionReenvio();
-                  });
+                });
             } else {
                 inicio();
             }
@@ -215,7 +215,7 @@ async function comprobacion() {
     let j = 0
 
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-    const packQuery = "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'PANDO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
+    const packQuery = "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'PANDO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
     // const packQuerySn =
     //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
     try {

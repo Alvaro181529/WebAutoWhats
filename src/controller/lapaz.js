@@ -277,7 +277,7 @@ async function comprobacion() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-      const packItem = resPack.find((item) => item.id === idUnicoPack);
+      const packItem = resPack1.find((item) => item.id === idUnicoPack);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
       const telefono = packItem.TELEFONO;
