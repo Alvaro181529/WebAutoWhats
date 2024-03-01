@@ -33,8 +33,8 @@ exports.oruroController = (req, res) => {
                     // cron.schedule("43 * * * *", () => {
                     comprobacion();
                 });
-                // cron.schedule("0 12 * * 2,4", () => {
-                cron.schedule("57 * * * *", () => {
+                cron.schedule("0 12 * * 2,4", () => {
+                // cron.schedule("57 * * * *", () => {
                     comprobacionReenvio();
                 });
             } else {
