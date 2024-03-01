@@ -6,7 +6,7 @@ const conn = createPool({
   database: "trackpak",
   // user: "agbc",
   // password: "Correos.2023",
-  user: "rootagbc",
+  user: "root",
   password: "agbc",
 });
 module.exports = { conn };
