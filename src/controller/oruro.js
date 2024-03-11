@@ -34,7 +34,7 @@ exports.oruroController = (req, res) => {
                     comprobacion();
                 });
                 cron.schedule("0 12 * * 2,4", () => {
-                // cron.schedule("57 * * * *", () => {
+                    // cron.schedule("57 * * * *", () => {
                     comprobacionReenvio();
                 });
             } else {
@@ -58,11 +58,17 @@ const tableArray = {
 
 exports.oruroControllerReportes = async (req, res) => {
     const { date } = req.body
-    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'ORURO' AND mensajes.fecha_creacion >= '${date}';`
+    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion,mensajes.Intentos, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'ORURO' AND mensajes.fecha_creacion >= '${date}';`
     const cons = await ejecutarConsulta(pdf)
     cons.forEach((row) => {
-        const formattedDate = moment(row.fecha_creacion).format("DD-MM-YYYY HH:mm:ss");
-        const formattedDateEnd = moment(row.fecha_actualizacion).format("DD-MM-YYYY HH:mm:ss");
+        // const intento = moment(row.Intentos)
+        const etiquetaIntento = obtenerEtiquetaIntento(row.Intentos);
+        const formattedDate = moment(row.fecha_creacion).format(
+            "DD-MM-YYYY HH:mm:ss"
+        );
+        const formattedDateEnd = moment(row.fecha_actualizacion).format(
+            "DD-MM-YYYY HH:mm:ss"
+        );
         tableArray.rows.push([
             row.numero,
             row.TELEFONO,
@@ -70,8 +76,9 @@ exports.oruroControllerReportes = async (req, res) => {
             row.mensajes,
             row.observacion,
             row.estado,
+            etiquetaIntento,
             formattedDate,
-            formattedDateEnd
+            formattedDateEnd,
         ]);
     });
 
@@ -86,6 +93,20 @@ exports.oruroControllerReportes = async (req, res) => {
     );
 };
 
+function obtenerEtiquetaIntento(intentos) {
+    switch (intentos) {
+        case 0:
+            return 'Envio realizado';
+        case 1:
+            return '1er reenvio';
+        case 2:
+            return '2do reenvio';
+        case 3:
+            return 'ultimo reenvio';
+        default:
+            return 'Otro valor';
+    }
+}
 function buildPDF(dataCallback, endCallback) {
     const doc = new PDFDocument();
 
@@ -94,7 +115,7 @@ function buildPDF(dataCallback, endCallback) {
 
     doc.fontSize(20).text("Reporte de envio");
 
-    doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 70, 45, 55, 55] });
+    doc.table(tableArray, { columnsSize: [15, 50, 45, 90, 60, 35, 65, 55, 55] });
     doc.end();
 }
 
@@ -217,10 +238,10 @@ async function comprobacion() {
 
 
     // SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` DESC LIMIT 100;
-    
-    const packQuery = 
-    // "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
-    "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
+
+    const packQuery =
+        // "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
+        "SELECT * FROM packages WHERE VENTANILLA ='UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'ORURO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 100;";
 
     try {
         const resPack = await ejecutarConsulta(packQuery);

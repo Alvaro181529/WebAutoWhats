@@ -58,11 +58,17 @@ const tableArray = {
 
 exports.sucreControllerReportes = async (req, res) => {
     const { date } = req.body
-    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'SUCRE' AND mensajes.fecha_creacion >= '${date}';`
+    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion,mensajes.Intentos, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'SUCRE' AND mensajes.fecha_creacion >= '${date}';`
     const cons = await ejecutarConsulta(pdf)
-    cons.forEach((row) => {
-        const formattedDate = moment(row.fecha_creacion).format("DD-MM-YYYY HH:mm:ss");
-        const formattedDateEnd = moment(row.fecha_actualizacion).format("DD-MM-YYYY HH:mm:ss");
+  cons.forEach((row) => {
+        // const intento = moment(row.Intentos)
+        const etiquetaIntento = obtenerEtiquetaIntento(row.Intentos);
+        const formattedDate = moment(row.fecha_creacion).format(
+            "DD-MM-YYYY HH:mm:ss"
+        );
+        const formattedDateEnd = moment(row.fecha_actualizacion).format(
+            "DD-MM-YYYY HH:mm:ss"
+        );
         tableArray.rows.push([
             row.numero,
             row.TELEFONO,
@@ -70,8 +76,9 @@ exports.sucreControllerReportes = async (req, res) => {
             row.mensajes,
             row.observacion,
             row.estado,
+            etiquetaIntento,
             formattedDate,
-            formattedDateEnd
+            formattedDateEnd,
         ]);
     });
 
@@ -86,6 +93,20 @@ exports.sucreControllerReportes = async (req, res) => {
     );
 };
 
+function obtenerEtiquetaIntento(intentos) {
+    switch (intentos) {
+        case 0:
+            return 'Envio realizado';
+        case 1:
+            return '1er reenvio';
+        case 2:
+            return '2do reenvio';
+        case 3:
+            return 'ultimo reenvio';
+        default:
+            return 'Otro valor';
+    }
+}
 function buildPDF(dataCallback, endCallback) {
     const doc = new PDFDocument();
 
@@ -94,10 +115,9 @@ function buildPDF(dataCallback, endCallback) {
 
     doc.fontSize(20).text("Reporte de envio");
 
-    doc.table(tableArray, { columnsSize: [20, 60, 50, 120, 70, 45, 55, 55] });
+    doc.table(tableArray, { columnsSize: [15, 50, 45, 90, 60, 35, 65, 55, 55] });
     doc.end();
 }
-
 exports.sucreControllerAuth = (req, res) => {
     const { pass } = req.body;
     const admin = bpass[9].pass;
