@@ -195,13 +195,13 @@ async function inicio() {
     container.cliente = cliente; // Almacena el cliente en el contenedor
     return container.cliente;
 }
-function envio(contacto, id, estadoEnvio, ven) {
+function envio(contacto, id, estadoEnvio, ven, codigo) {
     const cliente = container.cliente;
     const randomIndex = Math.floor(Math.random() * mensajesPN.length);
     let status = callbackStatusPN();
     const numero = "591" + contacto + "@c.us";
     const men = mensajesPN[randomIndex].mensaje;
-    const mensaje = men + " " + ven + ".";
+    const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
     let estado;
     let descripcion;
     let enviados = 0;
@@ -280,9 +280,11 @@ async function comprobacion() {
             const id = packItem.id;
             const ven = packItem.VENTANILLA;
             const telefono = packItem.TELEFONO;
+            const codigo = packItem.CODIGO;
+
             const estadoEnvio = packItem.ESTADO;
             envio(telefono, id, estadoEnvio, ven);
-            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
         }
 
         console.log("terminado");

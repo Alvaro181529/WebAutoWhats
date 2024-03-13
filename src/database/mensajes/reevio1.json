@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "mensaje": "Informarle que aún tenemos su correspondencia en nuestras instalaciones. Le sugerimos que pase a recogerla"
+  },
+  {
+    "id": 2,
+    "mensaje": "Este aviso es para notificarle que su correspondencia aún está pendiente de recoger en nuestras oficinas. Por favor, pase a retirarla lo antes posible"
+  },
+  {
+    "id": 3,
+    "mensaje": "Nos dirigimos a usted para informarle que su correspondencia permanece en nuestras oficinas. Le pedimos que se acerque para recogerla en breve"
+  },
+  {
+    "id": 4,
+    "mensaje": "Le comunicamos que su correspondencia está aún bajo nuestra custodia. Le solicitamos amablemente que venga a recogerla en nuestras oficinas"
+  },
+  {
+    "id": 5,
+    "mensaje": "Queremos alertarle que su correspondencia todavía se encuentra en nuestras instalaciones. Le instamos a que la recoja lo antes posible"
+  },
+  {
+    "id": 6,
+    "mensaje": "Esta es una notificación inicial para recordarle que su correspondencia está pendiente de recogida en nuestras oficinas. Le animamos a que venga a recogerla a la brevedad"
+  },
+  {
+    "id": 7,
+    "mensaje": "Le recordamos que su correspondencia sigue en nuestras oficinas. Le recomendamos que venga a retirarla en persona para evitar cualquier inconveniente"
+  },
+  {
+    "id": 8,
+    "mensaje": "Queremos informarle que su correspondencia aún no ha sido recogida. Por favor, hágase presente en nuestras instalaciones para recuperarla"
+  },
+  {
+    "id": 9,
+    "mensaje": "Este es un aviso inicial para informarle que su correspondencia sigue en nuestras manos. Le rogamos que la recoja en nuestras oficinas en el menor tiempo posible"
+  },
+  {
+    "id": 10,
+    "mensaje": "Le hacemos saber que su correspondencia aún está en nuestras oficinas. Le solicitamos que venga a recogerla en un plazo razonable para evitar cualquier demora adicional"
+  }
+]

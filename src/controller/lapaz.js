@@ -208,7 +208,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
   const men = mensajesLP[randomIndex].mensaje;
-  const mensaje = men + " de destino " + codCadena + " en Ventanilla " + ven + ".";
+  const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
   let estado;
   let descripcion;
   let numeroEstado;
@@ -320,11 +320,11 @@ async function comprobacion() {
 }
 function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
   const cliente = container.cliente;
-  const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   let status = callbackStatusLPZ();
-  const numero = "591" + contacto + "@c.us";
+  const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   const men = mensajesLP[randomIndex].mensaje;
   const mensaje = men + " " + ven + ".";
+  const numero = "591" + contacto + "@c.us";
   let estado;
   let descripcion;
   let enviados = 0;
