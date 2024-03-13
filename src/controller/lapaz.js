@@ -34,8 +34,8 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("18 17 * * 1,2,3,4,5", () => {
-          // cron.schedule("* * * * *", () => {
+        // cron.schedule("18 17 * * 1,2,3,4,5", () => {
+        cron.schedule("* * * * *", () => {
           comprobacion();
         });
         cron.schedule("0 12 * * 2,4", () => {
@@ -200,13 +200,15 @@ async function inicio() {
   container.cliente = cliente; // Almacena el cliente en el contenedor
   return cliente;
 }
-function envio(contacto, id, estadoEnvio, ven) {
+function envio(contacto, id, estadoEnvio, ven, codigo) {
+  let cadena = codigo;
+  let codCadena = cadena.substring(cadena.length - 2);
   const cliente = container.cliente;
   const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
   const men = mensajesLP[randomIndex].mensaje;
-  const mensaje = men + " " + ven + ".";
+  const mensaje = men + " de destino " + codCadena + " en Ventanilla " + ven + ".";
   let estado;
   let descripcion;
   let numeroEstado;
@@ -286,10 +288,11 @@ async function comprobacion() {
       const packItem = resPack.find((item) => item.id === idUnicoPack);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio, ven);
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+      envio(telefono, id, estadoEnvio, ven, codigo);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
     }
     console.log("Envio mensajes desde despacho:");
 
@@ -303,9 +306,10 @@ async function comprobacion() {
       const packItem = resPack1.find((item) => item.id === idUnicoPack);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
-      const telefono = packItem.TELEFONO;
+      const telefono = packItem.TELEFONO;      const codigo = packItem.CODIGO;
+      
       const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio, ven);
+      envio(telefono, id, estadoEnvio, ven,codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
 
@@ -370,7 +374,7 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND  packages.ESTADO = 'DESPACHO' OR packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
@@ -423,7 +427,7 @@ async function comprobacionReenvio() {
 async function comprobacionReenvio2() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND  packages.ESTADO = 'DESPACHO' OR packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
 
