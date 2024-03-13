@@ -42,6 +42,10 @@ exports.lapazController = (req, res) => {
           // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
+        cron.schedule("0 12 * * 1", () => {
+          // cron.schedule("* * * * *", () => {
+          comprobacionReenvio2();
+        });
       } else {
         inicio();
       }
@@ -58,7 +62,7 @@ const tableArray = {
     "Ciudad",
     "Mensajes",
     "Observacion",
-    "Estado", 
+    "Estado",
     "Intento",
     "fecha Inicio",
     "fecha Fin",
@@ -127,7 +131,7 @@ function buildPDF(dataCallback, endCallback) {
 
   doc.fontSize(20).text("Reporte de envio");
 
-  doc.table(tableArray, { columnsSize: [15, 50, 45, 90, 60, 35, 65,55, 55] });
+  doc.table(tableArray, { columnsSize: [15, 50, 45, 90, 60, 35, 65, 55, 55] });
   doc.end();
 }
 
@@ -205,6 +209,7 @@ function envio(contacto, id, estadoEnvio, ven) {
   const mensaje = men + " " + ven + ".";
   let estado;
   let descripcion;
+  let numeroEstado;
   let enviados = 0;
   let rechazados = 0;
 
@@ -231,6 +236,7 @@ function envio(contacto, id, estadoEnvio, ven) {
           estado = "Enviado";
           break;
       }
+      numeroEstado = 1
       descripcion = "El número es correcto.";
       enviados++;
       enviarMensaje(cliente, numero, mensaje);
@@ -247,7 +253,7 @@ function envio(contacto, id, estadoEnvio, ven) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  guardarMensajes(estado, mensaje, descripcion, id, estadoEnvio);
+  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
 }
 
 async function comprobacion() {
@@ -308,7 +314,7 @@ async function comprobacion() {
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven) {
+function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
   const cliente = container.cliente;
   const randomIndex = Math.floor(Math.random() * mensajesLP.length);
   let status = callbackStatusLPZ();
@@ -343,12 +349,12 @@ function Reenvio(contacto, id, int, estadoEnvio, ven) {
           estado = "Enviado";
           break;
       }
-      descripcion = "El número es correcto. y el mensaje fue reenviado";
+      descripcion = "El mensaje fue reenviado";
       enviados++;
       enviarMensaje(cliente, numero, mensaje);
     } else {
       estado = "No enviado";
-      descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
+      descripcion = "El mensaje no fue reenviado";
       rechazados++;
     }
   } else {
@@ -359,16 +365,16 @@ function Reenvio(contacto, id, int, estadoEnvio, ven) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id);
+  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
 }
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' OR packages.ESTADO = 'DESPACHO' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND  packages.ESTADO = 'DESPACHO' OR packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
-    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
@@ -387,11 +393,12 @@ async function comprobacionReenvio() {
       const packItem = resMen1.find((item) => item.id === idUnicosMen1);
       const id = packItem.id;
       const intentos = packItem.Intentos;
+      const numeroEstado = packItem.numeroEstado;
       const ven = packItem.VENTANILLA;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
-      Reenvio(telefono, id, int, estadoEnvio, ven);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
     console.log("Segundo reenvio:");
@@ -399,14 +406,51 @@ async function comprobacionReenvio() {
     for (const idUnicosMen2 of idsUnicosMen2) {
       const packItem = resMen2.find((item) => item.id === idUnicosMen2);
       let id = packItem.id;
+      const numeroEstado = packItem.numeroEstado;
       let int = packItem.Intentos;
       let estado = packItem.estado;
       let desc = packItem.observacion;
       let descripcion = desc + " Paquete Entregado";
       let mensajes = packItem.mensajes;
       let estadoEnvio = packItem.ESTADO;
-      actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id);
+      actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id, numeroEstado);
     }
+    console.log("terminado");
+  } catch (err) {
+    console.error("Error en la comprobación:", err);
+  }
+}
+async function comprobacionReenvio2() {
+  /* seleccina las mensajes mas antiguos y los envio */
+  const menQuery1 =
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND  packages.ESTADO = 'DESPACHO' OR packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+
+  /* revisara si los paquetes ya fueron entregados */
+
+  try {
+    const resMen1 = await ejecutarConsulta(menQuery1);
+
+    const idsUnicosMen1 = resMen1.map((item) => item.id);
+
+    console.log("Primer reenvio:");
+    for (const idUnicosMen1 of idsUnicosMen1) {
+      const limiteInferior = 10000;
+      const limiteSuperior = 25000;
+      const numeroAleatorio =
+        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+        limiteInferior;
+      const packItem = resMen1.find((item) => item.id === idUnicosMen1);
+      const id = packItem.id;
+      const intentos = packItem.Intentos;
+      const numeroEstado = packItem.numeroEstado;
+      const ven = packItem.VENTANILLA;
+      const telefono = packItem.TELEFONO;
+      const estadoEnvio = packItem.ESTADO;
+      const int = intentos + 1;
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+    }
+
     console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);

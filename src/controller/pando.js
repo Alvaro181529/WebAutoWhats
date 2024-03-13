@@ -2,7 +2,7 @@ const qrcode = require("qrcode");
 const cron = require("node-cron");
 const CryptoJS = require("crypto-js");
 const PDFDocument = require("pdfkit-table");
-const moment = require('moment');
+const moment = require("moment");
 const bpass = require("../database/mensajes/bpass.json");
 const {
     ClientPN,
@@ -14,7 +14,11 @@ const {
     contactoPN,
 } = require("../whatsapp/pando");
 const mensajesPN = require("../database/mensajes/mensajesPN.json");
-const { ejecutarConsulta, guardarMensajes, actualizarMensajes } = require("../database/ejecutar");
+const {
+    ejecutarConsulta,
+    guardarMensajes,
+    actualizarMensajes,
+} = require("../database/ejecutar");
 const container = {
     cliente: null,
 };
@@ -28,7 +32,6 @@ exports.pandoController = (req, res) => {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 //si o si una hora definida
-                //              s   m h 
                 cron.schedule("0 9 * * 1,2,3,4,5", () => {
                     // cron.schedule("* * * * *", () => {
                     comprobacion();
@@ -36,6 +39,10 @@ exports.pandoController = (req, res) => {
                 cron.schedule("0 12 * * 2,4", () => {
                     // cron.schedule("* * * * *", () => {
                     comprobacionReenvio();
+                });
+                cron.schedule("0 12 * * 1", () => {
+                    // cron.schedule("* * * * *", () => {
+                    comprobacionReenvio2();
                 });
             } else {
                 inicio();
@@ -45,21 +52,31 @@ exports.pandoController = (req, res) => {
             console.log(err, error);
         }
     });
-}
+};
 exports.pandoControllerMessage = async (req, res) => {
-    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'PANDO' AND mensajes.fecha_actualizacion >= CURRENT_DATE();"
-    const cons = await ejecutarConsulta(mensajes)
-    res.json(cons)
-}
+    const mensajes =
+        "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'PANDO' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
+    const cons = await ejecutarConsulta(mensajes);
+    res.json(cons);
+};
 const tableArray = {
-    headers: ["N°", "Telefono", "Ciudad", "Mensajes", "Observacion", "Estado", "fecha Inicio", "fecha Fin"],
+    headers: [
+        "N°",
+        "Telefono",
+        "Ciudad",
+        "Mensajes",
+        "Observacion",
+        "Estado", "Intento",
+        "fecha Inicio",
+        "fecha Fin",
+    ],
     rows: [],
 };
 
 exports.pandoControllerReportes = async (req, res) => {
-    const { date } = req.body
-    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado,mensajes.Intentos,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'PANDO' AND mensajes.fecha_creacion >= '${date}';`
-    const cons = await ejecutarConsulta(pdf)
+    const { date } = req.body;
+    const pdf = `SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion,mensajes.Intentos, mensajes.estado,mensajes.fecha_creacion,mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_creacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'PANDO' AND mensajes.fecha_creacion >= '${date}';`;
+    const cons = await ejecutarConsulta(pdf);
     cons.forEach((row) => {
         // const intento = moment(row.Intentos)
         const etiquetaIntento = obtenerEtiquetaIntento(row.Intentos);
@@ -82,17 +99,19 @@ exports.pandoControllerReportes = async (req, res) => {
         ]);
     });
 
-
     res.writeHead(200, {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename=${date}-reporte.pdf`,
     });
 
     buildPDF(
-        (data) => res.write(data),  // Utiliza res.write para enviar datos al cliente
-        () => { res.end(), tableArray.rows = []; } // Llamado cuando el documento está completo
+        (data) => res.write(data), // Utiliza res.write para enviar datos al cliente
+        () => {
+            res.end(), (tableArray.rows = []);
+        } // Llamado cuando el documento está completo
     );
 };
+
 function obtenerEtiquetaIntento(intentos) {
     switch (intentos) {
         case 0:
@@ -118,8 +137,6 @@ function buildPDF(dataCallback, endCallback) {
     doc.table(tableArray, { columnsSize: [15, 50, 45, 90, 60, 35, 65, 55, 55] });
     doc.end();
 }
-
-
 exports.pandoControllerAuth = (req, res) => {
     const { pass } = req.body;
     const admin = bpass[9].pass;
@@ -136,18 +153,18 @@ exports.pandoControllerAuth = (req, res) => {
     }
 };
 exports.NotespandoController = (req, res) => {
-    res.json(mensajesPN)
-}
+    res.json(mensajesPN);
+};
 exports.NotesCreatepandoController = (req, res) => {
     const { mensaje } = req.body;
     mensajesPN.push({
         id: mensajesPN.length + 1,
-        mensaje
+        mensaje,
     });
-    res.json('Creado Exitosamente ');
-}
+    res.json("Creado Exitosamente ");
+};
 exports.NotesUpdatepandoController = (req, res) => {
-    console.log(req.body, req.params)
+    console.log(req.body, req.params);
     const { id } = req.params;
     const { mensaje } = req.body;
 
@@ -156,8 +173,8 @@ exports.NotesUpdatepandoController = (req, res) => {
             mensajesL.mensaje = mensaje;
         }
     });
-    res.json('Actualizado Exitosamente');
-}
+    res.json("Actualizado Exitosamente");
+};
 exports.NotesDelatepandoController = (req, res) => {
     const { id } = req.params;
 
@@ -166,8 +183,8 @@ exports.NotesDelatepandoController = (req, res) => {
             mensajesPN.splice(i, 1);
         }
     });
-    res.json('Eliminado Exitosamente');
-}
+    res.json("Eliminado Exitosamente");
+};
 exports.logout = async (req, res) => {
     const cliente = container.cliente;
     res.json("deslogeado");
@@ -189,6 +206,8 @@ function envio(contacto, id, estadoEnvio, ven) {
     let descripcion;
     let enviados = 0;
     let rechazados = 0;
+    let numeroEstado;
+
 
     if (typeof contacto === "number") {
         const numeroComoCadena = contacto.toString();
@@ -212,7 +231,8 @@ function envio(contacto, id, estadoEnvio, ven) {
                 default:
                     estado = "Enviado";
                     break;
-            }
+            }      numeroEstado = 1
+
             descripcion = "El número es correcto.";
             enviados++;
             enviarMensaje(cliente, numero, mensaje);
@@ -229,17 +249,19 @@ function envio(contacto, id, estadoEnvio, ven) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    guardarMensajes(estado, mensaje, descripcion, id, estadoEnvio);
+    guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
 }
 
 async function comprobacion() {
-    let i = 0
-    let j = 0
+    let i = 0;
+    let j = 0;
 
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-    const packQuery = "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'PANDO' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
+    const packQuery =
+        "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'PANDO' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
     // const packQuerySn =
     //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
+
     try {
         const resPack = await ejecutarConsulta(packQuery);
 
@@ -268,7 +290,7 @@ async function comprobacion() {
         console.error("Error en la comprobación:", err);
     }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven) {
+function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
     const cliente = container.cliente;
     const randomIndex = Math.floor(Math.random() * mensajesPN.length);
     let status = callbackStatusPN();
@@ -319,31 +341,76 @@ function Reenvio(contacto, id, int, estadoEnvio, ven) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id);
+    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
 }
 async function comprobacionReenvio() {
-    let i = 0
-    let j = 0
+    let i = 0;
+    let j = 0;
     /* seleccina las mensajes mas antiguos y los envio */
     const menQuery1 =
-        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' OR packages.ESTADO = 'DESPACHO' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' OR packages.ESTADO = 'DESPACHO' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
     /* revisara si los paquetes ya fueron entregados */
     const menQuery2 =
         "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'PANDO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
-
-    // // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-    // const menQuery1 = "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-    // const menQuery2 = "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =1 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-    // const menQuery3 = "SELECT mensajes.*, packages.TELEFONO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos =2 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_creacion ASC LIMIT 33;";
-    // // const packQuerySn =
-    // //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
     try {
         const resMen1 = await ejecutarConsulta(menQuery1);
         const resMen2 = await ejecutarConsulta(menQuery2);
 
         const idsUnicosMen1 = resMen1.map((item) => item.id);
         const idsUnicosMen2 = resMen2.map((item) => item.id);
+
+        console.log("Primer reenvio:");
+        for (const idUnicosMen1 of idsUnicosMen1) {
+            const limiteInferior = 10000;
+            const limiteSuperior = 25000;
+            const numeroAleatorio =
+                Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+                limiteInferior;
+            const packItem = resMen1.find((item) => item.id === idUnicosMen1);
+            const id = packItem.id;
+            const intentos = packItem.Intentos;
+            const numeroEstado = packItem.numeroEstado;
+
+            const ven = packItem.VENTANILLA;
+            const telefono = packItem.TELEFONO;
+            const estadoEnvio = packItem.ESTADO;
+            const int = intentos + 1;
+            console.log(estadoEnvio);
+            Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado);
+            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+        }
+        console.log("Segundo reenvio:");
+
+        for (const idUnicosMen2 of idsUnicosMen2) {
+            const packItem = resMen2.find((item) => item.id === idUnicosMen2);
+            let id = packItem.id;
+            let int = packItem.Intentos;
+            let estado = packItem.estado;
+            let desc = packItem.observacion;
+            let descripcion = desc + " Paquete Entregado";
+            let mensajes = packItem.mensajes;
+            let estadoEnvio = packItem.ESTADO;
+            console.log(estado, mensajes, descripcion, int, estadoEnvio, id);
+            actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id);
+        }
+        console.log("terminado");
+    } catch (err) {
+        console.error("Error en la comprobación:", err);
+    }
+}
+async function comprobacionReenvio2() {
+    let i = 0;
+    let j = 0;
+    /* seleccina las mensajes mas antiguos y los envio */
+    const menQuery1 =
+        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1 AND packages.ESTADO = 'VENTANILLA' OR packages.ESTADO = 'DESPACHO' AND CUIDAD='PANDO' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+
+    /* revisara si los paquetes ya fueron entregados */
+    try {
+        const resMen1 = await ejecutarConsulta(menQuery1);
+
+        const idsUnicosMen1 = resMen1.map((item) => item.id);
 
         console.log("Primer reenvio:");
         for (const idUnicosMen1 of idsUnicosMen1) {
@@ -363,20 +430,7 @@ async function comprobacionReenvio() {
             Reenvio(telefono, id, int, estadoEnvio, ven);
             await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
         }
-        console.log("Segundo reenvio:");
 
-        for (const idUnicosMen2 of idsUnicosMen2) {
-            const packItem = resMen2.find((item) => item.id === idUnicosMen2);
-            let id = packItem.id;
-            let int = packItem.Intentos;
-            let estado = packItem.estado;
-            let desc = packItem.observacion;
-            let descripcion = desc + " Paquete Entregado";
-            let mensajes = packItem.mensajes;
-            let estadoEnvio = packItem.ESTADO;
-            console.log(estado, mensajes, descripcion, int, estadoEnvio, id);
-            actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id);
-        }
         console.log("terminado");
     } catch (err) {
         console.error("Error en la comprobación:", err);

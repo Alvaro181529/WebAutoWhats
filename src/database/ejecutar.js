@@ -14,16 +14,18 @@ async function guardarMensajes(
   estado,
   mensaje,
   descripcion,
+  numeroEstado,
   id_telefono,
   estadoEnvio
 ) {
   const query =
-    "INSERT INTO `mensajes` (`id`, `estado`, `mensajes`, `observacion`, `id_telefono`,`entrega`) VALUES (NULL, ?, ?, ?, ?,?)";
+    "INSERT INTO `mensajes` (`id`, `estado`, `mensajes`, `observacion`,`numeroEstado` ,`id_telefono`,`entrega`) VALUES (NULL, ?, ?, ?, ?, ?,  ?)";
   try {
     await conn.query(query, [
       estado,
       mensaje,
       descripcion,
+      numeroEstado,
       id_telefono,
       estadoEnvio,
     ]);
@@ -32,11 +34,11 @@ async function guardarMensajes(
     console.error("Error al enviar y guardar mensaje:", err);
   }
 }
-async function actualizarMensajes(estado, mensaje, descripcion, intentos,entrega, id) {
+async function actualizarMensajes(estado, mensaje, descripcion, intentos, entrega, id,numeroEstado) {
   const query =
-    "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
+    "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?,`numeroEstado` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
   try {
-    await conn.query(query, [estado, mensaje, descripcion, intentos,entrega, id]); // Asegúrate de tener un valor para `id`
+    await conn.query(query, [estado, mensaje, descripcion, intentos, entrega,numeroEstado, id]); // Asegúrate de tener un valor para `id`
     console.log("Mensaje actualizado en la base de datos");
   } catch (err) {
     console.error("Error al actualizar mensaje:", err);
