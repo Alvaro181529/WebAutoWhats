@@ -16,6 +16,8 @@ const {
 } = require("../whatsapp/lapaz");
 let estado = "";
 const mensajesLP = require("../database/mensajes/mensajesLP.json");
+const mensajeR1 = require("../database/reenvio1/reevio1LP.json");
+const mensajeR2 = require("../database/reenvio2/reevio2LP.json");
 const {
   ejecutarConsulta,
   guardarMensajes,
@@ -114,10 +116,8 @@ function obtenerEtiquetaIntento(intentos) {
     case 0:
       return 'Envio realizado';
     case 1:
-      return '1er reenvio';
-    case 2:
       return '2do reenvio';
-    case 3:
+    case 2:
       return 'ultimo reenvio';
     default:
       return 'Otro valor';
@@ -205,10 +205,10 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   let codCadena = cadena.substring(cadena.length - 2);
   const cliente = container.cliente;
   const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+  const men = mensajesLP[randomIndex].mensaje;
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
-  const men = mensajesLP[randomIndex].mensaje;
-  const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
+  const mensaje = men + "con procedencia de " + codCadena + "puede recogerlo en Ventanilla " + ven + ".";
   let estado;
   let descripcion;
   let numeroEstado;
@@ -265,18 +265,13 @@ async function comprobacion() {
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
-  const packQuery1 =
-    "SELECT * FROM packages WHERE TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'DESPACHO' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
-
   try {
     const resPack = await ejecutarConsulta(packQuery);
     //DESPACHO
-    const resPack1 = await ejecutarConsulta(packQuery1);
 
     console.log("Envio mensajes:");
 
     const idsUnicosPack = resPack.map((item) => item.id);
-    const idsUnicosPack1 = resPack1.map((item) => item.id);
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
@@ -294,36 +289,26 @@ async function comprobacion() {
       envio(telefono, id, estadoEnvio, ven, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
     }
-    console.log("Envio mensajes desde despacho:");
-
-    for (const idUnicoPack of idsUnicosPack1) {
-      i++;
-      const limiteInferior = 10000;
-      const limiteSuperior = 25000;
-      const numeroAleatorio =
-        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-        limiteInferior;
-      const packItem = resPack1.find((item) => item.id === idUnicoPack);
-      const id = packItem.id;
-      const ven = packItem.VENTANILLA;
-      const telefono = packItem.TELEFONO;      const codigo = packItem.CODIGO;
-      
-      const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio, ven,codigo);
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
-    }
 
     console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
+function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   const cliente = container.cliente;
   let status = callbackStatusLPZ();
-  const randomIndex = Math.floor(Math.random() * mensajesLP.length);
-  const men = mensajesLP[randomIndex].mensaje;
-  const mensaje = men + " " + ven + ".";
+  let cadena = codigo;
+  let codCadena = cadena.substring(cadena.length - 2);
+  let men;
+  if (int == 1) {
+    const randomIndex = Math.floor(Math.random() * mensajeR1.length);
+    men = mensajeR1[randomIndex].mensaje;
+  } else {
+    const randomIndex = Math.floor(Math.random() * mensajeR2.length);
+    men = mensajeR2[randomIndex].mensaje;
+  }
+  const mensaje = men + "con procedencia de " + codCadena + "puede recogerlo en Ventanilla " + ven + ".";
   const numero = "591" + contacto + "@c.us";
   let estado;
   let descripcion;
@@ -374,11 +359,11 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
-    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
@@ -399,10 +384,11 @@ async function comprobacionReenvio() {
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;
       const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
     console.log("Segundo reenvio:");
@@ -427,7 +413,7 @@ async function comprobacionReenvio() {
 async function comprobacionReenvio2() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
 
@@ -448,10 +434,12 @@ async function comprobacionReenvio2() {
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;
       const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
+
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
 
