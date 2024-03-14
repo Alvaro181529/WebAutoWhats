@@ -275,8 +275,8 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-      const limiteInferior = 10000;
-      const limiteSuperior = 25000;
+      const limiteInferior = 60000;
+const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -374,8 +374,8 @@ async function comprobacionReenvio() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-      const limiteInferior = 10000;
-      const limiteSuperior = 25000;
+      const limiteInferior = 60000;
+const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -424,8 +424,8 @@ async function comprobacionReenvio2() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-      const limiteInferior = 10000;
-      const limiteSuperior = 25000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
