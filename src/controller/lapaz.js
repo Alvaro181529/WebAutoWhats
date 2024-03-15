@@ -36,8 +36,8 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("4 10 * * 1,2,3,4,5,6", () => {
-        // cron.schedule("* * * * *", () => {
+        cron.schedule("19 11 * * 1,2,3,4,5,6", () => {
+          // cron.schedule("* * * * *", () => {
           comprobacion();
         });
         cron.schedule("0 10 * * 3,6", () => {
@@ -265,18 +265,23 @@ async function comprobacion() {
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 300;";
+  const packQuery1 =
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0  AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  ORDER BY `packages`.`created_at` DESC LIMIT 200;";
+
   try {
     const resPack = await ejecutarConsulta(packQuery);
+    const resPack1 = await ejecutarConsulta(packQuery1);
     //DESPACHO
 
     console.log("Envio mensajes:");
 
     const idsUnicosPack = resPack.map((item) => item.id);
+    const idsUnicosPack1 = resPack1.map((item) => item.id);
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
       const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -289,7 +294,22 @@ const limiteSuperior = 125000;
       envio(telefono, id, estadoEnvio, ven, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
     }
-
+    for (const idUnicoPack1 of idsUnicosPack1) {
+      i++;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
+      const numeroAleatorio =
+        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+        limiteInferior;
+      const packItem = resPack.find((item) => item.id === idUnicoPack1);
+      const id = packItem.id;
+      const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
+      const telefono = packItem.TELEFONO;
+      const estadoEnvio = packItem.ESTADO;
+      envio(telefono, id, estadoEnvio, ven, codigo);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+    }
     console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
@@ -364,22 +384,45 @@ async function comprobacionReenvio() {
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
     "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+  const menQuery3 =
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND VENTANILLA = 'DD' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
     const resMen2 = await ejecutarConsulta(menQuery2);
+    const resMen3 = await ejecutarConsulta(menQuery3);
 
     const idsUnicosMen1 = resMen1.map((item) => item.id);
     const idsUnicosMen2 = resMen2.map((item) => item.id);
+    const idsUnicosMen3 = resMen3.map((item) => item.id);
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
       const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
       const packItem = resMen1.find((item) => item.id === idUnicosMen1);
+      const id = packItem.id;
+      const intentos = packItem.Intentos;
+      const numeroEstado = packItem.numeroEstado;
+      const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
+      const telefono = packItem.TELEFONO;
+      const estadoEnvio = packItem.ESTADO;
+      const int = intentos + 1;
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+    }
+
+    for (const idUnicosMen3 of idsUnicosMen3) {
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
+      const numeroAleatorio =
+        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+        limiteInferior;
+      const packItem = resMen1.find((item) => item.id === idUnicosMen3);
       const id = packItem.id;
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;
@@ -413,14 +456,18 @@ const limiteSuperior = 125000;
 async function comprobacionReenvio2() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'ENCOMIENDAS' AND  CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'ENCOMIENDAS' AND  CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+  const menQuery2 =
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'DD' AND  CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
+    const resMen2 = await ejecutarConsulta(menQuery2);
 
     const idsUnicosMen1 = resMen1.map((item) => item.id);
+    const idsUnicosMen2 = resMen2.map((item) => item.id);
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
@@ -430,6 +477,25 @@ async function comprobacionReenvio2() {
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
       const packItem = resMen1.find((item) => item.id === idUnicosMen1);
+      const id = packItem.id;
+      const intentos = packItem.Intentos;
+      const numeroEstado = packItem.numeroEstado;
+      const ven = packItem.VENTANILLA;
+      const codigo = packItem.CODIGO;
+
+      const telefono = packItem.TELEFONO;
+      const estadoEnvio = packItem.ESTADO;
+      const int = intentos + 1;
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
+      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
+    }
+    for (const idUnicosMen2 of idsUnicosMen2) {
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
+      const numeroAleatorio =
+        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+        limiteInferior;
+      const packItem = resMen1.find((item) => item.id === idUnicosMen2);
       const id = packItem.id;
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;
