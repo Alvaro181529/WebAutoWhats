@@ -36,15 +36,15 @@ exports.lapazController = (req, res) => {
       //lunes , martes, miercoles, 15:30hrs envio
       //jueves, viernes, 15:30hrs reenvio
       if (estado == "conectado") {
-        cron.schedule("25 18 * * 1,2,3,4,5", () => {
+        cron.schedule("53 9 * * 1,2,3,4,5,6", () => {
         // cron.schedule("* * * * *", () => {
           comprobacion();
         });
-        cron.schedule("0 12 * * 2,4", () => {
+        cron.schedule("0 10 * * 3,6", () => {
           // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
-        cron.schedule("0 12 * * 1", () => {
+        cron.schedule("0 10 * * 1", () => {
           // cron.schedule("* * * * *", () => {
           comprobacionReenvio2();
         });
@@ -208,7 +208,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   const men = mensajesLP[randomIndex].mensaje;
   let status = callbackStatusLPZ();
   const numero = "591" + contacto + "@c.us";
-  const mensaje = men + "con procedencia de " + codCadena + "puede recogerlo en Ventanilla " + ven + ".";
+  const mensaje = men + "con procedencia de " + codCadena + " puede recogerlo en Ventanilla " + ven + ".";
   let estado;
   let descripcion;
   let numeroEstado;
@@ -264,7 +264,7 @@ async function comprobacion() {
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 200;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 300;";
   try {
     const resPack = await ejecutarConsulta(packQuery);
     //DESPACHO
@@ -359,7 +359,7 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0  AND VENTANILLA = 'ENCOMIENDAS' AND  packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0  AND VENTANILLA = 'ENCOMIENDAS' AND  packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
