@@ -34,7 +34,7 @@ exports.santacruzController = (req, res) => {
       const lp = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
         //si o si una hora definida
-        cron.schedule("0 9 * * 1,2,3,4,5", () => {
+        cron.schedule("0 17 * * 1,2,3,4,5", () => {
           // cron.schedule("* * * * *", () => {
           comprobacion();
         });
@@ -42,9 +42,10 @@ exports.santacruzController = (req, res) => {
           // cron.schedule("* * * * *", () => {
           comprobacionReenvio();
         });
-        cron.schedule("0 12 * * 1", () => {
-          // cron.schedule("* * * * *", () => {
-          comprobacionReenvio2();
+        cron.schedule("0 10 * * 1", () => {
+          if (esTerceraSemana()) {
+            comprobacionReenvio2();
+          }
         });
       } else {
         inicio();
@@ -55,6 +56,27 @@ exports.santacruzController = (req, res) => {
     }
   });
 };
+//Calculo del envio en la ultima semana
+function esTerceraSemana() {
+  const hoy = new Date();
+  const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const diaInicioSemana = 1; // Lunes
+
+  // Calcula el día de la semana del primer día del mes
+  let primerDiaMesDiaSemana = primerDiaMes.getDay();
+  if (primerDiaMesDiaSemana === 0) {
+    primerDiaMesDiaSemana = 7; // Si es domingo, se ajusta a 7 en lugar de 0
+  }
+
+  // Calcula el número de días hasta el inicio de la tercera semana
+  let diasHastaTerceraSemana = (diaInicioSemana - primerDiaMesDiaSemana + 7) % 7 + 14;
+
+  // Calcula la fecha del primer lunes de la tercera semana
+  const primerLunesTerceraSemana = new Date(hoy.getFullYear(), hoy.getMonth(), diasHastaTerceraSemana);
+
+  // Compara la fecha actual con la fecha del primer lunes de la tercera semana
+  return hoy.getTime() === primerLunesTerceraSemana.getTime();
+}
 exports.santacruzControllerMessage = async (req, res) => {
   const mensajes =
     "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'SANTA CRUZ' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
@@ -203,7 +225,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   let status = callbackStatusSC();
   const numero = "591" + contacto + "@c.us";
   const men = mensajesSC[randomIndex].mensaje;
-  const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
+  const mensaje = men + "con origen de " + codCadena + " puedo recogerlo en Ventanilla " + ven + ".";
   let estado;
   let descripcion;
   let enviados = 0;
@@ -260,7 +282,7 @@ async function comprobacion() {
 
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'BENI' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
+    "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'SANTA CRUZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
   // const packQuerySn =
   //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
 
@@ -273,8 +295,8 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -294,7 +316,7 @@ const limiteSuperior = 125000;
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado,codigo) {
+function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   const cliente = container.cliente;
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
@@ -374,8 +396,8 @@ async function comprobacionReenvio() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -389,7 +411,7 @@ const limiteSuperior = 125000;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
       console.log(estadoEnvio);
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado,codigo);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
     console.log("Segundo reenvio:");
@@ -426,8 +448,8 @@ async function comprobacionReenvio2() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -441,7 +463,7 @@ const limiteSuperior = 125000;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
       console.log(estadoEnvio);
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado,codigo);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
 
