@@ -34,7 +34,7 @@ exports.santacruzController = (req, res) => {
       const lp = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
         //si o si una hora definida
-        cron.schedule("0 17 * * 1,2,3,4,5", () => {
+        cron.schedule("40 18 * * 1,2,3,4,5", () => {
           // cron.schedule("* * * * *", () => {
           comprobacion();
         });
