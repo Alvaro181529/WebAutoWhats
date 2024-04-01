@@ -44,7 +44,9 @@ exports.potosiController = (req, res) => {
         });
         cron.schedule("0 12 * * 1", () => {
           // cron.schedule("* * * * *", () => {
-          comprobacionReenvio2();
+            if (esTerceraSemana()) {
+              comprobacionReenvio2();
+            }
         });
       } else {
         inicio();
@@ -55,6 +57,26 @@ exports.potosiController = (req, res) => {
     }
   });
 };
+function esTerceraSemana() {
+  const hoy = new Date();
+  const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const diaInicioSemana = 1; // Lunes
+
+  // Calcula el día de la semana del primer día del mes
+  let primerDiaMesDiaSemana = primerDiaMes.getDay();
+  if (primerDiaMesDiaSemana === 0) {
+    primerDiaMesDiaSemana = 7; // Si es domingo, se ajusta a 7 en lugar de 0
+  }
+
+  // Calcula el número de días hasta el inicio de la tercera semana
+  let diasHastaTerceraSemana = (diaInicioSemana - primerDiaMesDiaSemana + 7) % 7 + 14;
+
+  // Calcula la fecha del primer lunes de la tercera semana
+  const primerLunesTerceraSemana = new Date(hoy.getFullYear(), hoy.getMonth(), diasHastaTerceraSemana);
+
+  // Compara la fecha actual con la fecha del primer lunes de la tercera semana
+  return hoy.getTime() === primerLunesTerceraSemana.getTime();
+}
 exports.potosiControllerMessage = async (req, res) => {
   const mensajes =
     "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'POTOSI' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";

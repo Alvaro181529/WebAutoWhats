@@ -34,7 +34,7 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
-        cron.schedule("19 11 * * 1-6", () => {
+        cron.schedule("22 14 * * 1-6", () => {
           comprobacion();
         });
         cron.schedule("0 10 * * 3,6", () => {
@@ -282,7 +282,7 @@ async function comprobacion() {
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) LIMIT 300;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) ORDER BY `packages`.`created_at` DESC LIMIT 300;";
   const packQuery1 =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0  AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  ORDER BY `packages`.`created_at` DESC LIMIT 200;";
 
@@ -309,8 +309,8 @@ async function comprobacion() {
       const codigo = packItem.CODIGO;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio, ven, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+      envio(telefono, id, estadoEnvio, ven, codigo);
     }
     for (const idUnicoPack1 of idsUnicosPack1) {
       i++;
@@ -319,14 +319,14 @@ async function comprobacion() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-      const packItem = resPack.find((item) => item.id === idUnicoPack1);
+      const packItem = resPack1.find((item) => item.id === idUnicoPack1);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
       const codigo = packItem.CODIGO;
       const telefono = packItem.TELEFONO;
       const estadoEnvio = packItem.ESTADO;
-      envio(telefono, id, estadoEnvio, ven, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+      envio(telefono, id, estadoEnvio, ven, codigo);
     }
     console.log("terminado");
   } catch (err) {
@@ -440,7 +440,7 @@ async function comprobacionReenvio() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-      const packItem = resMen1.find((item) => item.id === idUnicosMen3);
+      const packItem = resMen3.find((item) => item.id === idUnicosMen3);
       const id = packItem.id;
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;
@@ -513,7 +513,7 @@ async function comprobacionReenvio2() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-      const packItem = resMen1.find((item) => item.id === idUnicosMen2);
+      const packItem = resMen2.find((item) => item.id === idUnicosMen2);
       const id = packItem.id;
       const intentos = packItem.Intentos;
       const numeroEstado = packItem.numeroEstado;

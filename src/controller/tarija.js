@@ -44,7 +44,9 @@ exports.tarijaController = (req, res) => {
         });
         cron.schedule("0 12 * * 1", () => {
           // cron.schedule("* * * * *", () => {
-          comprobacionReenvio2();
+          if (esTerceraSemana()) {
+            comprobacionReenvio2();
+          }
         });
       } else {
         inicio();
@@ -55,6 +57,27 @@ exports.tarijaController = (req, res) => {
     }
   });
 };
+function esTerceraSemana() {
+  const hoy = new Date();
+  const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const diaInicioSemana = 1; // Lunes
+
+  // Calcula el día de la semana del primer día del mes
+  let primerDiaMesDiaSemana = primerDiaMes.getDay();
+  if (primerDiaMesDiaSemana === 0) {
+    primerDiaMesDiaSemana = 7; // Si es domingo, se ajusta a 7 en lugar de 0
+  }
+
+  // Calcula el número de días hasta el inicio de la tercera semana
+  let diasHastaTerceraSemana = (diaInicioSemana - primerDiaMesDiaSemana + 7) % 7 + 14;
+
+  // Calcula la fecha del primer lunes de la tercera semana
+  const primerLunesTerceraSemana = new Date(hoy.getFullYear(), hoy.getMonth(), diasHastaTerceraSemana);
+
+  // Compara la fecha actual con la fecha del primer lunes de la tercera semana
+  return hoy.getTime() === primerLunesTerceraSemana.getTime();
+}
+
 exports.tarijaControllerMessage = async (req, res) => {
   const mensajes =
     "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'TARIJA' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
@@ -273,8 +296,8 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -374,8 +397,8 @@ async function comprobacionReenvio() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -389,7 +412,7 @@ const limiteSuperior = 125000;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
       console.log(estadoEnvio);
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado,codigo);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
     console.log("Segundo reenvio:");
@@ -426,8 +449,8 @@ async function comprobacionReenvio2() {
 
     console.log("Primer reenvio:");
     for (const idUnicosMen1 of idsUnicosMen1) {
-  const limiteInferior = 60000;
-const limiteSuperior = 125000;
+      const limiteInferior = 60000;
+      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -441,7 +464,7 @@ const limiteSuperior = 125000;
       const estadoEnvio = packItem.ESTADO;
       const int = intentos + 1;
       console.log(estadoEnvio);
-      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado,codigo);
+      Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
 
