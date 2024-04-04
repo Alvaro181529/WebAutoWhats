@@ -34,10 +34,10 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
-        cron.schedule("40 11 * * 1-6", () => {
+        cron.schedule("42 11 * * 1-6", () => {
           comprobacion();
         });
-        cron.schedule("42 11 * * 1-6", () => {
+        cron.schedule("44 11 * * 1-6", () => {
           comprobacion();
         });
         cron.schedule("0 10 * * 3,6", () => {
