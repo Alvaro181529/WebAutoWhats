@@ -3,20 +3,19 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRlapaz = "";
 let estadoLapaz = "";
 let statusLapaz = "";
-let contacto = "";
+let contacto ="";
 async function ClientLP() {
-  const lapaz = new Client({
-    puppeteer: {
-      headless: true,
+ const lapaz = new Client({
+  puppeteer: {
+    headless: true,
       args: [
         '--no-sandbox',
         '--disable-site-isolation-trials',
         '--disable-setuid-sandbox',
       ],
-    },
+  },
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
-    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', }
-  });
+     webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html' } });
 
   lapaz.on("qr", (qr) => {
     QRlapaz = qr;
@@ -33,7 +32,7 @@ async function ClientLP() {
     statusLapaz = ack;
   });
   await lapaz.initialize();
-  return lapaz;
+  return lapaz ;
 }
 
 function codigoQRLPZ() {
@@ -44,7 +43,7 @@ function estadoConexionLPZ() {
 }
 function callbackStatusLPZ() {
   return statusLapaz;
-} function contactoLPZ() {
+}function contactoLPZ() {
   return contacto;
 }
 async function enviarMensaje(cliente, numero, mensaje) {
@@ -56,9 +55,10 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-async function cerrarSesion(cliente) {
+async function cerrarSesion(cliente){
 
   await cliente.logout();
 
 }
-module.exports = { ClientLP, contactoLPZ, codigoQRLPZ, estadoConexionLPZ, enviarMensaje, callbackStatusLPZ, cerrarSesion };
+module.exports = { ClientLP,contactoLPZ, codigoQRLPZ, estadoConexionLPZ, enviarMensaje, callbackStatusLPZ, cerrarSesion };
+ 
