@@ -3,19 +3,20 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let QRtarija = "";
 let estadoTarija = "";
 let statusTarija = "";
-let contacto ="";
+let contacto = "";
 async function ClientTJ() {
   const tarija = new Client({
     puppeteer: {
       headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-site-isolation-trials',
-          '--disable-setuid-sandbox',
-        ],
+      args: [
+        '--no-sandbox',
+        '--disable-site-isolation-trials',
+        '--disable-setuid-sandbox',
+      ],
     },
     authStrategy: new LocalAuth({ clientId: "tarija" }),
-    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', }
+  });
 
 
   tarija.on("qr", (qr) => {
@@ -57,9 +58,9 @@ async function enviarMensaje(cliente, numero, mensaje) {
     console.error('Error al enviar mensaje:', error);
   }
 }
-async function cerrarSesion(cliente){
+async function cerrarSesion(cliente) {
 
   await cliente.logout();
 
 }
-module.exports = { ClientTJ,contactoTJ, codigoQRTJ, estadoConexionTJ, enviarMensaje, callbackStatusTJ,cerrarSesion };
+module.exports = { ClientTJ, contactoTJ, codigoQRTJ, estadoConexionTJ, enviarMensaje, callbackStatusTJ, cerrarSesion };
