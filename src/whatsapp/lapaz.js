@@ -15,7 +15,7 @@ async function ClientLP() {
       ],
     },
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
-    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.0.html'}
+    webVersionCache: { tipo: 'remoto', remotePath: ' https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2410.1.html ', } 
   });
 
   lapaz.on("qr", (qr) => {
