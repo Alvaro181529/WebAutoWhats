@@ -35,10 +35,7 @@ exports.lapazController = (req, res) => {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
 
-        cron.schedule("33 15 * * 1-6", () => {
-          comprobacion();
-        });
-        cron.schedule("40 15 * * 1-6", () => {
+        cron.schedule("51 16 * * 1-6", () => {
           comprobacion();
         });
         cron.schedule("0 10 * * 3,6", () => {
@@ -288,7 +285,7 @@ async function comprobacion() {
   const packQuery =
     "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) ORDER BY `packages`.`created_at` DESC LIMIT 300;";
   const packQuery1 =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0  AND VENTANILLA = 'DD' OR VENTANILLA = 'DND' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  ORDER BY `packages`.`created_at` DESC LIMIT 200;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0  AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  ORDER BY `packages`.`created_at` DESC LIMIT 200;";
 
   try {
     const resPack = await ejecutarConsulta(packQuery);
