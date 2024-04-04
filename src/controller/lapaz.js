@@ -35,7 +35,7 @@ exports.lapazController = (req, res) => {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
         console.log("esta dentro de la hora")
-        cron.schedule("27 18 * * 1-6", () => {
+        cron.schedule("46 18 * * 1-6", () => {
           console.log("esta aca en comprobacion ")
           comprobacion();
         });
