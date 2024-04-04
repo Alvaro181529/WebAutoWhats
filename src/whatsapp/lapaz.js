@@ -9,9 +9,16 @@ async function ClientLP() {
   puppeteer: {
     headless: true,
       args: [
-        '--no-sandbox',
         '--disable-site-isolation-trials',
+        '--no-sandbox',
         '--disable-setuid-sandbox',
+        '--unhandled-rejections=strict',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu'
       ],
   },
     authStrategy: new LocalAuth({ clientId: "lapaz" }),
