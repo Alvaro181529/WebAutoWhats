@@ -16,7 +16,8 @@ async function ClientOR() {
         ],
     },
     authStrategy: new LocalAuth({ clientId: "oruro" }),
-  });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
+
 
   oruro.on("qr", (qr) => {
     QRoruro = qr;

@@ -16,7 +16,8 @@ async function ClientCBBA() {
         ],
     },
     authStrategy: new LocalAuth({ clientId: "cochabamba" }),
-  });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
+
 
   cochabamba.on("qr", (qr) => {
     QRcochabamba = qr;

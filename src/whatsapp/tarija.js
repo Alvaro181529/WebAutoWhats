@@ -15,7 +15,8 @@ async function ClientTJ() {
         ],
     },
     authStrategy: new LocalAuth({ clientId: "tarija" }),
-  });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
+
 
   tarija.on("qr", (qr) => {
     QRtarija = qr;

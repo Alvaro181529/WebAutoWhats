@@ -16,7 +16,7 @@ async function ClientBN() {
         ],
     },
     authStrategy: new LocalAuth({ clientId: "beni" }),
-  });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
 
   beni.on("qr", (qr) => {
     QRbeni = qr;

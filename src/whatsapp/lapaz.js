@@ -14,8 +14,7 @@ async function ClientLP() {
         '--disable-setuid-sandbox',
       ],
   },
-    authStrategy: new LocalAuth({ clientId: "lapaz" }),
-  });
+    authStrategy: new LocalAuth({ clientId: "lapaz" }), webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
 
   lapaz.on("qr", (qr) => {
     QRlapaz = qr;

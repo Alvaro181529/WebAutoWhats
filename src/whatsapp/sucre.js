@@ -15,7 +15,8 @@ async function ClientSR() {
         ],
     },
     authStrategy: new LocalAuth({ clientId: "sucre" }),
-  });
+    webVersionCache: { type: 'remote', remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html', } });
+
 
   sucre.on("qr", (qr) => {
     QRsucre = qr;
