@@ -34,14 +34,17 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
+        // Envio de mensajes
         console.log("esta dentro de la hora")
-        cron.schedule("27 17 * * 1-6", () => {
+        cron.schedule("0 7  * * 1-6", () => {
           console.log("esta aca en comprobacion ")
           comprobacion();
         });
-        cron.schedule("0 10 * * 3,6", () => {
+        //Primwer reenvio
+        cron.schedule("0 8 * * 3,6", () => {
           comprobacionReenvio();
         });
+        //Segundo envio
         cron.schedule("0 10 * * 1", () => {
           if (esTerceraSemana()) {
             comprobacionReenvio2();
