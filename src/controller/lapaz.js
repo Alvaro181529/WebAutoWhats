@@ -36,12 +36,12 @@ exports.lapazController = (req, res) => {
       if (estado == "conectado") {
         // Envio de mensajes
         console.log("esta dentro de la hora")
-        cron.schedule("0 7  * * 1-6", () => {
+        cron.schedule("15 10  * * 1-6", () => {
           console.log("esta aca en comprobacion ")
           comprobacion();
         });
         //Primwer reenvio
-        cron.schedule("0 8 * * 3,6", () => {
+        cron.schedule("30 10 * * 3,6", () => {
           comprobacionReenvio();
         });
         //Segundo envio
@@ -402,13 +402,13 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0  AND VENTANILLA = 'ENCOMIENDAS' AND  packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'ENCOMIENDAS' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
     "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
   const menQuery3 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =0 AND VENTANILLA = 'DD' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'DD' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
@@ -479,9 +479,9 @@ async function comprobacionReenvio() {
 async function comprobacionReenvio2() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'ENCOMIENDAS' AND  CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'ENCOMIENDAS' AND  CUIDAD='LA PAZ' GROUP BY mensajes.id_Telefono  ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
   const menQuery2 =
-    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'DD' AND  CUIDAD='LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos =1  AND packages.ESTADO = 'VENTANILLA'  AND VENTANILLA = 'DD' AND  CUIDAD='LA PAZ' GROUP BY mensajes.id_Telefono  ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
 
   /* revisara si los paquetes ya fueron entregados */
 

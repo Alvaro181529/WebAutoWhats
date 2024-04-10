@@ -4,6 +4,16 @@ socket.on("connect", () => {
 });
 
 $(function () {
+  $('#api').on("click", function () {
+    $.ajax({
+      url: "/lapaz/certificado",
+      success: async function (lp) {
+        console.log(lp)
+      }
+    })
+  }
+
+  )
   $("#inicio").on("click", function () {
     $.ajax({
       url: "/lapaz",
