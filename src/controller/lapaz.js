@@ -402,13 +402,13 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
 async function comprobacionReenvio() {
   /* seleccina las mensajes mas antiguos y los envio */
   const menQuery1 =
-    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'ENCOMIENDAS' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'ENCOMIENDAS' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 100;";
 
   /* revisara si los paquetes ya fueron entregados */
   const menQuery2 =
     "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO ,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND  mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'LA PAZ' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
   const menQuery3 =
-    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'DD' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    "SELECT mensajes.*, packages.TELEFONO, packages.ESTADO, packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.numeroEstado = 1 AND mensajes.intentos = 0 AND VENTANILLA = 'DD' AND packages.ESTADO = 'VENTANILLA' AND CUIDAD = 'LA PAZ' GROUP BY mensajes.id_Telefono ORDER BY mensajes.fecha_actualizacion ASC LIMIT 100;";
 
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
@@ -465,8 +465,7 @@ async function comprobacionReenvio() {
       const numeroEstado = packItem.numeroEstado;
       let int = packItem.Intentos;
       let estado = packItem.estado;
-      let desc = packItem.observacion;
-      let descripcion = desc + " Paquete Entregado";
+      let descripcion = " Paquete Entregado";
       let mensajes = packItem.mensajes;
       let estadoEnvio = packItem.ESTADO;
       actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id, numeroEstado);
