@@ -283,7 +283,8 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 
 async function comprobacion() {
   let i = 0;
-  let j = 0;
+  const limiteInferior = 60000;
+  const limiteSuperior = 125000;
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
@@ -303,8 +304,6 @@ async function comprobacion() {
 
     for (const idUnicoPack of idsUnicosPack) {
       i++;
-      const limiteInferior = 60000;
-      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -319,8 +318,6 @@ async function comprobacion() {
     }
     for (const idUnicoPack1 of idsUnicosPack1) {
       i++;
-      const limiteInferior = 60000;
-      const limiteSuperior = 125000;
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
@@ -338,6 +335,8 @@ async function comprobacion() {
     console.error("Error en la comprobación:", err);
   }
 }
+
+
 function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   const cliente = container.cliente;
   let status = callbackStatusLPZ();
