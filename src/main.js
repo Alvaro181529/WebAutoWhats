@@ -16,6 +16,9 @@ const urlSR = require("./routes/sucre")
 const urlPN = require("./routes/pando")
 const urlADM = require("./routes/admin")
 
+//certificadosRutas
+const urlCLP= require("./routes/certificados/lapaz")
+
 const sockets = require("./sockets/sockets")
 
 const app = new express();
@@ -42,6 +45,7 @@ app.use("/ea804e881365b39d9d9364ee1707311b", express.static(path.join(__dirname,
 app.use("/fc9fdf084e290f26a270390dc49061a2", express.static(path.join(__dirname, 'city/potosi')));//pt
 app.use("/e22428ccf96cda9674a939c209ad1000", express.static(path.join(__dirname, 'city/sucre')));//sr
 app.use("/ded0804cf804b6d26e37953dc2dbc505", express.static(path.join(__dirname, 'city/pando')));//pn
+app.use("/certificadosLapaz", express.static(path.join(__dirname, 'certificados/lapaz')));//pn
 
 app.use(urlLP)
 app.use(urlOR)
@@ -53,6 +57,8 @@ app.use(urlPT)
 app.use(urlSR)
 app.use(urlPN)
 app.use(urlADM)
+//certificado
+app.use(urlCLP)
 
 server.listen(app.get('port'));
 console.log(`servidor encendido ${app.get('appName')}`)
