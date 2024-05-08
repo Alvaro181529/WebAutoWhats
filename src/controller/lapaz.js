@@ -4,6 +4,7 @@ const CryptoJS = require("crypto-js");
 const PDFDocument = require("pdfkit-table");
 const moment = require("moment");
 const bpass = require("../database/mensajes/bpass.json");
+const { apiExterno } = require("../database/api");
 
 const {
   ClientLP,
@@ -36,7 +37,7 @@ exports.lapazController = (req, res) => {
       if (estado == "conectado") {
         // Envio de mensajes
         console.log("esta dentro de la hora")
-        cron.schedule("0 7  * * 1-6", () => {
+        cron.schedule("* * * * 1-6", () => {
           console.log("esta aca en comprobacion ")
           comprobacion();
         });
@@ -282,61 +283,76 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 }
 
 async function comprobacion() {
+  const limiteInferior = 60000;
+  const limiteSuperior = 125000;
+  const numeroAleatorio =
+    Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+    limiteInferior;
   let i = 0;
-  let j = 0;
+  const certificados = await apiExterno()
+  const certificadoCode = certificados.map((item) => item.mailitM_FID);
+  for (const certificado of certificadoCode) {
+    const packItem = certificados.find((item) => item.mailitM_FID === certificado)
+    const Codigo = packItem.mailitM_FID
+    const Numero = packItem.customeR_PHONE_NO
+    const Pais = packItem.countrY_CD
+    await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, Codigo));
+    console.log(Codigo + " " + Numero + " " + Pais)
+  }
+
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
-  const packQuery =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
-  const packQuery1 =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
+  // const packQuery =
+  //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
+  // const packQuery1 =
+  //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
 
-  try {
-    const resPack = await ejecutarConsulta(packQuery);
-    const resPack1 = await ejecutarConsulta(packQuery1);
-    //DESPACHO
+  // try {
+  //   const resPack = await ejecutarConsulta(packQuery);
+  //   const resPack1 = await ejecutarConsulta(packQuery1);
+  //   //DESPACHO
 
-    console.log("Envio mensajes:");
+  //   console.log("Envio mensajes:");
 
-    const idsUnicosPack = resPack.map((item) => item.id);
-    const idsUnicosPack1 = resPack1.map((item) => item.id);
+  //   const idsUnicosPack = resPack.map((item) => item.id);
+  //   const idsUnicosPack1 = resPack1.map((item) => item.id);
 
-    for (const idUnicoPack of idsUnicosPack) {
-      i++;
-      const limiteInferior = 60000;
-      const limiteSuperior = 125000;
-      const numeroAleatorio =
-        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-        limiteInferior;
-      const packItem = resPack.find((item) => item.id === idUnicoPack);
-      const id = packItem.id;
-      const ven = packItem.VENTANILLA;
-      const codigo = packItem.CODIGO;
-      const telefono = packItem.TELEFONO;
-      const estadoEnvio = packItem.ESTADO;
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
-      envio(telefono, id, estadoEnvio, ven, codigo);
-    }
-    for (const idUnicoPack1 of idsUnicosPack1) {
-      i++;
-      const limiteInferior = 60000;
-      const limiteSuperior = 125000;
-      const numeroAleatorio =
-        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-        limiteInferior;
-      const packItem = resPack1.find((item) => item.id === idUnicoPack1);
-      const id = packItem.id;
-      const ven = packItem.VENTANILLA;
-      const codigo = packItem.CODIGO;
-      const telefono = packItem.TELEFONO;
-      const estadoEnvio = packItem.ESTADO;
-      await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
-      envio(telefono, id, estadoEnvio, ven, codigo);
-    }
-    console.log("terminado");
-  } catch (err) {
-    console.error("Error en la comprobación:", err);
-  }
+  //   for (const idUnicoPack of idsUnicosPack) {
+  //     i++;
+  //     const limiteInferior = 60000;
+  //     const limiteSuperior = 125000;
+  //     const numeroAleatorio =
+  //       Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+  //       limiteInferior;
+  //     const packItem = resPack.find((item) => item.id === idUnicoPack);
+  //     const id = packItem.id;
+  //     const ven = packItem.VENTANILLA;
+  //     const codigo = packItem.CODIGO;
+  //     const telefono = packItem.TELEFONO;
+  //     const estadoEnvio = packItem.ESTADO;
+  //     await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+  //     envio(telefono, id, estadoEnvio, ven, codigo);
+  //   }
+  //   for (const idUnicoPack1 of idsUnicosPack1) {
+  //     i++;
+  //     const limiteInferior = 60000;
+  //     const limiteSuperior = 125000;
+  //     const numeroAleatorio =
+  //       Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+  //       limiteInferior;
+  //     const packItem = resPack1.find((item) => item.id === idUnicoPack1);
+  //     const id = packItem.id;
+  //     const ven = packItem.VENTANILLA;
+  //     const codigo = packItem.CODIGO;
+  //     const telefono = packItem.TELEFONO;
+  //     const estadoEnvio = packItem.ESTADO;
+  //     await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+  //     envio(telefono, id, estadoEnvio, ven, codigo);
+  //   }
+  //   console.log("terminado");
+  // } catch (err) {
+  //   console.error("Error en la comprobación:", err);
+  // }
 }
 function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   const cliente = container.cliente;
