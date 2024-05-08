@@ -36,7 +36,7 @@ exports.lapazController = (req, res) => {
       if (estado == "conectado") {
         // Envio de mensajes
         console.log("esta dentro de la hora")
-        cron.schedule("0 7  * * 1-6", () => {
+        cron.schedule("41 9  * * 1-6", () => {
           console.log("esta aca en comprobacion ")
           comprobacion();
         });
@@ -321,7 +321,7 @@ async function comprobacion() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-      const packItem = resPack1.find((item) => item.id === idUnicoPack1);
+        const packItem = resPack1.find((item) => item.id === idUnicoPack1);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
       const codigo = packItem.CODIGO;
@@ -330,7 +330,7 @@ async function comprobacion() {
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
       envio(telefono, id, estadoEnvio, ven, codigo);
     }
-    console.log("terminado");
+    return console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
   }
@@ -469,7 +469,7 @@ async function comprobacionReenvio() {
       let estadoEnvio = packItem.ESTADO;
       actualizarMensajes(estado, mensajes, descripcion, int, estadoEnvio, id, numeroEstado);
     }
-    console.log("terminado");
+    return console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
   }
@@ -486,7 +486,7 @@ async function comprobacionReenvio2() {
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
     const resMen2 = await ejecutarConsulta(menQuery2);
-
+    
     const idsUnicosMen1 = resMen1.map((item) => item.id);
     const idsUnicosMen2 = resMen2.map((item) => item.id);
 
@@ -529,8 +529,7 @@ async function comprobacionReenvio2() {
       Reenvio(telefono, id, int, estadoEnvio, ven, numeroEstado, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
-
-    console.log("terminado");
+    return console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
   }
