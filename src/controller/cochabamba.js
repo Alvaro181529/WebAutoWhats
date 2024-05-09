@@ -30,9 +30,9 @@ exports.cochabambaController = (req, res) => {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
                 cron.schedule("18 0 * * 1-6", () => {
-                    cron.schedule("20 */2 7-21 * * 1-6", async () => {
+                    cron.schedule("30 */2 7-21 * * 1-6", async () => {
                         const limiteInferior = 5000;
-                        const limiteSuperior = 30000;
+                        const limiteSuperior = 20000;
                         const numeroAleatorio =
                             Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
                             limiteInferior;
@@ -267,8 +267,8 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 }
 async function comprobacion() {
     let i = 0;
-    const limiteInferior = 0;
-    const limiteSuperior = 0;
+    const limiteInferior = 1000;
+    const limiteSuperior = 10000;
     /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const packQuery =
