@@ -34,11 +34,21 @@ exports.lapazController = (req, res) => {
     try {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
-        // Envio de mensajes
-        console.log("esta dentro de la hora")
-        cron.schedule("41 9  * * 1-6", () => {
-          console.log("esta aca en comprobacion ")
-          comprobacion();
+
+        cron.schedule("45 23 * * 1-6", () => {
+          // Envio de mensajes
+          console.log("esta dentro de la hora")
+          cron.schedule("*/2 22-23 * * 1-6",async () => {
+            const limiteInferior = 5000;
+            const limiteSuperior = 15000;
+            const numeroAleatorio =
+              Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+              limiteInferior;
+            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+            console.log("esta aca en comprobacion ")
+            comprobacion();
+          });
+        
         });
         //Primwer reenvio
         cron.schedule("0 8 * * 3,6", () => {
@@ -283,14 +293,14 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 
 async function comprobacion() {
   let i = 0;
-  const limiteInferior = 60000;
-  const limiteSuperior = 125000;
+  const limiteInferior = 0;
+  const limiteSuperior = 0;
   /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'ENCOMIENDAS' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) ORDER BY `packages`.`created_at` DESC LIMIT 1;";
   const packQuery1 =
-    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  GROUP BY TELEFONO ORDER BY `packages`.`created_at` DESC LIMIT 150;";
+    "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND VENTANILLA = 'DD' AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL)  ORDER BY `packages`.`created_at` DESC LIMIT 1;";
 
   try {
     const resPack = await ejecutarConsulta(packQuery);
@@ -321,7 +331,7 @@ async function comprobacion() {
       const numeroAleatorio =
         Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
         limiteInferior;
-        const packItem = resPack1.find((item) => item.id === idUnicoPack1);
+      const packItem = resPack1.find((item) => item.id === idUnicoPack1);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
       const codigo = packItem.CODIGO;
@@ -486,7 +496,7 @@ async function comprobacionReenvio2() {
   try {
     const resMen1 = await ejecutarConsulta(menQuery1);
     const resMen2 = await ejecutarConsulta(menQuery2);
-    
+
     const idsUnicosMen1 = resMen1.map((item) => item.id);
     const idsUnicosMen2 = resMen2.map((item) => item.id);
 
