@@ -29,17 +29,15 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                cron.schedule("18 0 * * 1-6", () => {
-                    cron.schedule("30 */2 7-21 * * 1-6", async () => {
-                        const limiteInferior = 5000;
-                        const limiteSuperior = 20000;
-                        const numeroAleatorio =
-                            Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-                            limiteInferior;
-                        await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
-                        console.log("esta aca en comprobacion ")
-                        comprobacion();
-                    });
+                cron.schedule("30 */2 7-21 * * 1-6", async () => {
+                    const limiteInferior = 5000;
+                    const limiteSuperior = 20000;
+                    const numeroAleatorio =
+                        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+                        limiteInferior;
+                    await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+                    console.log("esta aca en comprobacion ")
+                    comprobacion();
                 });
                 cron.schedule("0 12 * * 2,4", () => {
                     // cron.schedule("* * * * *", () => {

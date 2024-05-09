@@ -35,21 +35,19 @@ exports.lapazController = (req, res) => {
       const lpl = [{ estado, codigo, contacto, code: src }];
       if (estado == "conectado") {
 
-        cron.schedule("45 23 * * 1-6", () => {
-          // Envio de mensajes
-          console.log("esta dentro de la hora")
-          cron.schedule("*/2 7-21 * * 1-6",async () => {
-            const limiteInferior = 5000;
-            const limiteSuperior = 9000;
-            const numeroAleatorio =
-              Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-              limiteInferior;
-            await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
-            console.log("esta aca en comprobacion ")
-            comprobacion();
-          });
-        
+        // Envio de mensajes
+        console.log("esta dentro de la hora")
+        cron.schedule("*/2 7-21 * * 1-6", async () => {
+          const limiteInferior = 5000;
+          const limiteSuperior = 9000;
+          const numeroAleatorio =
+            Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+            limiteInferior;
+          await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+          console.log("esta aca en comprobacion ")
+          comprobacion();
         });
+
         //Primwer reenvio
         cron.schedule("0 8 * * 3,6", () => {
           comprobacionReenvio();
