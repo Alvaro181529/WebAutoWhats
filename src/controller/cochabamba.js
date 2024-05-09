@@ -13,6 +13,7 @@ const {
     cerrarSesion,
     contactoCBBA,
 } = require("../whatsapp/cochabamba");
+const mensajesLP = require("../database/mensajes/mensajesLP.json");
 const mensajesCBBA = require("../database/mensajes/mensajesCBBA.json");
 const mensajeR1 = require("../database/reenvio1/reevio1CBBA.json");
 const mensajeR2 = require("../database/reenvio2/reevio2CBBA.json");
@@ -29,15 +30,17 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                cron.schedule("30 */2 7-21 * * 1-6", async () => {
-                    const limiteInferior = 5000;
-                    const limiteSuperior = 20000;
-                    const numeroAleatorio =
-                        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-                        limiteInferior;
-                    await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
-                    console.log("esta aca en comprobacion ")
-                    comprobacion();
+                cron.schedule("45 10 * * 1-6", async () => {
+                    cron.schedule("30 */2 7-21 * * 1-6", async () => {
+                        const limiteInferior = 5000;
+                        const limiteSuperior = 20000;
+                        const numeroAleatorio =
+                            Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+                            limiteInferior;
+                        await new Promise((resolve) => setTimeout(resolve, numeroAleatorio, codigo)); //12
+                        console.log("esta aca en comprobacion ")
+                        comprobacion();
+                    });
                 });
                 cron.schedule("0 12 * * 2,4", () => {
                     // cron.schedule("* * * * *", () => {
@@ -208,61 +211,118 @@ async function inicio() {
     return container.cliente;
 }
 function envio(contacto, id, estadoEnvio, ven, codigo) {
-    const cliente = container.cliente;
     let cadena = codigo;
     let codCadena = cadena.substring(cadena.length - 2);
-    const randomIndex = Math.floor(Math.random() * mensajesCBBA.length);
+    const cliente = container.cliente;
+    const randomIndex = Math.floor(Math.random() * mensajesLP.length);
+    const men = mensajesLP[randomIndex].mensaje;
     let status = callbackStatusCBBA();
     const numero = "591" + contacto + "@c.us";
-    const men = mensajesCBBA[randomIndex].mensaje;
-    const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
+    const mensaje = men + "con procedencia de " + codCadena + " puede recogerlo en Ventanilla " + ven + ".";
     let estado;
     let descripcion;
+    let numeroEstado;
     let enviados = 0;
     let rechazados = 0;
-    let numeroEstado;
+  
     if (typeof contacto === "number") {
-        const numeroComoCadena = contacto.toString();
-        const primerNumero = numeroComoCadena[0];
-        const cantidadDigitos = numeroComoCadena.length;
-
-        if (
-            cantidadDigitos === 8 &&
-            (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
-        ) {
-            switch (status) {
-                case 3:
-                    estado = "Leído";
-                    break;
-                case 2:
-                    estado = "Recibido";
-                    break;
-                case 1:
-                    estado = "Enviado";
-                    break;
-                default:
-                    estado = "Enviado";
-                    break;
-            }
-            numeroEstado = 1
-            descripcion = "El número es correcto.";
-            enviados++;
-            enviarMensaje(cliente, numero, mensaje);
-        } else {
-            estado = "No enviado";
-            descripcion = "El número es incorrecto.";
-            rechazados++;
+      const numeroComoCadena = contacto.toString();
+      const primerNumero = numeroComoCadena[0];
+      const cantidadDigitos = numeroComoCadena.length;
+  
+      if (
+        cantidadDigitos === 8 &&
+        (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
+      ) {
+        switch (status) {
+          case 3:
+            estado = "Leído";
+            break;
+          case 2:
+            estado = "Recibido";
+            break;
+          case 1:
+            estado = "Enviado";
+            break;
+          default:
+            estado = "Enviado";
+            break;
         }
-    } else {
+        numeroEstado = 1
+        descripcion = "El número es correcto.";
+        enviados++;
+        enviarMensaje(cliente, numero, mensaje);
+      } else {
         estado = "No enviado";
-        descripcion = "No es un número.";
+        descripcion = "El número es incorrecto.";
         rechazados++;
+      }
+    } else {
+      estado = "No enviado";
+      descripcion = "No es un número.";
+      rechazados++;
     }
     console.log(
-        `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
+      `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
     guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
-}
+  }
+// function envio(contacto, id, estadoEnvio, ven, codigo) {
+//     const cliente = container.cliente;
+//     let cadena = codigo;
+//     let codCadena = cadena.substring(cadena.length - 2);
+//     const randomIndex = Math.floor(Math.random() * mensajesCBBA.length);
+//     let status = callbackStatusCBBA();
+//     const numero = "591" + contacto + "@c.us";
+//     const men = mensajesCBBA[randomIndex].mensaje;
+//     const mensaje = men + "con origen de " + codCadena + "puedo recogerlo en Ventanilla " + ven + ".";
+//     let estado;
+//     let descripcion;
+//     let enviados = 0;
+//     let rechazados = 0;
+//     let numeroEstado;
+//     if (typeof contacto === "number") {
+//         const numeroComoCadena = contacto.toString();
+//         const primerNumero = numeroComoCadena[0];
+//         const cantidadDigitos = numeroComoCadena.length;
+
+//         if (
+//             cantidadDigitos === 8 &&
+//             (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
+//         ) {
+//             switch (status) {
+//                 case 3:
+//                     estado = "Leído";
+//                     break;
+//                 case 2:
+//                     estado = "Recibido";
+//                     break;
+//                 case 1:
+//                     estado = "Enviado";
+//                     break;
+//                 default:
+//                     estado = "Enviado";
+//                     break;
+//             }
+//             numeroEstado = 1
+//             descripcion = "El número es correcto.";
+//             enviados++;
+//             enviarMensaje(cliente, numero, mensaje);
+//         } else {
+//             estado = "No enviado";
+//             descripcion = "El número es incorrecto.";
+//             rechazados++;
+//         }
+//     } else {
+//         estado = "No enviado";
+//         descripcion = "No es un número.";
+//         rechazados++;
+//     }
+//     console.log(
+//         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
+//     );
+//     guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+// }
 async function comprobacion() {
     let i = 0;
     const limiteInferior = 1000;
