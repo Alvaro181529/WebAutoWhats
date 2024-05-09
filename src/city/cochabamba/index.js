@@ -181,7 +181,8 @@ $(function () {
   }
   function table() {
     $.ajax({
-      url: "/cochabamba/message",
+      // url: "/cochabamba/message",
+      url: "/lapaz/message",
       success: function (resp) {
         let tbody = $('#info');
         tbody.html('');
