@@ -37,7 +37,7 @@ exports.lapazController = (req, res) => {
 
         // Envio de mensajes
         console.log("esta dentro de la hora")
-        cron.schedule("59 10 * * 1-6", async () => {
+        cron.schedule("15 11 * * 1-6", async () => {
           cron.schedule("*/2 7-21 * * 1-6", async () => {
             const limiteInferior = 5000;
             const limiteSuperior = 9000;
