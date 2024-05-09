@@ -29,8 +29,8 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                cron.schedule("0 9 * * 1,2,3,4,5", () => {
-                    cron.schedule("20 */2 22-23 * * 1-6", async () => {
+                cron.schedule("18 0 * * 1-6", () => {
+                    cron.schedule("20 */2 0-23 * * 1-6", async () => {
                         const limiteInferior = 5000;
                         const limiteSuperior = 30000;
                         const numeroAleatorio =
