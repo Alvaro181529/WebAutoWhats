@@ -30,10 +30,10 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                cron.schedule("16 11 * * 1-6", async () => {
-                    cron.schedule("30 */2 7-21 * * 1-6", async () => {
-                        const limiteInferior = 5000;
-                        const limiteSuperior = 20000;
+                cron.schedule("32 11 * * 1-6", async () => {
+                    cron.schedule("50 */2 7-21 * * 1-6", async () => {
+                        const limiteInferior = 2000;
+                        const limiteSuperior = 5000;
                         const numeroAleatorio =
                             Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
                             limiteInferior;
@@ -44,7 +44,7 @@ exports.cochabambaController = (req, res) => {
                 });
                 cron.schedule("0 12 * * 2,4", () => {
                     // cron.schedule("* * * * *", () => {
-                    comprobacionReenvio();
+                    comprobacionReenvio()
                 });
                 cron.schedule("0 12 * * 1", () => {
                     // cron.schedule("* * * * *", () => {
@@ -224,49 +224,49 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
     let numeroEstado;
     let enviados = 0;
     let rechazados = 0;
-  
+
     if (typeof contacto === "number") {
-      const numeroComoCadena = contacto.toString();
-      const primerNumero = numeroComoCadena[0];
-      const cantidadDigitos = numeroComoCadena.length;
-  
-      if (
-        cantidadDigitos === 8 &&
-        (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
-      ) {
-        switch (status) {
-          case 3:
-            estado = "Leído";
-            break;
-          case 2:
-            estado = "Recibido";
-            break;
-          case 1:
-            estado = "Enviado";
-            break;
-          default:
-            estado = "Enviado";
-            break;
+        const numeroComoCadena = contacto.toString();
+        const primerNumero = numeroComoCadena[0];
+        const cantidadDigitos = numeroComoCadena.length;
+
+        if (
+            cantidadDigitos === 8 &&
+            (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
+        ) {
+            switch (status) {
+                case 3:
+                    estado = "Leído";
+                    break;
+                case 2:
+                    estado = "Recibido";
+                    break;
+                case 1:
+                    estado = "Enviado";
+                    break;
+                default:
+                    estado = "Enviado";
+                    break;
+            }
+            numeroEstado = 1
+            descripcion = "El número es correcto.";
+            enviados++;
+            enviarMensaje(cliente, numero, mensaje);
+        } else {
+            estado = "No enviado";
+            descripcion = "El número es incorrecto.";
+            rechazados++;
         }
-        numeroEstado = 1
-        descripcion = "El número es correcto.";
-        enviados++;
-        enviarMensaje(cliente, numero, mensaje);
-      } else {
-        estado = "No enviado";
-        descripcion = "El número es incorrecto.";
-        rechazados++;
-      }
     } else {
-      estado = "No enviado";
-      descripcion = "No es un número.";
-      rechazados++;
+        estado = "No enviado";
+        descripcion = "No es un número.";
+        rechazados++;
     }
     console.log(
-      `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
+        `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
     guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
-  }
+}
 // function envio(contacto, id, estadoEnvio, ven, codigo) {
 //     const cliente = container.cliente;
 //     let cadena = codigo;
@@ -325,8 +325,6 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 // }
 async function comprobacion() {
     let i = 0;
-    const limiteInferior = 1000;
-    const limiteSuperior = 10000;
     /* YO PREGUNTO DONDE LA ZONA ESTE VACIA Y EL TELEFONO SEA 0 O NULO Y QUE ESTE CON EL ESTADO DE VENTANILLA */
     // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
     const packQuery =
@@ -345,6 +343,8 @@ async function comprobacion() {
         const idsUnicosPack1 = resPack1.map((item) => item.id);
 
         for (const idUnicoPack of idsUnicosPack) {
+            const limiteInferior = 1000;
+            const limiteSuperior = 5000;
             i++;
             const numeroAleatorio =
                 Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
@@ -359,6 +359,8 @@ async function comprobacion() {
             envio(telefono, id, estadoEnvio, ven, codigo);
         }
         for (const idUnicoPack1 of idsUnicosPack1) {
+            const limiteInferior = 10000;
+            const limiteSuperior = 30000;
             i++;
             const numeroAleatorio =
                 Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
