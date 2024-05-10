@@ -171,7 +171,7 @@ function buildPDF(dataCallback, endCallback) {
 exports.lapazControllerMessage = async (req, res) => {
   //con esta consultan se hace el control de los mensajes
   const mensajes =
-    "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'LA PAZ' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
+    "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes,mensajes.ciudad, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'LA PAZ' AND mensajes.ciudad = 'LPZ' AND mensajes.fecha_actualizacion >= CURRENT_DATE();";
   const cons = await ejecutarConsulta(mensajes);
   res.json(cons);
 };

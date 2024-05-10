@@ -82,7 +82,7 @@ function esTerceraSemana() {
     return hoy.getTime() === primerLunesTerceraSemana.getTime();
 }
 exports.cochabambaControllerMessage = async (req, res) => {
-    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'COCHABAMBA' AND mensajes.fecha_actualizacion >= CURRENT_DATE();"
+    const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.ciudad, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND mensajes.ciudad = 'CBBA' AND packages.CUIDAD = 'COCHABAMBA' AND mensajes.fecha_actualizacion >= CURRENT_DATE();"
     const cons = await ejecutarConsulta(mensajes)
     res.json(cons)
 }
