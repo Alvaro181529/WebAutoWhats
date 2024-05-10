@@ -20,7 +20,7 @@ async function guardarMensajes(
   estadoEnvio
 ) {
   const query =
-    "INSERT INTO `mensajes` (`id`, `estado`, `mensajes`, `observacion`,`numeroEstado` ,`id_telefono`,`ciudad`,`entrega`) VALUES (NULL, ?, ?, ?, ?, ?,  ?)";
+    "INSERT INTO `mensajes` (`id`, `estado`, `mensajes`, `observacion`,`numeroEstado` ,`id_telefono`,`ciudad`,`entrega`) VALUES (NULL, ?, ?, ?, ?, ?, ?,  ?)";
   try {
     await conn.query(query, [
       estado,
@@ -28,6 +28,7 @@ async function guardarMensajes(
       descripcion,
       numeroEstado,
       id_telefono,
+      ciudad,
       estadoEnvio,
     ]);
     console.log("Mensaje enviado y guardado en la base de datos");
