@@ -39,9 +39,9 @@ exports.cochabambaController = (req, res) => {
                 });
                 cron.schedule("0 12 * * 1", () => {
                     // cron.schedule("* * * * *", () => {
-                        if (esTerceraSemana()) {
-                            comprobacionReenvio2();
-                          }
+                    if (esTerceraSemana()) {
+                        comprobacionReenvio2();
+                    }
                 });
             } else {
                 inicio();
@@ -56,22 +56,22 @@ function esTerceraSemana() {
     const hoy = new Date();
     const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
     const diaInicioSemana = 1; // Lunes
-  
+
     // Calcula el día de la semana del primer día del mes
     let primerDiaMesDiaSemana = primerDiaMes.getDay();
     if (primerDiaMesDiaSemana === 0) {
-      primerDiaMesDiaSemana = 7; // Si es domingo, se ajusta a 7 en lugar de 0
+        primerDiaMesDiaSemana = 7; // Si es domingo, se ajusta a 7 en lugar de 0
     }
-  
+
     // Calcula el número de días hasta el inicio de la tercera semana
     let diasHastaTerceraSemana = (diaInicioSemana - primerDiaMesDiaSemana + 7) % 7 + 14;
-  
+
     // Calcula la fecha del primer lunes de la tercera semana
     const primerLunesTerceraSemana = new Date(hoy.getFullYear(), hoy.getMonth(), diasHastaTerceraSemana);
-  
+
     // Compara la fecha actual con la fecha del primer lunes de la tercera semana
     return hoy.getTime() === primerLunesTerceraSemana.getTime();
-  }
+}
 exports.cochabambaControllerMessage = async (req, res) => {
     const mensajes = "SELECT packages.TELEFONO, packages.CUIDAD, mensajes.mensajes, mensajes.observacion, mensajes.estado, mensajes.fecha_actualizacion, ROW_NUMBER() OVER (ORDER BY mensajes.fecha_actualizacion) AS numero FROM mensajes INNER JOIN packages ON mensajes.id_telefono = packages.id AND packages.CUIDAD = 'COCHABAMBA' AND mensajes.fecha_actualizacion >= CURRENT_DATE();"
     const cons = await ejecutarConsulta(mensajes)
@@ -201,7 +201,8 @@ async function inicio() {
     container.cliente = cliente; // Almacena el cliente en el contenedor
     return container.cliente;
 }
-function envio(contacto, id, estadoEnvio, ven, codigo) {
+async function envio(contacto, id, estadoEnvio, ven, codigo) {
+    const ciudad = "CBBA"
     const cliente = container.cliente;
     let cadena = codigo;
     let codCadena = cadena.substring(cadena.length - 2);
@@ -228,20 +229,25 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
                 case 3:
                     estado = "Leído";
                     break;
-                case 2:
-                    estado = "Recibido";
-                    break;
+                    case 2:
+                        estado = "Recibido";
+                        break;
                 case 1:
                     estado = "Enviado";
                     break;
-                default:
-                    estado = "Enviado";
-                    break;
+                    default:
+                        estado = "Enviado";
+                        break;
             }
             numeroEstado = 1
             descripcion = "El número es correcto.";
             enviados++;
-            enviarMensaje(cliente, numero, mensaje);
+           const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
         } else {
             estado = "No enviado";
             descripcion = "El número es incorrecto.";
@@ -255,7 +261,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+    guardarMensajes(estado, mensaje, descripcion, numeroEstado, id,ciudad, estadoEnvio);
 }
 async function comprobacion() {
     let i = 0
@@ -265,23 +271,23 @@ async function comprobacion() {
     const packQuery = "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'COCHABAMBA' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
     // const packQuerySn =
     //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
-
-
+    
+    
     try {
         const resPack = await ejecutarConsulta(packQuery);
-
+        
         console.log("IDs Únicos en packQuery:");
 
         const idsUnicosPack = resPack.map((item) => item.id);
-
+        
         for (const idUnicoPack of idsUnicosPack) {
             i++;
             const limiteInferior = 60000;
-const limiteSuperior = 125000;
+            const limiteSuperior = 125000;
             const numeroAleatorio =
-                Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+            Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
                 limiteInferior;
-            const packItem = resPack.find((item) => item.id === idUnicoPack);
+                const packItem = resPack.find((item) => item.id === idUnicoPack);
             const id = packItem.id;
             const ven = packItem.VENTANILLA;
             const telefono = packItem.TELEFONO;
@@ -290,13 +296,14 @@ const limiteSuperior = 125000;
             envio(telefono, id, estadoEnvio, ven, codigo);
             await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
         }
-
+        
         console.log("terminado");
     } catch (err) {
         console.error("Error en la comprobación:", err);
     }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+async function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+    const ciudad = "CBBA"
     const cliente = container.cliente;
     let cadena = codigo;
     let codCadena = cadena.substring(cadena.length - 2);
@@ -315,12 +322,12 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
     let descripcion;
     let enviados = 0;
     let rechazados = 0;
-
+    
     if (typeof contacto === "number") {
         const numeroComoCadena = contacto.toString();
         const primerNumero = numeroComoCadena[0];
         const cantidadDigitos = numeroComoCadena.length;
-
+        
         if (
             cantidadDigitos === 8 &&
             (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
@@ -329,19 +336,24 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
                 case 3:
                     estado = "Leído";
                     break;
-                case 2:
-                    estado = "Recibido";
-                    break;
-                case 1:
-                    estado = "Enviado";
-                    break;
+                    case 2:
+                        estado = "Recibido";
+                        break;
+                        case 1:
+                            estado = "Enviado";
+                            break;
                 default:
                     estado = "Enviado";
                     break;
             }
             descripcion = "El número es correcto. y el mensaje fue reenviado";
             enviados++;
-            enviarMensaje(cliente, numero, mensaje);
+           const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
         } else {
             estado = "No enviado";
             descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
@@ -355,19 +367,19 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
+    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado,ciudad);
 }
 async function comprobacionReenvio() {
     let i = 0
     let j = 0
     /* seleccina las mensajes mas antiguos y los envio */
     const menQuery1 =
-        "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='COCHABAMBA' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
-
+    "SELECT mensajes.*, packages.TELEFONO ,packages.ESTADO ,packages.VENTANILLA, packages.CODIGO FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos <3 AND packages.ESTADO = 'VENTANILLA' AND CUIDAD='COCHABAMBA' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 200;";
+    
     /* revisara si los paquetes ya fueron entregados */
     const menQuery2 =
-        "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'COCHABAMBA' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
-
+    "SELECT mensajes.*, packages.ESTADO, packages.TELEFONO,packages.VENTANILLA FROM mensajes JOIN packages ON mensajes.id_Telefono = packages.id WHERE mensajes.intentos >= 0 AND packages.ESTADO = 'ENTREGADO' AND mensajes.entrega = 'ventanilla' AND CUIDAD = 'COCHABAMBA' ORDER BY mensajes.fecha_actualizacion ASC LIMIT 300;";
+    
 
     try {
         const resMen1 = await ejecutarConsulta(menQuery1);
@@ -379,7 +391,7 @@ async function comprobacionReenvio() {
         console.log("Primer reenvio:");
         for (const idUnicosMen1 of idsUnicosMen1) {
             const limiteInferior = 60000;
-const limiteSuperior = 125000;
+            const limiteSuperior = 125000;
             const numeroAleatorio =
                 Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
                 limiteInferior;
@@ -430,7 +442,7 @@ async function comprobacionReenvio2() {
         console.log("Primer reenvio:");
         for (const idUnicosMen1 of idsUnicosMen1) {
             const limiteInferior = 60000;
-const limiteSuperior = 125000;
+            const limiteSuperior = 125000;
             const numeroAleatorio =
                 Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
                 limiteInferior;

@@ -217,7 +217,8 @@ async function inicio() {
   container.cliente = cliente; // Almacena el cliente en el contenedor
   return container.cliente;
 }
-function envio(contacto, id, estadoEnvio, ven, codigo) {
+async function envio(contacto, id, estadoEnvio, ven, codigo) {
+  const ciudad = "BN"
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
   const cliente = container.cliente;
@@ -259,7 +260,12 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
 
       descripcion = "El número es correcto.";
       enviados++;
-      enviarMensaje(cliente, numero, mensaje);
+     const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
     } else {
       estado = "No enviado";
       descripcion = "El número es incorrecto.";
@@ -273,7 +279,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id,ciudad, estadoEnvio);
 }
 
 async function comprobacion() {
@@ -315,7 +321,8 @@ async function comprobacion() {
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+async function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+  const ciudad  = "BN"
   const cliente = container.cliente;
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
@@ -360,7 +367,12 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
       }
       descripcion = "El número es correcto. y el mensaje fue reenviado";
       enviados++;
-      enviarMensaje(cliente, numero, mensaje);
+     const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
     } else {
       estado = "No enviado";
       descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
@@ -374,7 +386,7 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
+  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado,ciudad);
 }
 async function comprobacionReenvio() {
   let i = 0;

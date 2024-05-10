@@ -218,7 +218,8 @@ async function inicio() {
   container.cliente = cliente; // Almacena el cliente en el contenedor
   return container.cliente;
 }
-function envio(contacto, id, estadoEnvio, ven, codigo) {
+async function envio(contacto, id, estadoEnvio, ven, codigo) {
+  const ciudad = "TJ"
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
   const cliente = container.cliente;
@@ -232,13 +233,13 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   let enviados = 0;
   let rechazados = 0;
   let numeroEstado;
-
-
+  
+  
   if (typeof contacto === "number") {
     const numeroComoCadena = contacto.toString();
     const primerNumero = numeroComoCadena[0];
     const cantidadDigitos = numeroComoCadena.length;
-
+    
     if (
       cantidadDigitos === 8 &&
       (primerNumero === "7" || primerNumero === "8" || primerNumero === "6")
@@ -247,21 +248,26 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
         case 3:
           estado = "Leído";
           break;
-        case 2:
-          estado = "Recibido";
-          break;
-        case 1:
+          case 2:
+            estado = "Recibido";
+            break;
+            case 1:
+              estado = "Enviado";
+              break;
+              default:
           estado = "Enviado";
           break;
-        default:
-          estado = "Enviado";
-          break;
-      }      numeroEstado = 1
+        }      numeroEstado = 1
 
-      descripcion = "El número es correcto.";
-      enviados++;
-      enviarMensaje(cliente, numero, mensaje);
-    } else {
+        descripcion = "El número es correcto.";
+        enviados++;
+       const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
+      } else {
       estado = "No enviado";
       descripcion = "El número es incorrecto.";
       rechazados++;
@@ -274,7 +280,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id,ciudad, estadoEnvio);
 }
 
 async function comprobacion() {
@@ -284,23 +290,23 @@ async function comprobacion() {
   // SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';
   const packQuery =
     "SELECT * FROM packages WHERE VENTANILLA = 'UNICA' AND TELEFONO IS NOT NULL AND TELEFONO <> 0 AND CUIDAD = 'TARIJA' AND ESTADO = 'VENTANILLA' AND id NOT IN (SELECT id_Telefono FROM mensajes WHERE id_Telefono IS NOT NULL) AND created_at <= DATE_SUB(NOW(), INTERVAL 2 DAY) ORDER BY `packages`.`created_at` ASC LIMIT 100;"
-  // const packQuerySn =
-  //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
-
-  try {
-    const resPack = await ejecutarConsulta(packQuery);
-
+    // const packQuerySn =
+    //   "SELECT * FROM packages WHERE ZONA <> '' AND TELEFONO IS NOT NULL AND TELEFONO = 0 AND CUIDAD = 'LA PAZ' AND ESTADO = 'VENTANILLA';";
+    
+    try {
+      const resPack = await ejecutarConsulta(packQuery);
+      
     console.log("IDs Únicos en packQuery:");
-
+    
     const idsUnicosPack = resPack.map((item) => item.id);
-
+    
     for (const idUnicoPack of idsUnicosPack) {
       i++;
       const limiteInferior = 60000;
       const limiteSuperior = 125000;
       const numeroAleatorio =
-        Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
-        limiteInferior;
+      Math.floor(Math.random() * (limiteSuperior - limiteInferior + 1)) +
+      limiteInferior;
       const packItem = resPack.find((item) => item.id === idUnicoPack);
       const id = packItem.id;
       const ven = packItem.VENTANILLA;
@@ -310,13 +316,14 @@ async function comprobacion() {
       envio(telefono, id, estadoEnvio, ven, codigo);
       await new Promise((resolve) => setTimeout(resolve, numeroAleatorio)); //12
     }
-
+    
     console.log("terminado");
   } catch (err) {
     console.error("Error en la comprobación:", err);
   }
 }
-function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+async function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+  const ciudad = "TJ"
   const cliente = container.cliente;
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
@@ -362,7 +369,12 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
       }
       descripcion = "El número es correcto. y el mensaje fue reenviado";
       enviados++;
-      enviarMensaje(cliente, numero, mensaje);
+     const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
     } else {
       estado = "No enviado";
       descripcion = "El número es incorrecto. y el mensaje no fue reenviado";
@@ -376,7 +388,7 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
+  actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado,ciudad);
 }
 async function comprobacionReenvio() {
   let i = 0;
