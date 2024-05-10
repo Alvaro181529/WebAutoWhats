@@ -55,6 +55,7 @@ async function enviarMensaje(cliente, numero, mensaje) {
     return resultado
   } catch (error) {
     console.error('Error al enviar mensaje:', error);
+    return null
   }
 }
 async function cerrarSesion(cliente){
