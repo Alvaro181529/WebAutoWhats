@@ -30,8 +30,8 @@ exports.cochabambaController = (req, res) => {
         try {
             const lp = [{ estado, codigo, contacto, code: src }];
             if (estado == "conectado") {
-                cron.schedule("32 11 * * 1-6", async () => {
-                    cron.schedule("50 */2 7-21 * * 1-6", async () => {
+                cron.schedule("10 10 * * 1-6", async () => {
+                    cron.schedule("50 */2 7-19 * * 1-6", async () => {
                         const limiteInferior = 2000;
                         const limiteSuperior = 5000;
                         const numeroAleatorio =
@@ -210,7 +210,8 @@ async function inicio() {
     container.cliente = cliente; // Almacena el cliente en el contenedor
     return container.cliente;
 }
-function envio(contacto, id, estadoEnvio, ven, codigo) {
+async function envio(contacto, id, estadoEnvio, ven, codigo) {
+    const ciudad = "CBBA"
     let cadena = codigo;
     let codCadena = cadena.substring(cadena.length - 2);
     const cliente = container.cliente;
@@ -251,7 +252,12 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
             numeroEstado = 1
             descripcion = "El número es correcto.";
             enviados++;
-            enviarMensaje(cliente, numero, mensaje);
+            const resultado = await enviarMensaje(cliente, numero, mensaje);
+            if (resultado == null) {
+                console.log("No Mensae no enviado")
+                return
+            }
+            console.log("mensaje enviado")
         } else {
             estado = "No enviado";
             descripcion = "El número es incorrecto.";
@@ -265,7 +271,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+    guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, ciudad, estadoEnvio);
 }
 // function envio(contacto, id, estadoEnvio, ven, codigo) {
 //     const cliente = container.cliente;
@@ -420,6 +426,7 @@ async function comprobacion() {
 //     }
 // }
 function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
+    const ciudad = "CBBA"
     const cliente = container.cliente;
     let cadena = codigo;
     let codCadena = cadena.substring(cadena.length - 2);
@@ -478,7 +485,7 @@ function Reenvio(contacto, id, int, estadoEnvio, ven, numeroEstado, codigo) {
     console.log(
         `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
     );
-    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, numeroEstado);
+    actualizarMensajes(estado, mensaje, descripcion, int, estadoEnvio, id, ciudad, numeroEstado);
 }
 async function comprobacionReenvio() {
     let i = 0

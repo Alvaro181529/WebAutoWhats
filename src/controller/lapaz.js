@@ -38,7 +38,7 @@ exports.lapazController = (req, res) => {
         // Envio de mensajes
         console.log("esta dentro de la hora")
         cron.schedule("31 11 * * 1-6", async () => {
-          cron.schedule("*/2 7-21 * * 1-6", async () => {
+          cron.schedule("*/2 7-19 * * 1-6", async () => {
             const limiteInferior = 1000;
             const limiteSuperior = 3000;
             const numeroAleatorio =
@@ -233,7 +233,8 @@ async function inicio() {
   container.cliente = cliente; // Almacena el cliente en el contenedor
   return cliente;
 }
-function envio(contacto, id, estadoEnvio, ven, codigo) {
+async function envio(contacto, id, estadoEnvio, ven, codigo) {
+  const ciudad = "LPZ"
   let cadena = codigo;
   let codCadena = cadena.substring(cadena.length - 2);
   const cliente = container.cliente;
@@ -274,7 +275,13 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
       numeroEstado = 1
       descripcion = "El número es correcto.";
       enviados++;
-      enviarMensaje(cliente, numero, mensaje);
+      const resultado = await enviarMensaje(cliente, numero, mensaje);
+      if (resultado == null ){
+        console.log('No se envio el mensaje fallo'); 
+        return
+      }
+      console.log(' Se envio el mensaje y no hubo fallo'); 
+
     } else {
       estado = "No enviado";
       descripcion = "El número es incorrecto.";
@@ -288,7 +295,7 @@ function envio(contacto, id, estadoEnvio, ven, codigo) {
   console.log(
     `ID: ${id}, NUMERO: ${numero}, MENSAJE: ${mensaje}, ESTADO ${estado}, DESCRIPCION ${descripcion}`
   );
-  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, estadoEnvio);
+  guardarMensajes(estado, mensaje, descripcion, numeroEstado, id, ciudad,estadoEnvio);
 }
 
 async function comprobacion() {
