@@ -38,7 +38,7 @@ async function guardarMensajes(
 }
 async function actualizarMensajes(estado, mensaje, descripcion, intentos, entrega, id, numeroEstado, ciudad) {
   const query =
-    "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?,`numeroEstado` = ?,`ciudad` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
+    "UPDATE `ems` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?,`numeroEstado` = ?,`ciudad` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
   try {
     await conn.query(query, [estado, mensaje, descripcion, intentos, entrega, numeroEstado, ciudad, id]); // Asegúrate de tener un valor para `id`
     console.log("Mensaje actualizado en la base de datos");
