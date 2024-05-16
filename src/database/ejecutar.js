@@ -16,10 +16,11 @@ async function guardarMensajes(
   descripcion,
   numeroEstado,
   id_telefono,
+  ciudad,
   estadoEnvio
 ) {
   const query =
-    "INSERT INTO `mensajes` (`id`, `estado`, `mensajes`, `observacion`,`numeroEstado` ,`id_telefono`,`entrega`) VALUES (NULL, ?, ?, ?, ?, ?,  ?)";
+    "INSERT INTO `ems` (`id`, `estado`, `mensajes`, `observacion`,`numeroEstado` ,`telefono`,`ciudad` ,`entrega`) VALUES (NULL, ?, ?, ?, ?,?, ?,  ?)";
   try {
     await conn.query(query, [
       estado,
@@ -27,6 +28,7 @@ async function guardarMensajes(
       descripcion,
       numeroEstado,
       id_telefono,
+      ciudad,
       estadoEnvio,
     ]);
     console.log("Mensaje enviado y guardado en la base de datos");
@@ -34,11 +36,11 @@ async function guardarMensajes(
     console.error("Error al enviar y guardar mensaje:", err);
   }
 }
-async function actualizarMensajes(estado, mensaje, descripcion, intentos, entrega, id,numeroEstado) {
+async function actualizarMensajes(estado, mensaje, descripcion, intentos, entrega, id, numeroEstado, ciudad) {
   const query =
-    "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?,`numeroEstado` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
+    "UPDATE `mensajes` SET `estado` = ?, `mensajes` = ?, `observacion` = ?, `intentos` = ?,`entrega` = ?,`numeroEstado` = ?,`ciudad` = ?, `fecha_actualizacion` = CURRENT_TIMESTAMP WHERE `id` = ?";
   try {
-    await conn.query(query, [estado, mensaje, descripcion, intentos, entrega,numeroEstado, id]); // Asegúrate de tener un valor para `id`
+    await conn.query(query, [estado, mensaje, descripcion, intentos, entrega, numeroEstado, ciudad, id]); // Asegúrate de tener un valor para `id`
     console.log("Mensaje actualizado en la base de datos");
   } catch (err) {
     console.error("Error al actualizar mensaje:", err);
